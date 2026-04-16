@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>德润童心 · 师范德育专题</title>
+  <style>
+    /* 全局样式 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', '微软雅黑', system-ui, sans-serif;
+      background-color: #fbfaf6;
+      color: #2e3b2c;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* 页头 */
+    header {
+      background-color: #d9e6d3;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid #9bb88b;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      color: #2d4e1e;
+      margin-bottom: 0.5rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #3a5e2b;
+      font-weight: 500;
+      font-size: 1.2rem;
+      padding: 0.25rem 0;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    nav a:hover {
+      border-bottom-color: #5b8c4e;
+    }
+
+    /* 主内容 */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      width: 100%;
+    }
+
+    /* 主视觉区 */
+    .hero {
+      background: linear-gradient(145deg, #e6f0e2 0%, #f8fbf7 100%);
+      padding: 3rem 2.5rem;
+      border-radius: 32px;
+      margin-bottom: 3rem;
+      text-align: center;
+      box-shadow: 0 6px 14px rgba(90, 110, 70, 0.08);
+      border: 1px solid #c8dcc0;
+    }
+
+    .hero h2 {
+      font-size: 2.8rem;
+      font-weight: 400;
+      color: #1f3b14;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      color: #43673a;
+      font-style: italic;
+    }
+
+    .hero small {
+      display: block;
+      margin-top: 1.2rem;
+      color: #667c5e;
+      font-size: 1rem;
+    }
+
+    /* 卡片入口区域 */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin: 2.5rem 0;
+    }
+
+    .card {
+      background: white;
+      padding: 2rem 1.5rem;
+      border-radius: 24px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+      border: 1px solid #dfe9d9;
+      text-align: center;
+      transition: transform 0.15s, box-shadow 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 28px rgba(80, 110, 60, 0.1);
+      border-color: #b3cfaa;
+    }
+
+    .card-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: #2f5126;
+      margin-bottom: 0.75rem;
+    }
+
+    .card p {
+      color: #4a5e42;
+      font-size: 1.05rem;
+    }
+
+    /* 作业说明 */
+    .course-note {
+      background: #f1efe7;
+      padding: 1.2rem 2rem;
+      border-radius: 40px;
+      margin-top: 2.5rem;
+      font-size: 0.95rem;
+      color: #4a6040;
+      text-align: center;
+      border-left: 6px solid #7fa86a;
+    }
+
+    /* 页脚 */
+    footer {
+      background-color: #d9e6d3;
+      padding: 1.5rem;
+      text-align: center;
+      color: #36522b;
+      font-size: 0.95rem;
+      border-top: 2px solid #b3cba7;
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.8rem; }
+      nav { gap: 1.2rem; }
+      .hero h2 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌱 德润童心</h1>
+    <nav>
+      <a href="index.html">🏠 首页</a>
+      <a href="virtues.html">📜 传统美德</a>
+      <a href="stories.html">📖 德育故事</a>
+      <a href="quotes.html">✨ 名言警句</a>
+      <a href="about.html">📋 关于课程</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 主视觉 + 教育名言 -->
+    <section class="hero">
+      <h2>“道德是做人的根本”</h2>
+      <p>—— 陶行知</p>
+      <small>师范课程作业 · 道德教育专题网站</small>
+    </section>
+
+    <!-- 三个主要入口卡片 (点击跳转) -->
+    <div class="card-grid">
+      <a href="virtues.html" class="card">
+        <div class="card-icon">🌿</div>
+        <h3>传统美德</h3>
+        <p>孝、悌、忠、信、礼、义、廉、耻 —— 中华文化的根基。</p>
+      </a>
+      <a href="stories.html" class="card">
+        <div class="card-icon">📚</div>
+        <h3>德育故事</h3>
+        <p>孔融让梨、曾子杀彘…… 用故事浸润心灵。</p>
+      </a>
+      <a href="quotes.html" class="card">
+        <div class="card-icon">💬</div>
+        <h3>名言警句</h3>
+        <p>古今中外的道德箴言，每日一省。</p>
+      </a>
+    </div>
+
+    <!-- 简短的作业说明区 -->
+    <div class="course-note">
+      <strong>📌 师范生德育实践</strong> · 本网站为《道德教育》课程设计，旨在通过传统美德与当代价值融合，传递向善力量。
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 德润童心 · 师范学校（课程作业） | 德育如细雨，润物细无声</p>
+  </footer>
+</body>
+</html>
