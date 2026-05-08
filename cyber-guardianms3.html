@@ -31,6 +31,7 @@
       background: rgba(8,15,25,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border: 1.5px solid rgba(0,243,255,0.6); border-radius: 22px; padding: 6px 24px;
       text-align: center; box-shadow: 0 0 25px rgba(0,243,255,0.3); z-index: 22; pointer-events: auto;
+      white-space: nowrap;
     }
     #timer-text { font-family: 'Orbitron', monospace; font-size: 28px; font-weight: 900; letter-spacing: 3px; color: #00f3ff; text-shadow: 0 0 12px #00f3ff; }
     #speed-indicator { font-size: 11px; color: #9ad7e0; letter-spacing: 1px; }
@@ -41,6 +42,7 @@
       border-radius: 12px; border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px;
       color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.6); z-index: 22; pointer-events: auto;
       display: flex; flex-direction: column; gap: 6px;
+      max-width: 45vw;
     }
     .board-title { font-size: 12px; font-weight: 700; color: #aaa; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; }
     .board-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; font-weight: bold; background: rgba(255,255,255,0.03); border-radius: 20px; padding: 4px 10px; }
@@ -50,38 +52,41 @@
 
     #minimap-container {
       position: absolute; bottom: calc(14px + var(--safe-bottom)); left: calc(10px + var(--safe-left));
-      width: 180px; height: 180px; background: rgba(4,4,10,0.8); border: 2px solid #333;
+      width: 150px; height: 150px; background: rgba(4,4,10,0.8); border: 2px solid #333;
       border-radius: 14px; overflow: hidden; box-shadow: 0 0 25px rgba(0,0,0,0.7); z-index: 25; pointer-events: auto;
     }
     #minimap-container canvas { width: 100%; height: 100%; border-radius: 12px; }
 
     #joystick-container {
-      position: absolute; bottom: calc(40px + var(--safe-bottom)); right: calc(20px + var(--safe-right));
-      width: 140px; height: 140px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.15);
+      position: absolute; bottom: calc(30px + var(--safe-bottom)); right: calc(15px + var(--safe-right));
+      width: 120px; height: 120px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.15);
       border-radius: 50%; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 30; pointer-events: auto; touch-action: none;
     }
     #joystick-thumb {
-      position: absolute; top: 50%; left: 50%; width: 60px; height: 60px; background: rgba(0,243,255,0.25);
+      position: absolute; top: 50%; left: 50%; width: 50px; height: 50px; background: rgba(0,243,255,0.25);
       border: 2px solid rgba(0,243,255,0.6); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 15px rgba(0,243,255,0.3); pointer-events: none;
     }
 
     #game-over { display: flex; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 100; }
-    .panel { background: #10121f; padding: 30px 35px; border-radius: 20px; color: white; border: 1px solid #2a2a3a; text-align: center; box-shadow: 0 20px 50px black; max-width: 95vw; }
-    .panel h1 { font-family: 'Orbitron', 'PingFang SC', sans-serif; margin-bottom: 20px; font-size: 30px; }
-    .panel .encourage { font-size: 18px; color: #ccc; margin: 15px 0 25px; line-height: 1.5; }
+    .panel { background: #10121f; padding: 30px 35px; border-radius: 20px; color: white; border: 1px solid #2a2a3a; text-align: center; box-shadow: 0 20px 50px black; max-width: 90vw; }
+    .panel h1 { font-family: 'Orbitron', 'PingFang SC', sans-serif; margin-bottom: 20px; font-size: 28px; }
+    .panel .encourage { font-size: 16px; color: #ccc; margin: 15px 0 25px; line-height: 1.5; }
     button { padding: 12px 35px; background: transparent; border: 2px solid #00f3ff; color: #00f3ff; font-weight: bold; border-radius: 30px; font-size: 18px; letter-spacing: 1px; cursor: pointer; transition: 0.2s; }
     button:active { background: #00f3ff; color: #000; }
 
     @media (max-width: 600px) {
-      #timer-container { padding: 4px 18px; }
-      #timer-text { font-size: 22px; }
-      #leaderboard { top: calc(65px + var(--safe-top)); gap: 4px; padding: 8px 10px; }
-      .board-row { font-size: 10px; padding: 3px 8px; }
-      #minimap-container { width: 130px; height: 130px; }
-      #joystick-container { width: 120px; height: 120px; }
-      #joystick-thumb { width: 50px; height: 50px; }
-      .panel h1 { font-size: 24px; }
-      .panel .encourage { font-size: 16px; }
+      #timer-container { padding: 4px 16px; }
+      #timer-text { font-size: 20px; }
+      #speed-indicator { font-size: 9px; }
+      #leaderboard { top: calc(65px + var(--safe-top)); padding: 6px 8px; gap: 4px; }
+      .board-row { font-size: 9px; padding: 3px 6px; gap: 4px; }
+      .board-title { font-size: 10px; }
+      #minimap-container { width: 110px; height: 110px; bottom: calc(10px + var(--safe-bottom)); left: calc(8px + var(--safe-left)); }
+      #joystick-container { width: 100px; height: 100px; bottom: calc(20px + var(--safe-bottom)); right: calc(10px + var(--safe-right)); }
+      #joystick-thumb { width: 42px; height: 42px; }
+      .panel h1 { font-size: 22px; }
+      .panel .encourage { font-size: 14px; }
+      .panel { padding: 20px 25px; }
     }
   </style>
 </head>
@@ -103,7 +108,7 @@
     <div class="panel">
       <h1 id="result-title"></h1>
       <div class="encourage" id="result-message"></div>
-      <button onclick="startGame()">Sambung Semula ke Rangkaian</button>
+      <button id="restart-button">Sambung Semula ke Rangkaian</button>
     </div>
   </div>
 
@@ -118,14 +123,19 @@
       const resultMessage = document.getElementById('result-message');
       const joystickContainer = document.getElementById('joystick-container');
       const joystickThumb = document.getElementById('joystick-thumb');
+      const restartButton = document.getElementById('restart-button');
 
       let width, height;
+      let isMobile = false;
+      
       function resize() {
         width = window.innerWidth;
         height = window.innerHeight;
         canvas.width = width;
         canvas.height = height;
-        const mmSize = window.innerWidth < 600 ? 130 : 180;
+        isMobile = width < 600;
+        
+        const mmSize = isMobile ? 110 : 150;
         minimapCanvas.width = mmSize;
         minimapCanvas.height = mmSize;
         document.getElementById('minimap-container').style.width = mmSize + 'px';
@@ -242,21 +252,68 @@
         for(let i=0;i<10;i++) superStars.push({x:Math.random()*WORLD_SIZE,y:Math.random()*WORLD_SIZE,type:getRandomSuperStarType(),pulse:Math.random()*Math.PI*2});
       }
 
-      function startGame(){
-        if(animationId) cancelAnimationFrame(animationId);
-        persons=[]; particles=[]; teams={}; obstacles=[]; powerups=[]; superStars=[];
-        gameState='PLAYING'; gameOverScreen.style.display='none';
-        gameTimeLeft=MAX_GAME_TIME; speedMultiplier=1.0; lastTime=performance.now();
-        generateMap();
-        for(let i=1;i<=NUM_AI_TEAMS+1;i++){
-          let sx=Math.random()*WORLD_SIZE,sy=Math.random()*WORLD_SIZE;
-          if(i===1){sx=WORLD_SIZE/2; sy=WORLD_SIZE/2;}
-          teams[i]={id:i,count:1,alive:true,targetX:sx,targetY:sy,cx:sx,cy:sy};
-          persons.push(new Person(sx,sy,i));
+      // 清理游戏资源的函数
+      function cleanupGame() {
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
         }
-        camera.x=WORLD_SIZE/2; camera.y=WORLD_SIZE/2;
-        for(let i=0;i<NUM_NEUTRALS;i++) persons.push(new Person(Math.random()*WORLD_SIZE,Math.random()*WORLD_SIZE,0));
-        animationId=requestAnimationFrame(gameLoop);
+        // 清空所有数组
+        persons = [];
+        particles = [];
+        teams = {};
+        obstacles = [];
+        powerups = [];
+        superStars = [];
+      }
+
+      function startGame() {
+        // 清理旧游戏
+        cleanupGame();
+        
+        // 重置状态
+        gameState = 'PLAYING';
+        gameTimeLeft = MAX_GAME_TIME;
+        speedMultiplier = 1.0;
+        lastTime = performance.now();
+        inputDir = { x: 0, y: 0 };
+        camera = { x: WORLD_SIZE/2, y: WORLD_SIZE/2 };
+        
+        // 隐藏结束画面
+        gameOverScreen.style.display = 'none';
+        
+        // 生成地图
+        generateMap();
+        
+        // 创建队伍
+        for(let i = 1; i <= NUM_AI_TEAMS + 1; i++){
+          let sx = Math.random() * WORLD_SIZE;
+          let sy = Math.random() * WORLD_SIZE;
+          if(i === 1){
+            sx = WORLD_SIZE / 2;
+            sy = WORLD_SIZE / 2;
+          }
+          teams[i] = {
+            id: i,
+            count: 1,
+            alive: true,
+            targetX: sx,
+            targetY: sy,
+            cx: sx,
+            cy: sy,
+            sumX: sx,
+            sumY: sy
+          };
+          persons.push(new Person(sx, sy, i));
+        }
+        
+        // 添加中立单位
+        for(let i = 0; i < NUM_NEUTRALS; i++) {
+          persons.push(new Person(Math.random() * WORLD_SIZE, Math.random() * WORLD_SIZE, 0));
+        }
+        
+        // 开始动画循环
+        animationId = requestAnimationFrame(gameLoop);
       }
 
       function updateAI(){
@@ -289,8 +346,14 @@
       function drawWorld(){
         ctx.save();
         if(teams[1]&&teams[1].alive) { camera.x+=(teams[1].cx-camera.x)*0.12; camera.y+=(teams[1].cy-camera.y)*0.12; }
-        const isMobile = window.innerWidth < 600;
-        const viewScale = isMobile ? 0.38 : 1.0;
+        
+        let viewScale;
+        if (isMobile) {
+          viewScale = Math.min(0.65, Math.max(0.45, width / 750));
+        } else {
+          viewScale = 1.0;
+        }
+        
         ctx.translate(width/2 - camera.x * viewScale, height/2 - camera.y * viewScale);
         ctx.scale(viewScale, viewScale);
 
@@ -303,8 +366,8 @@
 
         powerups.forEach(p=>{ p.pulse+=0.08; ctx.beginPath(); ctx.arc(p.x,p.y,9+Math.sin(p.pulse)*2.5,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.shadowBlur=10; ctx.shadowColor='#fff'; ctx.fill(); ctx.shadowBlur=0; });
 
-        const nameFontSize = (isMobile ? 22 : 20) / viewScale;
-        const bonusFontSize = (isMobile ? 15 : 13) / viewScale;
+        const nameFontSize = (isMobile ? 26 : 20) / viewScale;
+        const bonusFontSize = (isMobile ? 18 : 13) / viewScale;
         superStars.forEach(s=>{
           s.pulse+=0.06;
           let r=s.type.radius+Math.sin(s.pulse)*4;
@@ -326,7 +389,7 @@
         
         persons.forEach(p=>{ p.update(); p.draw(ctx); });
 
-        const teamFontSize = (isMobile ? 28 : 24) / viewScale;
+        const teamFontSize = (isMobile ? 32 : 24) / viewScale;
         for(let i=1;i<=NUM_AI_TEAMS+1;i++){
           const t = teams[i];
           if(t && t.alive && t.count > 0) {
@@ -360,7 +423,7 @@
         speedMultiplier=1.0+((MAX_GAME_TIME-gameTimeLeft)/MAX_GAME_TIME)*1.6;
         document.getElementById('timer-text').innerText=`${Math.floor(gameTimeLeft/60).toString().padStart(2,'0')}:${Math.floor(gameTimeLeft%60).toString().padStart(2,'0')}`;
         document.getElementById('speed-indicator').innerText=`Kelajuan Rangkaian ${speedMultiplier.toFixed(2)}x`;
-        let html=''; const maxShow=window.innerWidth<600?3:5;
+        let html=''; const maxShow=isMobile ? 3 : 5;
         for(let i=0;i<Math.min(sorted.length,maxShow);i++){
           let t=sorted[i], isMe=t.id===1;
           html+=`<div class="board-row ${isMe?'my-score-row':''}"><span class="board-color-dot" style="background:${TEAM_COLORS[t.id]};color:${TEAM_COLORS[t.id]};"></span><span style="flex:1;color:#ccc;">${TEAM_NAMES[t.id]}</span><span>${t.count}</span></div>`;
@@ -369,6 +432,7 @@
       }
 
       function triggerGameOver(title, sorted) {
+        if (gameState === 'GAMEOVER') return; // 防止重复触发
         gameState = 'GAMEOVER';
         if (title.includes('Ditenggelami') || title.includes('Gangguan')) {
           resultTitle.innerText = 'Sambungan Terputus';
@@ -384,21 +448,45 @@
       }
 
       function gameLoop(){
-        if(gameState==='PLAYING'){
-          if(teams[1]&&teams[1].alive){ teams[1].targetX=teams[1].cx+inputDir.x*220; teams[1].targetY=teams[1].cy+inputDir.y*220; }
-          updateAI(); updatePhysics();
+        if(gameState === 'PLAYING'){
+          if(teams[1] && teams[1].alive){ 
+            teams[1].targetX = teams[1].cx + inputDir.x * 220; 
+            teams[1].targetY = teams[1].cy + inputDir.y * 220; 
+          }
+          updateAI(); 
+          updatePhysics();
         }
+        
         ctx.clearRect(0,0,width,height);
         drawWorld();
-        let sorted=Object.values(teams).filter(t=>t.count>0).sort((a,b)=>b.count-a.count);
-        updateUI(sorted); drawMinimap();
-        if(gameState==='PLAYING'&&(!teams[1]||teams[1].count<=0)) triggerGameOver("Ditenggelami oleh Buli Siber",sorted);
-        else if(gameState==='PLAYING'&&sorted.length===1&&sorted[0].id===1) triggerGameOver("Persekitaran Rangkaian Telah Dibersihkan!",sorted);
-        animationId=requestAnimationFrame(gameLoop);
+        
+        let sorted = Object.values(teams).filter(t => t && t.count > 0).sort((a,b) => b.count - a.count);
+        updateUI(sorted); 
+        drawMinimap();
+        
+        if(gameState === 'PLAYING' && (!teams[1] || teams[1].count <= 0)) {
+          triggerGameOver("Ditenggelami oleh Buli Siber", sorted);
+        } else if(gameState === 'PLAYING' && sorted.length === 1 && sorted[0] && sorted[0].id === 1) {
+          triggerGameOver("Persekitaran Rangkaian Telah Dibersihkan!", sorted);
+        }
+        
+        animationId = requestAnimationFrame(gameLoop);
       }
 
+      // 绑定重启按钮事件（解决需要点击两次的问题）
+      restartButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        startGame();
+      });
+      
+      // 触摸屏也要处理
+      restartButton.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        startGame();
+      });
+
+      // 开始游戏
       startGame();
-      window.startGame = startGame;
     })();
   </script>
 </body>
