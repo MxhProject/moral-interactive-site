@@ -1,224 +1,353 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>德润童心 · 师范德育专题</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Moral Fantastic</title>
+  <!-- 预加载主 GIF，提升首屏体验 -->
+  <link rel="preload" as="image" href="https://jackmum2025.github.io/forMM/title.gif">
   <style>
-    /* 全局样式 */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', '微软雅黑', system-ui, sans-serif;
-      background-color: #fbfaf6;
-      color: #2e3b2c;
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* 页头 */
-    header {
-      background-color: #d9e6d3;
-      padding: 1.2rem 2rem;
-      border-bottom: 3px solid #9bb88b;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    }
-
-    header h1 {
-      font-size: 2.2rem;
-      font-weight: 500;
-      letter-spacing: 2px;
+      font-family: 'Nunito', 'Segoe UI', 'Quicksand', system-ui, sans-serif;
+      background: #ffffff;
       color: #2d4e1e;
-      margin-bottom: 0.5rem;
+      line-height: 1.5;
     }
-
-    nav {
+    .sticky-header {
+      position: sticky; top: 0; z-index: 1000;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #c8dcc0;
+      padding: 12px 20px;
       display: flex;
-      gap: 2rem;
+      align-items: center;
+      justify-content: space-between;
       flex-wrap: wrap;
+      gap: 12px;
     }
-
-    nav a {
-      text-decoration: none;
-      color: #3a5e2b;
-      font-weight: 500;
-      font-size: 1.2rem;
-      padding: 0.25rem 0;
-      border-bottom: 2px solid transparent;
-      transition: border-color 0.2s;
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { font-size: 32px; animation: bounce 2s ease-in-out infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);} }
+    .logo-text { font-size: 1.6rem; font-weight: 800; color: #2d4e1e; letter-spacing: -0.5px; }
+    .tagline {
+      background: #e8f0e3; border-radius: 40px; padding: 6px 16px;
+      font-size: 0.8rem; font-weight: 600; color: #4a6e3a;
     }
-
-    nav a:hover {
-      border-bottom-color: #5b8c4e;
+    .container { max-width: 100%; margin: 0 auto; }
+    .full-image { width: 100%; display: block; }
+    @media (min-width: 768px) {
+      .full-image { max-width: 50%; margin: 20px auto; border-radius: 16px; overflow: hidden; }
     }
-
-    /* 主内容 */
-    main {
-      flex: 1;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
+    @media (max-width: 767px) { .full-image { max-width: 100%; margin: 0; } }
+    .full-image img { width: 100%; height: auto; display: block; object-fit: cover; }
+    /* 懒加载占位背景 */
+    .lazy-placeholder {
+      background: linear-gradient(135deg, #e8f0e3, #d4e6ca);
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 24px;
       width: 100%;
     }
+    .buttons-section {
+      padding: 48px 20px; text-align: center; background: #ffffff;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.5s ease-out;
+    }
+    .buttons-section.visible { opacity: 1; transform: translateY(0); }
+    .btn-group {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 20px; max-width: 500px; margin: 0 auto;
+    }
+    .btn {
+      padding: 14px 28px; border: none; border-radius: 60px;
+      font-size: 1.1rem; font-weight: 700; cursor: pointer;
+      transition: all 0.25s ease; text-decoration: none;
+      display: inline-block; text-align: center; font-family: inherit;
+      flex: 1; min-width: 200px;
+    }
+    .btn-trial { background: #7fa86a; color: white; box-shadow: 0 6px 14px rgba(127, 168, 106, 0.35); }
+    .btn-trial:hover { background: #5b8c4e; transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 24px rgba(91, 140, 78, 0.4); }
+    .btn-master { background: #a8c99b; color: #2d4e1e; box-shadow: 0 6px 14px rgba(127, 168, 106, 0.2); }
+    .btn-master:hover { background: #8aaf7a; transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 24px rgba(127, 168, 106, 0.3); }
+    .btn-small-desc { display: block; font-size: 0.7rem; font-weight: normal; opacity: 0.85; margin-top: 4px; }
 
-    /* 主视觉区 */
-    .hero {
-      background: linear-gradient(145deg, #e6f0e2 0%, #f8fbf7 100%);
-      padding: 3rem 2.5rem;
-      border-radius: 32px;
-      margin-bottom: 3rem;
-      text-align: center;
-      box-shadow: 0 6px 14px rgba(90, 110, 70, 0.08);
+    .extra-features { background: #f8fbf6; padding: 48px 20px; text-align: center; }
+    .features-grid { max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+    .feature-card {
+      background: white; border-radius: 32px; padding: 28px 24px; flex: 1;
+      min-width: 250px; border: 1px solid #d4e6ca; transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 12px 28px rgba(127, 168, 106, 0.15); border-color: #7fa86a; }
+    .feature-icon { font-size: 3rem; margin-bottom: 16px; }
+    .feature-card h3 { color: #2d4e1e; font-size: 1.3rem; margin-bottom: 12px; }
+    .feature-card p { color: #6b7c63; font-size: 0.9rem; line-height: 1.5; }
+
+    .footer-nav { background: #eef5ea; padding: 40px 20px 20px; margin-top: 0; }
+    .footer-grid { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-between; }
+    .footer-section { flex: 1; min-width: 180px; }
+    .footer-section h4 { color: #2d4e1e; font-size: 1.1rem; margin-bottom: 16px; font-weight: 700; position: relative; padding-bottom: 8px; }
+    .footer-section h4::after { content: ''; position: absolute; bottom: 0; left: 0; width: 40px; height: 3px; background: #7fa86a; border-radius: 3px; }
+    .footer-section a { display: block; color: #5a6e53; text-decoration: none; margin-bottom: 10px; font-size: 0.85rem; transition: 0.2s; }
+    .footer-section a:hover { color: #7fa86a; transform: translateX(5px); }
+    .contact-info { color: #5a6e53; font-size: 0.85rem; margin-bottom: 8px; }
+    .back-to-top { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #c8dcc0; }
+    .back-to-top button { background: #7fa86a; color: white; border: none; padding: 10px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+    .back-to-top button:hover { background: #5b8c4e; transform: translateY(-2px); }
+    .copyright { text-align: center; padding: 20px; color: #9bb88b; font-size: 0.75rem; }
+    .grade-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .grade-grid a { font-size: 0.8rem; padding: 4px 0; }
+
+    /* 弹窗样式保持不变 */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2000; animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .master-modal {
+      background: white; border-radius: 48px; max-width: 380px; width: 90%;
+      padding: 2rem 1.5rem; text-align: center;
+      box-shadow: 0 28px 48px rgba(0,0,0,0.2);
+      animation: bounceIn 0.4s cubic-bezier(0.34,1.2,0.64,1);
       border: 1px solid #c8dcc0;
     }
-
-    .hero h2 {
-      font-size: 2.8rem;
-      font-weight: 400;
-      color: #1f3b14;
-      margin-bottom: 0.75rem;
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      80% { transform: scale(1.02); }
+      100% { opacity: 1; transform: scale(1); }
     }
-
-    .hero p {
-      font-size: 1.5rem;
-      color: #43673a;
-      font-style: italic;
+    .master-modal h3 { color: #2d4e1e; font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .master-modal p { color: #6b7c63; font-size: 0.85rem; margin-bottom: 1rem; }
+    .master-modal input { width: 100%; padding: 14px 16px; margin: 0.5rem 0 1rem; border: 2px solid #d9e6d3; border-radius: 60px; font-size: 1rem; text-align: center; letter-spacing: 2px; font-family: monospace; transition: 0.2s; }
+    .master-modal input:focus { outline: none; border-color: #7fa86a; box-shadow: 0 0 0 3px rgba(127,168,106,0.2); }
+    .modal-buttons { display: flex; gap: 12px; margin-top: 0.5rem; }
+    .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 60px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .modal-login { background: #7fa86a; color: white; }
+    .modal-login:hover { background: #5b8c4e; transform: translateY(-2px); }
+    .modal-cancel { background: #f0f0f0; color: #666; }
+    .modal-cancel:hover { background: #e0e0e0; transform: translateY(-2px); }
+    .language-modal {
+      background: white; border-radius: 48px; max-width: 360px; width: 90%;
+      padding: 2rem 1.5rem; text-align: center; box-shadow: 0 28px 48px rgba(0,0,0,0.2);
+      animation: bounceIn 0.4s cubic-bezier(0.34,1.2,0.64,1);
+      border: 1px solid #c8dcc0;
     }
+    .language-modal h3 { color: #2d4e1e; font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .lang-link { display: block; padding: 14px; border-radius: 60px; margin-bottom: 12px; font-weight: 700; text-decoration: none; transition: 0.2s; font-size: 1.1rem; }
+    .lang-link.cn { background: #7fa86a; color: white; }
+    .lang-link.cn:hover { background: #5b8c4e; transform: translateY(-2px); }
+    .lang-link.ms { background: #a8c99b; color: #2d4e1e; }
+    .lang-link.ms:hover { background: #8aaf7a; transform: translateY(-2px); }
 
-    .hero small {
-      display: block;
-      margin-top: 1.2rem;
-      color: #667c5e;
-      font-size: 1rem;
+    #rotateOverlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.88); z-index: 99999;
+      justify-content: center; align-items: center; flex-direction: column;
+      color: white; text-align: center;
     }
-
-    /* 卡片入口区域 */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 2rem;
-      margin: 2.5rem 0;
-    }
-
-    .card {
-      background: white;
-      padding: 2rem 1.5rem;
-      border-radius: 24px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.04);
-      border: 1px solid #dfe9d9;
-      text-align: center;
-      transition: transform 0.15s, box-shadow 0.2s;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 16px 28px rgba(80, 110, 60, 0.1);
-      border-color: #b3cfaa;
-    }
-
-    .card-icon {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .card h3 {
-      font-size: 1.8rem;
-      font-weight: 500;
-      color: #2f5126;
-      margin-bottom: 0.75rem;
-    }
-
-    .card p {
-      color: #4a5e42;
-      font-size: 1.05rem;
-    }
-
-    /* 作业说明 */
-    .course-note {
-      background: #f1efe7;
-      padding: 1.2rem 2rem;
-      border-radius: 40px;
-      margin-top: 2.5rem;
-      font-size: 0.95rem;
-      color: #4a6040;
-      text-align: center;
-      border-left: 6px solid #7fa86a;
-    }
-
-    /* 页脚 */
-    footer {
-      background-color: #d9e6d3;
-      padding: 1.5rem;
-      text-align: center;
-      color: #36522b;
-      font-size: 0.95rem;
-      border-top: 2px solid #b3cba7;
-    }
-
-    /* 响应式调整 */
+    #rotateOverlay.active { display: flex; }
+    #rotateOverlay .rotate-icon { font-size: 5rem; animation: rotatePhone 1.5s ease-in-out infinite; }
+    @keyframes rotatePhone { 0%,100%{transform:rotate(0deg);} 50%{transform:rotate(90deg);} }
     @media (max-width: 600px) {
-      header h1 { font-size: 1.8rem; }
-      nav { gap: 1.2rem; }
-      .hero h2 { font-size: 2rem; }
+      .sticky-header { padding: 10px 16px; }
+      .logo-text { font-size: 1.3rem; }
+      .logo-icon { font-size: 28px; }
+      .btn { padding: 12px 20px; font-size: 1rem; min-width: 160px; }
+      .buttons-section { padding: 32px 16px; }
+      .features-grid { flex-direction: column; }
+      .footer-grid { flex-direction: column; gap: 24px; }
+      .grade-grid { grid-template-columns: repeat(3, 1fr); }
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>🌱 德润童心</h1>
-    <nav>
-      <a href="index.html">🏠 首页</a>
-      <a href="virtues.html">📜 传统美德</a>
-      <a href="stories.html">📖 德育故事</a>
-      <a href="quotes.html">✨ 名言警句</a>
-      <a href="about.html">📋 关于课程</a>
-    </nav>
-  </header>
 
-  <main>
-    <!-- 主视觉 + 教育名言 -->
-    <section class="hero">
-      <h2>“道德是做人的根本”</h2>
-      <p>—— 陶行知</p>
-      <small>师范课程作业 · 道德教育专题网站</small>
-    </section>
+<div id="rotateOverlay"><div class="rotate-icon">📱</div><p>Please rotate your phone to portrait mode<br>请将手机转回竖屏模式</p></div>
 
-    <!-- 三个主要入口卡片 (点击跳转) -->
-    <div class="card-grid">
-      <a href="virtues.html" class="card">
-        <div class="card-icon">🌿</div>
-        <h3>传统美德</h3>
-        <p>孝、悌、忠、信、礼、义、廉、耻 —— 中华文化的根基。</p>
+<div class="sticky-header">
+  <div class="logo-area"><div class="logo-icon">🍀</div><div class="logo-text">Moral Fantastic</div></div>
+  <div class="tagline">Learn Moral · Fun Way</div>
+</div>
+
+<div class="container">
+  <!-- 图片 1 - GIF 动画（预加载已优化） -->
+  <div class="full-image" id="image1">
+    <img id="heroGif" src="https://jackmum2025.github.io/forMM/title.gif" alt="Moral Fantastic Banner" style="width:100%; height:auto; display:block;">
+  </div>
+
+  <!-- 按钮区域（延迟淡入） -->
+  <div class="buttons-section" id="buttonsSection">
+    <div class="btn-group">
+      <a href="#" id="freeTrialBtn" class="btn btn-trial">
+        🎓 FREE TRIAL CLASS
+        <span class="btn-small-desc">Start Learning Now</span>
       </a>
-      <a href="stories.html" class="card">
-        <div class="card-icon">📚</div>
-        <h3>德育故事</h3>
-        <p>孔融让梨、曾子杀彘…… 用故事浸润心灵。</p>
-      </a>
-      <a href="quotes.html" class="card">
-        <div class="card-icon">💬</div>
-        <h3>名言警句</h3>
-        <p>古今中外的道德箴言，每日一省。</p>
-      </a>
+      <button id="masterKeyBtn" class="btn btn-master">
+        🔐 MASTER KEY LOGIN
+        <span class="btn-small-desc">Special Access</span>
+      </button>
     </div>
+  </div>
 
-    <!-- 简短的作业说明区 -->
-    <div class="course-note">
-      <strong>📌 师范生德育实践</strong> · 本网站为《道德教育》课程设计，旨在通过传统美德与当代价值融合，传递向善力量。
+  <!-- 图片 2~6：使用懒加载 + 轻量占位 -->
+  <div class="full-image" id="image2"><div class="lazy-placeholder" data-src="https://jackmum2025.github.io/forMM/picture1.gif" data-alt="Moral Fantastic Illustration 2"></div></div>
+  <div class="full-image" id="image3"><div class="lazy-placeholder" data-src="https://jackmum2025.github.io/forMM/picture2.gif" data-alt="Moral Fantastic Illustration 3"></div></div>
+  <div class="full-image" id="image4"><div class="lazy-placeholder" data-src="https://jackmum2025.github.io/forMM/picture3.gif" data-alt="Moral Fantastic Illustration 4"></div></div>
+  <div class="full-image" id="image5"><div class="lazy-placeholder" data-src="https://jackmum2025.github.io/forMM/picture4.gif" data-alt="Moral Fantastic Illustration 5"></div></div>
+  <div class="full-image" id="image6"><div class="lazy-placeholder" data-src="https://jackmum2025.github.io/forMM/picture5.gif" data-alt="Moral Fantastic Illustration 6"></div></div>
+
+  <div class="extra-features">
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-icon">🌙</div><h3>Anonymous Question Wall</h3><p>Share your concerns, struggles, or questions anonymously. Teachers will see and respond to you in a safe, supportive environment.</p></div>
+      <div class="feature-card"><div class="feature-icon">🌟</div><h3>Encouragement Quote Wall</h3><p>Share inspiring quotes or words of encouragement with your name. Spread positivity and motivate fellow learners.</p></div>
     </div>
-  </main>
+  </div>
 
-  <footer>
-    <p>© 2026 德润童心 · 师范学校（课程作业） | 德育如细雨，润物细无声</p>
-  </footer>
+  <div class="footer-nav">
+    <div class="footer-grid">
+      <div class="footer-section"><h4>Contact Us</h4><div class="contact-info">📧 nexusgt.my@gmail.com</div><div class="contact-info">📞 +6012-345 6789</div><div class="contact-info">📍 IPG Kampus Ilmu</div></div>
+      <div class="footer-section"><h4>Lower Primary</h4><div class="grade-grid"><a href="javascript:void(0)" onclick="showGradeModal('一年级')">一年级 / Tahun 1</a><a href="javascript:void(0)" onclick="showGradeModal('二年级')">二年级 / Tahun 2</a><a href="javascript:void(0)" onclick="showGradeModal('三年级')">三年级 / Tahun 3</a></div></div>
+      <div class="footer-section"><h4>Upper Primary</h4><div class="grade-grid"><a href="javascript:void(0)" onclick="showGradeModal('四年级')">四年级 / Tahun 4</a><a href="javascript:void(0)" onclick="showGradeModal('五年级')">五年级 / Tahun 5</a><a href="javascript:void(0)" onclick="showGradeModal('六年级')">六年级 / Tahun 6</a></div></div>
+      <div class="footer-section"><h4>Quick Links</h4><a href="#" onclick="scrollToTop()">⬆ Back to Top</a><a href="#" id="freeTrialFooterBtn">🎓 FREE TRIAL CLASS</a><a href="#" id="masterKeyFooterBtn">🔐 MASTER KEY LOGIN</a></div>
+    </div>
+    <div class="back-to-top"><button onclick="scrollToTop()">⬆ Back to Top</button></div>
+    <div class="copyright">🌱 Nurturing Young Hearts · Moral Education Made Fun © 2026 Moral Fantastic</div>
+  </div>
+</div>
+
+<script>
+  // ==================== GIF 加载完成后淡入按钮 ====================
+  (function() {
+    const gif = document.getElementById('heroGif');
+    const buttonsSection = document.getElementById('buttonsSection');
+    if (gif.complete && gif.naturalHeight !== 0) {
+      setTimeout(() => buttonsSection.classList.add('visible'), 200);
+    } else {
+      gif.addEventListener('load', () => setTimeout(() => buttonsSection.classList.add('visible'), 200));
+      setTimeout(() => { if (!buttonsSection.classList.contains('visible')) buttonsSection.classList.add('visible'); }, 2500);
+    }
+  })();
+
+  // ==================== 懒加载图片 2-6（使用 Intersection Observer）====================
+  function initLazyLoad() {
+    const placeholders = document.querySelectorAll('.lazy-placeholder');
+    if (!placeholders.length) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const div = entry.target;
+          const src = div.dataset.src;
+          const alt = div.dataset.alt || '';
+          if (src && div.querySelector('img') === null) {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = alt;
+            img.style.width = '100%';
+            img.style.height = 'auto';
+            img.style.display = 'block';
+            img.style.borderRadius = 'inherit';
+            div.innerHTML = '';
+            div.appendChild(img);
+          }
+          observer.unobserve(div);
+        }
+      });
+    }, { rootMargin: '200px' }); // 提前200px开始加载，感觉更流畅
+    placeholders.forEach(p => observer.observe(p));
+  }
+
+  // ==================== 课程数据（与原来完全一致）====================
+  const courseData = {
+    '一年级': ['我的宗教信仰','助人小天使','我已经长大','欢喜说谢谢','人人夸我有礼貌','我喜欢我自己','爱惜自己','处处讲公正','我是勇敢的小孩','花瓶是我打破的','天天要勤劳','分工合作真欢喜','凡事都要刚刚好','我懂得礼让'],
+    '二年级': ['美好的时光','贴心小举动','长大了，学做事','心里暖暖的','爸爸妈妈都夸我','看重家人的感受','可爱的家庭','公平又正直','学做小勇士','踏实的心','勤劳的收获','合作乐无穷','跟我这样生活吧','退一步想想'],
+    '三年级': ['欢喜庆佳节','助人为乐','责任小尖兵','感恩饼干','礼貌花朵校园开','互相尊重暖人心','关爱满校园','大公无私','我能够做到！','诚实是宝','最甜美的果实','团结力量大','刚刚好，真美好','一团和气'],
+    '四年级': ['和谐乐融融','欢喜来助人','尽责不自私','感恩有您','谦让你的赞美','一生受用的礼物','好邻居，无价宝','花卉才艺赛','有理无惧','线条上的密码','晚霞里最美的笑容','幸福的传电波','讨人喜欢的白雪','礼让乐开怀'],
+    '五年级': ['同一条路上','种希望','破窗效应','说不出口的"谢谢"','懂礼貌，守规矩','尊重乐开怀','让青山更翠绿','公正在人心','见义勇为','诚信无价','勤奋坚毅','守望相助','中庸之星','礼让之城'],
+    '六年级': ['和谐心欢畅','我为你送暖','为了您，马来西亚','感恩之旅','权利代言人','我的保护伞','月亮一样圆','以理服人','奔跑吧！小勇士','最美丽的外套','汗水年年','小手牵大手','不偏不倚','礼让不委屈']
+  };
+
+  function showGradeModal(grade) {
+    const courses = courseData[grade] || [];
+    let coursesHtml = '<div style="max-height:300px; overflow-y:auto;">';
+    courses.forEach((c, i) => coursesHtml += `<div style="padding:10px; border-bottom:1px solid #e2ecd9;">📚 第${i+1}课：${c}</div>`);
+    coursesHtml += '</div>';
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `<div class="language-modal" style="max-width:400px;"><div style="font-size:2rem;">📖</div><h3>${grade}</h3>${coursesHtml}<button class="modal-cancel" style="margin-top:16px; width:100%;">关闭</button></div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('.modal-cancel').onclick = () => overlay.remove();
+    overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  }
+
+  function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+  // 横屏检测
+  function isTouchDevice(){return 'ontouchstart' in window||navigator.maxTouchPoints>0;}
+  function checkOrientation(){
+    var o = document.getElementById('rotateOverlay');
+    if(!isTouchDevice()){o.classList.remove('active');return;}
+    if(window.innerWidth>window.innerHeight) o.classList.add('active');
+    else o.classList.remove('active');
+  }
+  window.addEventListener('orientationchange', checkOrientation);
+  window.addEventListener('resize', checkOrientation);
+  checkOrientation();
+
+  // FREE TRIAL 语言选择
+  function showLanguageModal() {
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    modalOverlay.innerHTML = `<div class="language-modal"><div style="font-size: 3rem;">🌍</div><h3>Choose Language</h3><p style="color: #6b7c63; margin-bottom: 1rem;">Please select your preferred language</p><a href="zh.html" class="lang-link cn">🇨🇳 Chinese (中文版)</a><a href="ms.html" class="lang-link ms">🇲🇾 Malay (Bahasa Melayu)</a><button class="modal-cancel" style="width: 100%; padding: 12px; background: #f0f0f0; border: none; border-radius: 60px; cursor: pointer; font-weight: 600;">Cancel</button></div>`;
+    document.body.appendChild(modalOverlay);
+    const cancelBtn = modalOverlay.querySelector('.modal-cancel');
+    cancelBtn.onclick = () => modalOverlay.remove();
+    modalOverlay.onclick = (e) => { if (e.target === modalOverlay) modalOverlay.remove(); };
+  }
+  function handleFreeTrial(e) { e.preventDefault(); showLanguageModal(); }
+  document.getElementById('freeTrialBtn').addEventListener('click', handleFreeTrial);
+  const footerTrialBtn = document.getElementById('freeTrialFooterBtn');
+  if (footerTrialBtn) footerTrialBtn.addEventListener('click', handleFreeTrial);
+
+  // MASTER KEY LOGIN
+  function showMasterKeyModal() {
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    modalOverlay.innerHTML = `<div class="master-modal"><div style="font-size: 2.5rem;">🔐</div><h3>Master Key Login</h3><p>Enter 8-digit master key</p><input type="password" id="masterPassword" maxlength="8" placeholder="········" autocomplete="off"><div class="modal-buttons"><button id="modalLoginBtn" class="modal-btn modal-login">Login</button><button id="modalCancelBtn" class="modal-btn modal-cancel">Cancel</button></div></div>`;
+    document.body.appendChild(modalOverlay);
+    const passwordInput = modalOverlay.querySelector('#masterPassword');
+    const loginBtn = modalOverlay.querySelector('#modalLoginBtn');
+    const cancelBtn = modalOverlay.querySelector('#modalCancelBtn');
+    loginBtn.onclick = () => {
+      const pwd = passwordInput.value.trim();
+      if (pwd.length === 8) {
+        alert('❌ Invalid Master Key');
+        passwordInput.value = '';
+        passwordInput.focus();
+        const modal = modalOverlay.querySelector('.master-modal');
+        modal.style.animation = 'none';
+        setTimeout(() => modal.style.animation = 'bounceIn 0.4s cubic-bezier(0.34,1.2,0.64,1)', 10);
+      } else {
+        alert('Please enter exactly 8 characters');
+        passwordInput.value = '';
+        passwordInput.focus();
+      }
+    };
+    cancelBtn.onclick = () => modalOverlay.remove();
+    modalOverlay.onclick = (e) => { if (e.target === modalOverlay) modalOverlay.remove(); };
+    passwordInput.focus();
+  }
+  document.getElementById('masterKeyBtn').addEventListener('click', showMasterKeyModal);
+  const footerMasterBtn = document.getElementById('masterKeyFooterBtn');
+  if (footerMasterBtn) footerMasterBtn.addEventListener('click', showMasterKeyModal);
+
+  // 页面加载完成后初始化懒加载
+  document.addEventListener('DOMContentLoaded', initLazyLoad);
+</script>
 </body>
 </html>
