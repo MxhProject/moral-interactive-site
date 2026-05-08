@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>道德测验 · Moral Fantastic</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Nunito', 'Segoe UI', 'Quicksand', '微软雅黑', system-ui, sans-serif;
+      background: #ffffff;
+      color: #2d4e1e;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #eef5ea; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #7fa86a; border-radius: 10px; }
+
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #d4e6ca;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { font-size: 28px; animation: bounce 2s ease-in-out infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);} }
+    .logo-text { font-size: 1.5rem; font-weight: 800; color: #2d4e1e; }
+    .back-home {
+      background: #eef5ea;
+      color: #2d4e1e;
+      text-decoration: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .back-home:hover { background: #7fa86a; color: white; transform: translateY(-2px); }
+
+    .container { max-width: 700px; margin: 0 auto; padding: 24px 16px 40px; }
+    h1 { color: #2d4e1e; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+
+    .quiz-card {
+      background: white;
+      border-radius: 32px;
+      border: 1px solid #d4e6ca;
+      padding: 24px;
+      margin: 20px 0;
+    }
+    .quiz-question {
+      margin-bottom: 28px;
+      background: #fefef9;
+      border-radius: 28px;
+      padding: 16px;
+      border: 1px solid #e2ecd9;
+    }
+    .quiz-image {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .quiz-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border: 2px solid #e2ecd9;
+      border-radius: 60px;
+      padding: 12px 18px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .quiz-option:last-child { margin-bottom: 0; }
+    .quiz-option:hover { border-color: #7fa86a; background: #f8fbf6; transform: translateX(4px); }
+    .quiz-option.selected { border-color: #7fa86a; background: #eef5ea; box-shadow: 0 2px 8px rgba(127,168,106,0.2); }
+    .quiz-option input { width: 20px; height: 20px; accent-color: #7fa86a; margin: 0; flex-shrink: 0; }
+
+    .btn-submit {
+      background: #7fa86a;
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      font-size: 1rem;
+      border-radius: 60px;
+      cursor: pointer;
+      font-weight: 700;
+      width: 100%;
+      transition: all 0.2s;
+      margin-top: 16px;
+    }
+    .btn-submit:hover { background: #5b8c4e; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(91,140,78,0.3); }
+
+    .feedback-area {
+      background: #eef5ea;
+      border-radius: 28px;
+      padding: 20px;
+      margin-top: 24px;
+      display: none;
+    }
+    .feedback-item {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 4px solid #7fa86a;
+    }
+    .feedback-correct { border-left-color: #7fa86a; }
+    .feedback-wrong { border-left-color: #c44; }
+    .score-display {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-top: 16px;
+      padding: 14px;
+      background: #7fa86a;
+      color: white;
+      border-radius: 60px;
+    }
+    .nav-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: #7fa86a;
+      color: white;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 60px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .nav-btn:hover { background: #5b8c4e; transform: translateY(-2px); }
+    .nav-btn.outline { background: white; color: #7fa86a; border: 2px solid #7fa86a; }
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: #9bb88b;
+      border-top: 1px solid #e2ecd9;
+      margin-top: 20px;
+    }
+    @media (max-width: 600px) {
+      .quiz-card { padding: 16px; }
+      .quiz-option { padding: 10px 14px; font-size: 0.85rem; }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="sticky-header">
+  <div class="logo-area">
+    <div class="logo-icon">🍀</div>
+    <div class="logo-text">Moral Fantastic</div>
+  </div>
+  <a href="zh.html" class="back-home">🏠 回到主页</a>
+</div>
+
+<div class="container">
+  <h1><span>📋</span> 道德小测验</h1>
+  <p style="color: #6b7c63; margin-bottom: 8px;">测试你对网络霸凌的认识</p>
+
+  <div class="quiz-card">
+    <!-- 第1题 -->
+    <div class="quiz-question">
+      <img src="https://i.ibb.co/HDj9cX3t/1.jpg" class="quiz-image">
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q1" value="A"> A. 举报别人对你发表仇恨言论。</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q1" value="B"> B. 向其他人发送宗教恶意评论。</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q1" value="C"> C. 只和朋友玩电子游戏。</label>
+    </div>
+    <!-- 第2题 -->
+    <div class="quiz-question">
+      <img src="https://i.ibb.co/Zz5FsY3Y/2.jpg" class="quiz-image">
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q2" value="A"> A. 分享朋友隐私故事。</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q2" value="B"> B. 举报网上恶意评论。</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q2" value="C"> C. 用更难听的骂回去。</label>
+    </div>
+    <!-- 第3题 -->
+    <div class="quiz-question">
+      <img src="https://i.ibb.co/PsKnmv0L/3.jpg" class="quiz-image">
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q3" value="A"> A. 有爱心</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q3" value="B"> B. 网络仇恨</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q3" value="C"> C. 责任感</label>
+    </div>
+    <!-- 第4题 -->
+    <div class="quiz-question">
+      <img src="https://i.ibb.co/5hxgqgWG/4.jpg" class="quiz-image">
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q4" value="A"> A. 会说两种语言</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q4" value="B"> B. 残疾人士</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q4" value="C"> C. 过高的人</label>
+    </div>
+    <!-- 第5题 -->
+    <div class="quiz-question">
+      <img src="https://i.ibb.co/RGKC9xGf/5.jpg" class="quiz-image">
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q5" value="A"> A. 教师/家长/儿童热线</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q5" value="B"> B. 朋友表兄弟</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q5" value="C"> C. 散布仇恨的人</label>
+    </div>
+
+    <button class="btn-submit" onclick="submitQuiz()">✅ 提交答案</button>
+
+    <div id="feedbackArea" class="feedback-area"></div>
+  </div>
+
+  <div class="nav-buttons">
+    <a href="classroom.html" class="nav-btn outline">← 上一项：今日课堂</a>
+    <a href="zh.html" class="nav-btn">🏠 回到主页</a>
+  </div>
+</div>
+
+<footer>© 2026 Moral Fantastic · 德育如细雨，润物细无声</footer>
+
+<script>
+  // 正确答案和解释
+  const correctAnswers = {
+    q1: { value: 'A', text: 'A. 举报别人对你发表仇恨言论。', explanation: '因为这有助于维护网络健康，举报是正确做法。' },
+    q2: { value: 'B', text: 'B. 举报网上恶意评论。', explanation: '这是一种维护网络礼仪的积极行为。' },
+    q3: { value: 'B', text: 'B. 网络仇恨。', explanation: '网络上发言前需三思，不可以伤害别人。' },
+    q4: { value: 'B', text: 'B. 残疾人士。', explanation: '做一个有道德的人，一起保护他们免受不必要的伤害。' },
+    q5: { value: 'A', text: 'A. 教师/家长/儿童热线。', explanation: '他们可以提供心理辅导，并采取正确行动。' }
+  };
+
+  // 选中选项的高亮效果
+  function selectOption(element) {
+    const parent = element.parentElement;
+    parent.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+    element.classList.add('selected');
+    element.querySelector('input').checked = true;
+  }
+
+  // 获取选项文字（用于显示）
+  function getOptionText(qNum, value) {
+    const options = {
+      q1: { A: '举报别人对你发表仇恨言论', B: '向其他人发送宗教恶意评论', C: '只和朋友玩电子游戏' },
+      q2: { A: '分享朋友隐私故事', B: '举报网上恶意评论', C: '用更难听的骂回去' },
+      q3: { A: '有爱心', B: '网络仇恨', C: '责任感' },
+      q4: { A: '会说两种语言', B: '残疾人士', C: '过高的人' },
+      q5: { A: '教师/家长/儿童热线', B: '朋友表兄弟', C: '散布仇恨的人' }
+    };
+    return options[qNum][value] || '';
+  }
+
+  // 提交测验
+  function submitQuiz() {
+    let score = 0;
+    let feedbackHtml = '<h3 style="margin-bottom:16px;">📝 测验结果</h3>';
+
+    for (let i = 1; i <= 5; i++) {
+      const selected = document.querySelector(`input[name="q${i}"]:checked`);
+      const userAnswer = selected ? selected.value : null;
+      const isCorrect = userAnswer === correctAnswers[`q${i}`].value;
+      if (isCorrect) score++;
+
+      feedbackHtml += `
+        <div class="feedback-item ${isCorrect ? 'feedback-correct' : 'feedback-wrong'}">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+            <strong style="font-size:1rem;">第${i}题</strong>
+            <span style="padding:4px 12px; border-radius:40px; font-size:0.75rem; ${isCorrect ? 'background:#eef5ea; color:#7fa86a;' : 'background:#ffe0e0; color:#c44;'}">
+              ${isCorrect ? '✅ 回答正确' : '❌ 回答错误'}
+            </span>
+          </div>
+          <div style="margin-top:8px; color:#2d4e1e;">
+            <strong>你的答案：</strong> ${userAnswer ? (userAnswer + '. ' + getOptionText(`q${i}`, userAnswer)) : '未作答'}<br>
+            ${!isCorrect ? `<strong>正确答案：</strong> ${correctAnswers[`q${i}`].text}<br>` : ''}
+            <strong>💡 解释：</strong> ${correctAnswers[`q${i}`].explanation}
+          </div>
+        </div>
+      `;
+    }
+
+    feedbackHtml += `<div class="score-display">🎉 得分：${score} / 5 ${score === 5 ? '🏆 完美！' : '💪 继续加油！'}</div>`;
+    
+    const feedbackArea = document.getElementById('feedbackArea');
+    feedbackArea.innerHTML = feedbackHtml;
+    feedbackArea.style.display = 'block';
+    
+    // 滚动到反馈区域
+    feedbackArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+</script>
+</body>
+</html>
