@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Ruang Kelas · Moral Fantastic</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Nunito', 'Segoe UI', 'Quicksand', system-ui, sans-serif;
+      background: #ffffff;
+      color: #2d4e1e;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #d4e6ca;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { font-size: 28px; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);} }
+    .logo-text { font-size: 1.5rem; font-weight: 800; color: #2d4e1e; }
+    .back-home {
+      background: #eef5ea;
+      color: #2d4e1e;
+      text-decoration: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .back-home:hover { background: #7fa86a; color: white; transform: translateY(-2px); }
+    
+    /* ========== 统一容器宽度为 1200px ========== */
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 24px 20px 40px; 
+    }
+    
+    h1 { 
+      color: #2d4e1e; 
+      margin-bottom: 8px; 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      font-size: 1.8rem;
+    }
+    
+    .section-title { 
+      font-size: 1.3rem; 
+      font-weight: 700; 
+      margin: 28px 0 16px; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      color: #2d4e1e;
+    }
+    
+    /* ========== 图片样式优化 ========== */
+    .case-img {
+      width: 100%;
+      border-radius: 24px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 1px solid #d4e6ca;
+    }
+    .case-img:hover { 
+      transform: scale(1.01); 
+      box-shadow: 0 12px 28px rgba(127,168,106,0.15);
+      border-color: #7fa86a;
+    }
+    
+    /* ========== 统一视频容器尺寸 ========== */
+    .video-wrapper {
+      background: #1a2a1a;
+      border-radius: 24px;
+      overflow: hidden;
+      width: 100%;
+      height: 550px;      /* 电脑版固定高度，与游戏页面一致 */
+      min-height: 500px;
+      margin-bottom: 20px;
+    }
+    
+    /* 手机版：使用视口高度比例 */
+    @media (max-width: 768px) {
+      .video-wrapper {
+        height: 70vh;     /* 手机版占屏幕70%高度 */
+        min-height: 400px;
+      }
+      .container { 
+        padding: 16px 16px 32px; 
+      }
+      h1 { 
+        font-size: 1.5rem; 
+      }
+      .section-title { 
+        font-size: 1.1rem; 
+        margin: 20px 0 12px;
+      }
+      .case-img {
+        margin-bottom: 12px;
+      }
+    }
+    
+    /* 大屏幕电脑：更高 */
+    @media (min-width: 1200px) {
+      .video-wrapper {
+        height: 650px;    /* 大屏幕更高 */
+      }
+    }
+    
+    .video-wrapper iframe { 
+      width: 100%; 
+      height: 100%; 
+      border: none; 
+      display: block;
+    }
+    
+    .credit { 
+      color: #8aa67d; 
+      font-size: 0.75rem; 
+      text-align: center; 
+      margin: 8px 0 24px; 
+      padding: 8px 16px;
+      background: #f8fbf6;
+      border-radius: 40px;
+      display: inline-block;
+      width: auto;
+    }
+    
+    /* ========== 统一按钮样式 ========== */
+    .nav-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: #7fa86a;
+      color: white;
+      text-decoration: none;
+      padding: 12px 32px;
+      border-radius: 60px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+    .nav-btn:hover { 
+      background: #5b8c4e; 
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px rgba(91,140,78,0.3);
+    }
+    .nav-btn.outline { 
+      background: white; 
+      color: #7fa86a; 
+      border: 2px solid #7fa86a; 
+    }
+    .nav-btn.outline:hover { 
+      background: #eef5ea; 
+      transform: translateY(-3px);
+    }
+    
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: #9bb88b;
+      border-top: 1px solid #e2ecd9;
+      margin-top: 40px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    @media (max-width: 600px) {
+      .nav-btn { 
+        padding: 10px 20px; 
+        font-size: 0.9rem; 
+      }
+      .credit {
+        font-size: 0.7rem;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="sticky-header">
+  <div class="logo-area">
+    <div class="logo-icon">🍀</div>
+    <div class="logo-text">Moral Fantastic</div>
+  </div>
+  <a href="ms.html" class="back-home">🏠 Kembali ke Laman Utama</a>
+</div>
+
+<div class="container">
+  <h1><span>📖</span> Ruang Kelas</h1>
+  <p style="color: #6b7c63; margin-bottom: 20px; font-size: 1rem;">Buli Siber · Kes Sebenar &amp; Pendidikan Pencegahan</p>
+
+  <!-- Kes Berita Sebenar (3 gambar) -->
+  <div class="section-title"><span>📰</span> Kes Sebenar · Kesan Buli Siber</div>
+  <img src="https://i.ibb.co/RGjNjV4k/Pg-1-1.jpg" class="case-img" alt="Kes buli siber 1">
+  <img src="https://i.ibb.co/rRZStjbM/image.jpg" class="case-img" alt="Kes buli siber 2">
+  <img src="https://i.ibb.co/35crzWnX/PG-2-1.jpg" class="case-img" alt="Kes buli siber 3">
+  <div class="credit">📌 Kes di atas adalah kes berita sebenar. Waspada terhadap buli siber.</div>
+
+  <!-- Video Kesedaran Buli Siber -->
+  <div class="section-title"><span>▶️</span> Video Kesedaran Buli Siber</div>
+  <div class="video-wrapper">
+    <iframe src="https://www.youtube.com/embed/ZZKRRh9TjKo" allowfullscreen></iframe>
+  </div>
+  <div class="credit" style="margin-top:-8px;">🎬 Sumber: Kementerian Pendidikan Malaysia · Video Kesedaran Buli Siber</div>
+
+  <!-- Butang Navigasi -->
+  <div class="nav-buttons">
+    <a href="gamems.html" class="nav-btn outline">← Sebelumnya: Permainan</a>
+    <a href="ms.html" class="nav-btn">🏠 Kembali ke Laman Utama</a>
+    <a href="quizms.html" class="nav-btn">Seterusnya: Kuiz →</a>
+  </div>
+</div>
+
+<footer>© 2026 Moral Fantastic · Moral bagai hujan renyai, menyubur tanpa bunyi</footer>
+
+<script>
+  // 动态调整视频高度
+  function updateVideoHeight() {
+    const videoWrapper = document.querySelector('.video-wrapper');
+    if (!videoWrapper) return;
+    const isMobile = window.innerWidth < 768;
+    const isLarge = window.innerWidth > 1200;
+    
+    if (isMobile) {
+      videoWrapper.style.height = '70vh';
+    } else if (isLarge) {
+      videoWrapper.style.height = '650px';
+    } else {
+      videoWrapper.style.height = '550px';
+    }
+  }
+  
+  window.addEventListener('resize', updateVideoHeight);
+  window.addEventListener('load', updateVideoHeight);
+  setTimeout(updateVideoHeight, 100);
+</script>
+</body>
+</html>
