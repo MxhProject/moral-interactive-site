@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Video Pengajaran · Moral Fantastic</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Nunito', system-ui; background: #fff; color: #2d4e1e; }
+    .sticky-header {
+      position: sticky; top: 0; background: rgba(255,255,255,0.96); backdrop-filter: blur(10px);
+      border-bottom: 2px solid #d4e6ca; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { font-size: 28px; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);} }
+    .logo-text { font-size: 1.5rem; font-weight: 800; color: #2d4e1e; }
+    .back-home { background: #eef5ea; color: #2d4e1e; text-decoration: none; padding: 8px 20px; border-radius: 40px; font-weight: 600; transition: 0.2s; }
+    .back-home:hover { background: #7fa86a; color: white; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px 16px 40px; }
+    h1 { color: #2d4e1e; margin-bottom: 8px; }
+    
+    /* ========== 与 gamems.html 统一的卡片样式 ========== */
+    .video-card { 
+      background: white; 
+      border-radius: 32px; 
+      border: 1px solid #d4e6ca; 
+      padding: 20px; 
+      margin-bottom: 24px; 
+    }
+    .video-title { 
+      font-size: 1.2rem; 
+      font-weight: 700; 
+      margin-bottom: 12px; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+    }
+    
+    /* ========== 与 gamems.html 统一的视频容器尺寸 ========== */
+    .video-wrapper {
+      background: #1a2a1a;
+      border-radius: 24px;
+      overflow: hidden;
+      width: 100%;
+      height: 550px;      /* 电脑版固定高度，与游戏页面一致 */
+      min-height: 500px;
+    }
+    
+    /* 手机版：使用视口高度比例 */
+    @media (max-width: 768px) {
+      .video-wrapper {
+        height: 70vh;     /* 手机版占屏幕70%高度 */
+        min-height: 450px;
+      }
+    }
+    
+    /* 大屏幕电脑：更高 */
+    @media (min-width: 1200px) {
+      .video-wrapper {
+        height: 650px;    /* 大屏幕更高 */
+      }
+    }
+    
+    .video-wrapper iframe { 
+      width: 100%; 
+      height: 100%; 
+      border: none; 
+      display: block;
+    }
+    
+    /* 占位提示样式 */
+    .placeholder { 
+      background: #eef5ea; 
+      border-radius: 24px; 
+      padding: 60px 20px; 
+      text-align: center; 
+      color: #8aa67d; 
+      border: 2px dashed #c8dcc0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .placeholder-icon { font-size: 3rem; margin-bottom: 12px; }
+    
+    .video-note {
+      text-align: center;
+      margin-top: 12px;
+      color: #8aa67d;
+      font-size: 0.85rem;
+    }
+    
+    .nav-buttons { display: flex; gap: 16px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
+    .nav-btn { background: #7fa86a; color: white; text-decoration: none; padding: 12px 28px; border-radius: 60px; font-weight: 600; transition: 0.2s; }
+    .nav-btn:hover { background: #5b8c4e; transform: translateY(-2px); }
+    .nav-btn.outline { background: white; color: #7fa86a; border: 2px solid #7fa86a; }
+    footer { text-align: center; padding: 24px; color: #9bb88b; border-top: 1px solid #e2ecd9; margin-top: 20px; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="sticky-header">
+  <div class="logo-area"><div class="logo-icon">🍀</div><div class="logo-text">Moral Fantastic</div></div>
+  <a href="ms.html" class="back-home">🏠 Kembali ke Laman Utama</a>
+</div>
+<div class="container">
+  <h1>📺 Video Pengajaran</h1>
+  <p style="color: #6b7c63; margin-bottom: 24px;">Pembelajaran Interaktif · Menangani Buli Siber</p>
+  
+  <!-- 视频卡片 1 -->
+  <div class="video-card">
+    <div class="video-title"><span>🎬</span> Pembelajaran Interaktif: Cara Menangani Buli Siber</div>
+    <div class="video-wrapper">
+      <iframe src="https://learningapps.org/watch?v=pgfbevg3a26" allowfullscreen></iframe>
+    </div>
+    <div class="video-note">📌 Klik video untuk mula belajar · Tekan butang ⛶ untuk skrin penuh</div>
+  </div>
+  
+  <!-- 视频卡片 2（占位，等待添加实际内容） -->
+  <div class="video-card">
+    <div class="video-title"><span>📹</span> Video Pengajaran 2 (Akan Ditambah)</div>
+    <div class="video-wrapper">
+      <div class="placeholder">
+        <div class="placeholder-icon">🎥</div>
+        <p>Ruang Pautan Video</p>
+        <p style="font-size:0.8rem;">Sila tambahkan pautan video pengajaran anda di sini</p>
+      </div>
+    </div>
+    <div class="video-note">📌 Video baharu akan dikemas kini tidak lama lagi</div>
+  </div>
+  
+  <div class="nav-buttons">
+    <a href="pptms.html" class="nav-btn outline">← Sebelumnya: PPT</a>
+    <a href="ms.html" class="nav-btn">🏠 Kembali ke Laman Utama</a>
+    <a href="gamems.html" class="nav-btn outline">Seterusnya: Permainan →</a>
+  </div>
+</div>
+<footer>© 2026 Moral Fantastic · Moral bagai hujan renyai, menyubur tanpa bunyi</footer>
+
+<script>
+  // ========== 与 gamems.html 一致的动态尺寸调整 ==========
+  function updateVideoHeight() {
+    const videoWrappers = document.querySelectorAll('.video-wrapper');
+    const isMobile = window.innerWidth < 768;
+    const isLarge = window.innerWidth > 1200;
+    
+    let targetHeight;
+    if (isMobile) {
+      targetHeight = '70vh';
+    } else if (isLarge) {
+      targetHeight = '650px';
+    } else {
+      targetHeight = '550px';
+    }
+    
+    videoWrappers.forEach(wrapper => {
+      wrapper.style.height = targetHeight;
+    });
+  }
+  
+  // 监听窗口大小变化
+  window.addEventListener('resize', updateVideoHeight);
+  window.addEventListener('load', updateVideoHeight);
+  
+  // 也监听 iframe 内的内容加载
+  setTimeout(updateVideoHeight, 100);
+</script>
+</body>
+</html>
