@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Kuiz Moral · Moral Fantastic</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Nunito', 'Segoe UI', 'Quicksand', '微软雅黑', system-ui, sans-serif;
+      background: #ffffff;
+      color: #2d4e1e;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #eef5ea; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #7fa86a; border-radius: 10px; }
+
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #d4e6ca;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { font-size: 28px; animation: bounce 2s ease-in-out infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);} }
+    .logo-text { font-size: 1.5rem; font-weight: 800; color: #2d4e1e; }
+    .back-home {
+      background: #eef5ea;
+      color: #2d4e1e;
+      text-decoration: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .back-home:hover { background: #7fa86a; color: white; transform: translateY(-2px); }
+
+    .container { max-width: 700px; margin: 0 auto; padding: 24px 16px 40px; }
+    h1 { color: #2d4e1e; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+
+    .quiz-card {
+      background: white;
+      border-radius: 32px;
+      border: 1px solid #d4e6ca;
+      padding: 24px;
+      margin: 20px 0;
+    }
+    .quiz-question {
+      margin-bottom: 28px;
+      background: #fefef9;
+      border-radius: 28px;
+      padding: 16px;
+      border: 1px solid #e2ecd9;
+    }
+    .quiz-image {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .quiz-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border: 2px solid #e2ecd9;
+      border-radius: 60px;
+      padding: 12px 18px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .quiz-option:last-child { margin-bottom: 0; }
+    .quiz-option:hover { border-color: #7fa86a; background: #f8fbf6; transform: translateX(4px); }
+    .quiz-option.selected { border-color: #7fa86a; background: #eef5ea; box-shadow: 0 2px 8px rgba(127,168,106,0.2); }
+    .quiz-option input { width: 20px; height: 20px; accent-color: #7fa86a; margin: 0; flex-shrink: 0; }
+
+    .btn-submit {
+      background: #7fa86a;
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      font-size: 1rem;
+      border-radius: 60px;
+      cursor: pointer;
+      font-weight: 700;
+      width: 100%;
+      transition: all 0.2s;
+      margin-top: 16px;
+    }
+    .btn-submit:hover { background: #5b8c4e; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(91,140,78,0.3); }
+
+    .feedback-area {
+      background: #eef5ea;
+      border-radius: 28px;
+      padding: 20px;
+      margin-top: 24px;
+      display: none;
+    }
+    .feedback-item {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 4px solid #7fa86a;
+    }
+    .feedback-correct { border-left-color: #7fa86a; }
+    .feedback-wrong { border-left-color: #c44; }
+    .score-display {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-top: 16px;
+      padding: 14px;
+      background: #7fa86a;
+      color: white;
+      border-radius: 60px;
+    }
+    .nav-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: #7fa86a;
+      color: white;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 60px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .nav-btn:hover { background: #5b8c4e; transform: translateY(-2px); }
+    .nav-btn.outline { background: white; color: #7fa86a; border: 2px solid #7fa86a; }
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: #9bb88b;
+      border-top: 1px solid #e2ecd9;
+      margin-top: 20px;
+    }
+    @media (max-width: 600px) {
+      .quiz-card { padding: 16px; }
+      .quiz-option { padding: 10px 14px; font-size: 0.85rem; }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="sticky-header">
+  <div class="logo-area">
+    <div class="logo-icon">🍀</div>
+    <div class="logo-text">Moral Fantastic</div>
+  </div>
+  <a href="ms.html" class="back-home">🏠 Kembali ke Laman Utama</a>
+</div>
+
+<div class="container">
+  <h1><span>📋</span> Kuiz Moral</h1>
+  <p style="color: #6b7c63; margin-bottom: 8px;">Uji pengetahuan anda tentang buli siber</p>
+
+  <div class="quiz-card">
+    <!-- Soalan 1 -->
+    <div class="quiz-question">
+      <img src="https://i.ibb.co/HDj9cX3t/1.jpg" class="quiz-image">
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q1" value="A"> A. Laporkan seseorang yang menghantar komen buruk terhadap anda.</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q1" value="B"> B. Menghantar komen buruk tentang agama orang lain.</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q1" value="C"> C. Hanya bermain permainan digital dengan rakan sekolah.</label>
+    </div>
+    <!-- Soalan 2 -->
+    <div class="quiz-question">
+      <img src="https://i.ibb.co/Zz5FsY3Y/2.jpg" class="quiz-image">
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q2" value="A"> A. Kongsikan kisah peribadi rakan.</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q2" value="B"> B. Laporkan komen buruk atas talian.</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q2" value="C"> C. Gunakan bahasa yang lebih kasar untuk melawan pembuli.</label>
+    </div>
+    <!-- Soalan 3 -->
+    <div class="quiz-question">
+      <img src="https://i.ibb.co/PsKnmv0L/3.jpg" class="quiz-image">
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q3" value="A"> A. Kasih sayang.</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q3" value="B"> B. Kebencian Internet.</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q3" value="C"> C. Bertanggungjawab.</label>
+    </div>
+    <!-- Soalan 4 -->
+    <div class="quiz-question">
+      <img src="https://i.ibb.co/5hxgqgWG/4.jpg" class="quiz-image">
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q4" value="A"> A. Boleh bercakap dalam dua bahasa.</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q4" value="B"> B. Orang Kurang Upaya (OKU).</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q4" value="C"> C. Orang yang terlalu tinggi.</label>
+    </div>
+    <!-- Soalan 5 -->
+    <div class="quiz-question">
+      <img src="https://i.ibb.co/RGKC9xGf/5.jpg" class="quiz-image">
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q5" value="A"> A. Guru, ibu bapa atau kaunselor hotline kanak-kanak.</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q5" value="B"> B. Kawan, abang atau sepupu.</label>
+      <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q5" value="C"> C. Orang yang menyebar komen buruk.</label>
+    </div>
+
+    <button class="btn-submit" onclick="submitQuiz()">✅ Hantar Jawapan</button>
+
+    <div id="feedbackArea" class="feedback-area"></div>
+  </div>
+
+  <div class="nav-buttons">
+    <a href="classroomms.html" class="nav-btn outline">← Sebelumnya: Ruang Kelas</a>
+    <a href="ms.html" class="nav-btn">🏠 Kembali ke Laman Utama</a>
+  </div>
+</div>
+
+<footer>© 2026 Moral Fantastic · Moral bagai hujan renyai, menyubur tanpa bunyi</footer>
+
+<script>
+  // Jawapan dan penerangan yang betul
+  const correctAnswers = {
+    q1: { value: 'A', text: 'A. Laporkan seseorang yang menghantar komen buruk terhadap anda.', explanation: 'Ini membantu mengatasi penyebaran negativiti internet.' },
+    q2: { value: 'B', text: 'B. Laporkan komen buruk atas talian.', explanation: 'Ini menunjukkan etika penggunaan alat digital yang baik.' },
+    q3: { value: 'B', text: 'B. Kebencian Internet.', explanation: 'Perlu berfikir sebelum membuat hantaran dalam talian, elakkan menyakiti orang lain.' },
+    q4: { value: 'B', text: 'B. Orang Kurang Upaya (OKU).', explanation: 'Jadilah seorang yang bermoral dan lindungi golongan ini daripada menjadi sasaran.' },
+    q5: { value: 'A', text: 'A. Guru, ibu bapa atau kaunselor hotline kanak-kanak.', explanation: 'Mereka boleh memberi sokongan emosi dan mengambil tindakan yang sewajarnya.' }
+  };
+
+  function selectOption(element) {
+    const parent = element.parentElement;
+    parent.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+    element.classList.add('selected');
+    element.querySelector('input').checked = true;
+  }
+
+  function getOptionText(qNum, value) {
+    const options = {
+      q1: { A: 'Laporkan seseorang yang menghantar komen buruk terhadap anda', B: 'Menghantar komen buruk tentang agama orang lain', C: 'Hanya bermain permainan digital dengan rakan sekolah' },
+      q2: { A: 'Kongsikan kisah peribadi rakan', B: 'Laporkan komen buruk atas talian', C: 'Gunakan bahasa yang lebih kasar untuk melawan pembuli' },
+      q3: { A: 'Kasih sayang', B: 'Kebencian Internet', C: 'Bertanggungjawab' },
+      q4: { A: 'Boleh bercakap dalam dua bahasa', B: 'Orang Kurang Upaya (OKU)', C: 'Orang yang terlalu tinggi' },
+      q5: { A: 'Guru, ibu bapa atau kaunselor hotline kanak-kanak', B: 'Kawan, abang atau sepupu', C: 'Orang yang menyebar komen buruk' }
+    };
+    return options[qNum][value] || '';
+  }
+
+  function submitQuiz() {
+    let score = 0;
+    let feedbackHtml = '<h3 style="margin-bottom:16px;">📝 Keputusan Kuiz</h3>';
+
+    for (let i = 1; i <= 5; i++) {
+      const selected = document.querySelector(`input[name="q${i}"]:checked`);
+      const userAnswer = selected ? selected.value : null;
+      const isCorrect = userAnswer === correctAnswers[`q${i}`].value;
+      if (isCorrect) score++;
+
+      feedbackHtml += `
+        <div class="feedback-item ${isCorrect ? 'feedback-correct' : 'feedback-wrong'}">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+            <strong style="font-size:1rem;">Soalan ${i}</strong>
+            <span style="padding:4px 12px; border-radius:40px; font-size:0.75rem; ${isCorrect ? 'background:#eef5ea; color:#7fa86a;' : 'background:#ffe0e0; color:#c44;'}">
+              ${isCorrect ? '✅ Jawapan Betul' : '❌ Jawapan Salah'}
+            </span>
+          </div>
+          <div style="margin-top:8px; color:#2d4e1e;">
+            <strong>Jawapan anda:</strong> ${userAnswer ? (userAnswer + '. ' + getOptionText(`q${i}`, userAnswer)) : 'Tidak dijawab'}<br>
+            ${!isCorrect ? `<strong>Jawapan Betul:</strong> ${correctAnswers[`q${i}`].text}<br>` : ''}
+            <strong>💡 Penerangan:</strong> ${correctAnswers[`q${i}`].explanation}
+          </div>
+        </div>
+      `;
+    }
+
+    feedbackHtml += `<div class="score-display">🎉 Skor: ${score} / 5 ${score === 5 ? '🏆 Sempurna!' : '💪 Teruskan usaha!'}</div>`;
+    
+    const feedbackArea = document.getElementById('feedbackArea');
+    feedbackArea.innerHTML = feedbackHtml;
+    feedbackArea.style.display = 'block';
+    
+    feedbackArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+</script>
+</body>
+</html>
