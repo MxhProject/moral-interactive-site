@@ -46,30 +46,42 @@
     }
     .back-home:hover { background: #7fa86a; color: white; transform: translateY(-2px); }
 
-    .container { max-width: 700px; margin: 0 auto; padding: 24px 16px 40px; }
-    h1 { color: #2d4e1e; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+    /* ========== 统一容器宽度 ========== */
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px 20px 40px; }
+    h1 { color: #2d4e1e; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 1.8rem; }
 
     .quiz-card {
       background: white;
       border-radius: 32px;
       border: 1px solid #d4e6ca;
-      padding: 24px;
+      padding: 28px;
       margin: 20px 0;
     }
     .quiz-question {
-      margin-bottom: 28px;
+      margin-bottom: 32px;
       background: #fefef9;
       border-radius: 28px;
-      padding: 16px;
+      padding: 20px;
       border: 1px solid #e2ecd9;
+      transition: all 0.2s ease;
     }
+    .quiz-question:hover {
+      border-color: #c8dcc0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    
+    /* ========== 修复图片显示问题 ========== */
     .quiz-image {
       width: 100%;
-      max-height: 180px;
-      object-fit: cover;
+      height: auto;           /* 改为自适应高度，不裁剪 */
+      max-height: 280px;     /* 提高最大高度限制 */
+      object-fit: contain;   /* 改为 contain，完整显示图片不裁剪 */
       border-radius: 20px;
       margin-bottom: 16px;
+      background: #eef5ea;   /* 加载时背景色 */
+      border: 1px solid #d4e6ca;
     }
+    
     .quiz-option {
       display: flex;
       align-items: center;
@@ -81,7 +93,7 @@
       margin-bottom: 10px;
       cursor: pointer;
       transition: all 0.2s;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 500;
     }
     .quiz-option:last-child { margin-bottom: 0; }
@@ -93,29 +105,29 @@
       background: #7fa86a;
       color: white;
       border: none;
-      padding: 14px 24px;
+      padding: 14px 28px;
       font-size: 1rem;
       border-radius: 60px;
       cursor: pointer;
       font-weight: 700;
       width: 100%;
       transition: all 0.2s;
-      margin-top: 16px;
+      margin-top: 20px;
     }
-    .btn-submit:hover { background: #5b8c4e; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(91,140,78,0.3); }
+    .btn-submit:hover { background: #5b8c4e; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(91,140,78,0.3); }
 
     .feedback-area {
       background: #eef5ea;
       border-radius: 28px;
-      padding: 20px;
-      margin-top: 24px;
+      padding: 24px;
+      margin-top: 28px;
       display: none;
     }
     .feedback-item {
       background: white;
       border-radius: 20px;
-      padding: 16px;
-      margin-bottom: 12px;
+      padding: 18px;
+      margin-bottom: 14px;
       border-left: 4px solid #7fa86a;
     }
     .feedback-correct { border-left-color: #7fa86a; }
@@ -125,7 +137,7 @@
       font-size: 1.3rem;
       font-weight: 800;
       margin-top: 16px;
-      padding: 14px;
+      padding: 16px;
       background: #7fa86a;
       color: white;
       border-radius: 60px;
@@ -141,23 +153,42 @@
       background: #7fa86a;
       color: white;
       text-decoration: none;
-      padding: 12px 28px;
+      padding: 12px 32px;
       border-radius: 60px;
       font-weight: 600;
       transition: 0.2s;
+      font-size: 1rem;
     }
-    .nav-btn:hover { background: #5b8c4e; transform: translateY(-2px); }
+    .nav-btn:hover { background: #5b8c4e; transform: translateY(-3px); box-shadow: 0 6px 14px rgba(91,140,78,0.3); }
     .nav-btn.outline { background: white; color: #7fa86a; border: 2px solid #7fa86a; }
+    .nav-btn.outline:hover { background: #eef5ea; transform: translateY(-3px); }
     footer {
       text-align: center;
       padding: 24px;
       color: #9bb88b;
       border-top: 1px solid #e2ecd9;
-      margin-top: 20px;
+      margin-top: 40px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
     }
-    @media (max-width: 600px) {
+    
+    @media (max-width: 768px) {
+      .container { padding: 16px 16px 32px; }
+      h1 { font-size: 1.5rem; }
       .quiz-card { padding: 16px; }
-      .quiz-option { padding: 10px 14px; font-size: 0.85rem; }
+      .quiz-question { padding: 14px; margin-bottom: 24px; }
+      .quiz-image { max-height: 200px; }
+      .quiz-option { padding: 10px 14px; font-size: 0.85rem; gap: 10px; }
+      .feedback-item { padding: 14px; }
+      .score-display { font-size: 1.1rem; padding: 12px; }
+      .nav-btn { padding: 10px 20px; font-size: 0.9rem; }
+    }
+    
+    @media (max-width: 600px) {
+      .quiz-option { padding: 10px 12px; font-size: 0.8rem; }
+      .quiz-option input { width: 18px; height: 18px; }
+      .quiz-image { max-height: 160px; }
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -174,40 +205,40 @@
 
 <div class="container">
   <h1><span>📋</span> 道德小测验</h1>
-  <p style="color: #6b7c63; margin-bottom: 8px;">测试你对网络霸凌的认识</p>
+  <p style="color: #6b7c63; margin-bottom: 8px; font-size: 1rem;">测试你对网络霸凌的认识</p>
 
   <div class="quiz-card">
     <!-- 第1题 -->
     <div class="quiz-question">
-      <img src="https://i.ibb.co/HDj9cX3t/1.jpg" class="quiz-image">
+      <img src="https://i.ibb.co/HDj9cX3t/1.jpg" class="quiz-image" alt="测验图片1">
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q1" value="A"> A. 举报别人对你发表仇恨言论。</label>
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q1" value="B"> B. 向其他人发送宗教恶意评论。</label>
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q1" value="C"> C. 只和朋友玩电子游戏。</label>
     </div>
     <!-- 第2题 -->
     <div class="quiz-question">
-      <img src="https://i.ibb.co/Zz5FsY3Y/2.jpg" class="quiz-image">
+      <img src="https://i.ibb.co/Zz5FsY3Y/2.jpg" class="quiz-image" alt="测验图片2">
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q2" value="A"> A. 分享朋友隐私故事。</label>
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q2" value="B"> B. 举报网上恶意评论。</label>
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q2" value="C"> C. 用更难听的骂回去。</label>
     </div>
     <!-- 第3题 -->
     <div class="quiz-question">
-      <img src="https://i.ibb.co/PsKnmv0L/3.jpg" class="quiz-image">
+      <img src="https://i.ibb.co/PsKnmv0L/3.jpg" class="quiz-image" alt="测验图片3">
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q3" value="A"> A. 有爱心</label>
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q3" value="B"> B. 网络仇恨</label>
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q3" value="C"> C. 责任感</label>
     </div>
     <!-- 第4题 -->
     <div class="quiz-question">
-      <img src="https://i.ibb.co/5hxgqgWG/4.jpg" class="quiz-image">
+      <img src="https://i.ibb.co/5hxgqgWG/4.jpg" class="quiz-image" alt="测验图片4">
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q4" value="A"> A. 会说两种语言</label>
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q4" value="B"> B. 残疾人士</label>
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q4" value="C"> C. 过高的人</label>
     </div>
     <!-- 第5题 -->
     <div class="quiz-question">
-      <img src="https://i.ibb.co/RGKC9xGf/5.jpg" class="quiz-image">
+      <img src="https://i.ibb.co/RGKC9xGf/5.jpg" class="quiz-image" alt="测验图片5">
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q5" value="A"> A. 教师/家长/儿童热线</label>
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q5" value="B"> B. 朋友表兄弟</label>
       <label class="quiz-option" onclick="selectOption(this)"><input type="radio" name="q5" value="C"> C. 散布仇恨的人</label>
@@ -219,7 +250,7 @@
   </div>
 
   <div class="nav-buttons">
-    <a href="classroom.html" class="nav-btn outline">← 上一项：今日课堂</a>
+    <a href="classroom.html" class="nav-btn outline">← 上一项：现实课堂</a>
     <a href="zh.html" class="nav-btn">🏠 回到主页</a>
   </div>
 </div>
@@ -290,7 +321,6 @@
     feedbackArea.innerHTML = feedbackHtml;
     feedbackArea.style.display = 'block';
     
-    // 滚动到反馈区域
     feedbackArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 </script>
