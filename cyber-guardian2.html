@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-<title>⚖️ Moral Defense</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes"/>
+<title>⚖️ 道德守卫战</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap');
 :root{--acc:#a78bfa;--gold:#fbbf24;--red:#f87171;--green:#34d399;--bg:#08041a;--bdr:rgba(167,139,250,0.28);}
@@ -11,39 +11,82 @@
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);}
 body{font-family:'Rajdhani',sans-serif;color:#ddd6fe;display:flex;flex-direction:column;user-select:none;touch-action:none;}
 
-#hud{display:flex;align-items:center;justify-content:space-between;
-  padding:5px 10px;background:rgba(6,3,16,0.99);border-bottom:1px solid var(--bdr);
-  flex-shrink:0;z-index:50;gap:4px;}
+#hud{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:5px 10px;
+  background:rgba(6,3,16,0.99);
+  border-bottom:1px solid var(--bdr);
+  flex-shrink:0;
+  z-index:50;
+  gap:4px;
+  flex-wrap:wrap;
+}
 #hud-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:900;color:var(--acc);text-shadow:0 0 10px var(--acc);white-space:nowrap;}
 .hs{display:flex;align-items:center;gap:2px;background:rgba(0,0,0,0.5);border:1px solid var(--bdr);border-radius:6px;padding:2px 7px;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;white-space:nowrap;}
 .hs span{color:#fff;}
-#wave-pill{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;background:rgba(167,139,250,0.12);border:1px solid var(--acc);border-radius:14px;padding:2px 9px;color:var(--acc);}
-#speed-btn{padding:2px 9px;background:rgba(167,139,250,0.1);border:1px solid var(--bdr);border-radius:14px;color:var(--acc);font-size:10px;font-weight:700;cursor:pointer;font-family:'Orbitron',monospace;touch-action:manipulation;}
+#wave-pill{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;background:rgba(167,139,250,0.12);border:1px solid var(--acc);border-radius:14px;padding:2px 9px;color:var(--acc);white-space:nowrap;}
+#speed-btn{padding:2px 9px;background:rgba(167,139,250,0.1);border:1px solid var(--bdr);border-radius:14px;color:var(--acc);font-size:10px;font-weight:700;cursor:pointer;font-family:'Orbitron',monospace;touch-action:manipulation;white-space:nowrap;}
 
 #game-wrap{flex:1;position:relative;overflow:hidden;min-height:0;}
 #gc{display:block;width:100%;height:100%;touch-action:none;}
 
 #bottom-bar{flex-shrink:0;background:rgba(6,3,16,0.99);border-top:1px solid var(--bdr);z-index:50;}
-#tower-row{display:flex;align-items:center;gap:4px;padding:5px 6px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+#tower-row{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:5px 6px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
 #tower-row::-webkit-scrollbar{display:none;}
-.tcard{flex-shrink:0;width:64px;background:rgba(0,0,0,0.45);border:1.5px solid rgba(80,60,120,0.4);border-radius:10px;padding:5px 3px;cursor:pointer;text-align:center;position:relative;touch-action:manipulation;transition:border-color 0.15s,box-shadow 0.15s,opacity 0.15s;}
-/* Can afford — subtle green glow */
+.tcard{
+  flex-shrink:0;
+  width:64px;
+  background:rgba(0,0,0,0.45);
+  border:1.5px solid rgba(80,60,120,0.4);
+  border-radius:10px;
+  padding:5px 3px;
+  cursor:pointer;
+  text-align:center;
+  position:relative;
+  touch-action:manipulation;
+  transition:border-color 0.15s,box-shadow 0.15s,opacity 0.15s;
+}
+@media (max-width: 600px) {
+  .tcard { width: 55px; padding: 4px 2px; }
+  .tcard-icon { font-size: 18px; }
+  .tcard-name { font-size: 7px; }
+  .tcard-cost { font-size: 7px; }
+}
 .tcard.afford{border-color:rgba(52,211,153,0.7);box-shadow:0 0 8px rgba(52,211,153,0.25);}
-/* Selected */
 .tcard.sel{border-color:var(--gold);box-shadow:0 0 14px rgba(251,191,36,0.55);}
-/* Cannot afford — dimmed, no glow */
 .tcard.nope{opacity:0.32;border-color:rgba(60,40,80,0.35);box-shadow:none;}
 .tcard-icon{font-size:20px;line-height:1.1;}
 .tcard-name{font-size:8px;color:#c4b5fd;font-weight:700;margin-top:1px;}
-/* Cost text: green when affordable, red when not */
 .tcard-cost{font-size:8px;font-family:'Orbitron',monospace;font-weight:700;color:var(--gold);}
 .tcard.afford .tcard-cost{color:#34d399;}
 .tcard.nope .tcard-cost{color:#f87171;}
 .tcard-badge{position:absolute;top:2px;right:3px;font-size:7px;font-family:'Orbitron',monospace;color:#f87171;font-weight:700;}
 
-#info-strip{display:flex;align-items:center;gap:5px;padding:3px 8px 6px;min-height:26px;border-top:1px solid rgba(167,139,250,0.1);font-size:10px;color:#9d86e0;}
+#info-strip{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:3px 8px 6px;
+  min-height:26px;
+  border-top:1px solid rgba(167,139,250,0.1);
+  font-size:10px;
+  color:#9d86e0;
+  flex-wrap:wrap;
+}
 #info-strip b{color:#c4b5fd;}
 #sub-btns{display:flex;gap:4px;margin-left:auto;}
+#sub-btns button{white-space:nowrap;}
 .abtn{padding:3px 9px;border-radius:7px;font-size:10px;font-weight:700;cursor:pointer;border:1px solid;font-family:'Rajdhani',sans-serif;white-space:nowrap;touch-action:manipulation;}
 #sell-btn{background:rgba(127,29,29,0.25);border-color:#7f1d1d;color:var(--red);}
 #upg-btn{background:rgba(167,139,250,0.14);border-color:var(--acc);color:var(--acc);}
@@ -59,12 +102,12 @@ body{font-family:'Rajdhani',sans-serif;color:#ddd6fe;display:flex;flex-direction
 <body>
 
 <div id="hud">
-  <div id="hud-title">⚖️ MORAL DEFENSE</div>
-  <div style="display:flex;gap:3px;align-items:center;">
+  <div id="hud-title">⚖️ 道德守卫战</div>
+  <div style="display:flex;gap:3px;align-items:center;flex-wrap:wrap;">
     <div class="hs">💰<span id="h-gold">200</span></div>
     <div class="hs">❤️<span id="h-lives">20</span></div>
     <div class="hs">⭐<span id="h-score">0</span></div>
-    <div id="wave-pill">W<span id="h-wave">0</span>/20</div>
+    <div id="wave-pill">波<span id="h-wave">0</span>/20</div>
     <button id="speed-btn" onclick="cycleSpeed()">1×</button>
   </div>
 </div>
@@ -73,19 +116,19 @@ body{font-family:'Rajdhani',sans-serif;color:#ddd6fe;display:flex;flex-direction
   <canvas id="gc"></canvas>
   <div id="overlay">
     <div class="panel" id="start-panel">
-      <h2>⚖️ MORAL DEFENSE</h2>
-      <p>Cyberbullying words attack from <b style="color:#f87171">TWO directions</b> toward <b style="color:var(--gold)">道德</b>.</p>
-      <p>Deploy school defenders on <b style="color:var(--acc)">+ nodes</b> to stop them!</p>
+      <h2>⚖️ 道德守卫战</h2>
+      <p>网络霸凌言论从 <b style="color:#f87171">两个方向</b> 攻击 <b style="color:var(--gold)">道德核心</b>。</p>
+      <p>将校园守护者放置在 <b style="color:var(--acc)">节点 +</b> 上来阻止它们！</p>
       <p style="color:#3a2a6a;font-size:10.5px;margin-top:6px;">
-        👨‍💼 Principal: max <b style="color:var(--gold)">ONE</b> only<br>
-        Tap a card → tap a glowing node
+        👨‍💼 校长：只能建造 <b style="color:var(--gold)">一个</b><br>
+        选择卡牌 → 点击发光的节点
       </p>
-      <button class="glow-btn" id="start-btn">BEGIN DEFENSE</button>
+      <button class="glow-btn" id="start-btn">开始防御</button>
     </div>
     <div class="panel" id="go-panel" style="display:none;">
-      <h2 id="go-title">GAME OVER</h2>
+      <h2 id="go-title">游戏结束</h2>
       <p id="go-msg"></p>
-      <button class="glow-btn" id="restart-btn">TRY AGAIN</button>
+      <button class="glow-btn" id="restart-btn">重新开始</button>
     </div>
   </div>
 </div>
@@ -93,10 +136,10 @@ body{font-family:'Rajdhani',sans-serif;color:#ddd6fe;display:flex;flex-direction
 <div id="bottom-bar">
   <div id="tower-row"></div>
   <div id="info-strip">
-    <span id="info-text">Select a defender below</span>
+    <span id="info-text">选择下方的守护者</span>
     <div id="sub-btns" style="display:none;">
-      <button class="abtn" id="upg-btn">⬆ Upgrade</button>
-      <button class="abtn" id="sell-btn">💰 Sell</button>
+      <button class="abtn" id="upg-btn">⬆ 升级</button>
+      <button class="abtn" id="sell-btn">💰 出售</button>
     </div>
   </div>
 </div>
@@ -104,47 +147,52 @@ body{font-family:'Rajdhani',sans-serif;color:#ddd6fe;display:flex;flex-direction
 <script>
 (function(){'use strict';
 
-// ══════════ BULLY WORDS ══════════
-const BW=['丑死了','废物','没人要','去死吧','滚开','讨厌你','真恶心','好可笑',
-  '没用的','白痴','笨蛋','你好丑','神经病','疯了吧','没朋友','孤独狗',
-  '输家','弱鸡','没价值','垃圾人','乱传话','坏心眼','被孤立','被嘲笑',
-  '网络欺凌','散布谣言','诽谤','骚扰','贬低你','你不行','被排挤','造谣',
-  '超可笑','不受欢迎','是陷阱','欺负人','恶意评论','冒充身份'];
+// ══════════ 负面言论词汇（中文） ══════════
+const BW=[
+  '好丑！','没用','没朋友','去死','滚开',
+  '讨厌你','恶心','真搞笑','好笨','愚蠢',
+  '脸好怪','疯了吗？','没朋友','你输了','软弱',
+  '没价值','垃圾','散布谣言','心肠坏','被霸凌',
+  '网络霸凌','散布谎言','诽谤','骚扰','羞辱你',
+  '你不行','被排挤','恶搞','不流行',
+  '陷害你','欺负人','恶评','盗用身份',
+  '你好怪','好丢脸','不配','伪君子'
+];
 const rw=()=>BW[Math.random()*BW.length|0];
 
-// ══════════ TOWER DEFS — balanced for fair play ══════════
+// ══════════ 防御塔定义 ══════════
 const TDEFS={
-  student:{name:'Student',icon:'🧑‍🎓',cost:60,color:'#60a5fa',proj:'dot',
+  student:{name:'学生',icon:'🧑‍🎓',cost:60,color:'#60a5fa',proj:'dot',
     levels:[
       {dmg:14,rate:20,range:95, slow:0.52,slowDur:55,multi:1,splash:0},
       {dmg:22,rate:17,range:110,slow:0.45,slowDur:70,multi:1,splash:0},
       {dmg:34,rate:14,range:124,slow:0.38,slowDur:88,multi:2,splash:0}],
     upgCost:[85,130]},
-  monitor:{name:'Patrol',icon:'🕵️',cost:110,color:'#f59e0b',proj:'beam',priority:'strongest',
+  monitor:{name:'巡查员',icon:'🕵️',cost:110,color:'#f59e0b',proj:'beam',priority:'strongest',
     levels:[
       {dmg:45,rate:50,range:145,slow:0,slowDur:0,multi:1,splash:0},
       {dmg:70,rate:42,range:162,slow:0,slowDur:0,multi:1,splash:0},
       {dmg:105,rate:34,range:178,slow:0,slowDur:0,multi:1,splash:0}],
     upgCost:[150,210]},
-  teacher:{name:'Teacher',icon:'👩‍🏫',cost:150,color:'#f472b6',proj:'shell',
+  teacher:{name:'教师',icon:'👩‍🏫',cost:150,color:'#f472b6',proj:'shell',
     levels:[
       {dmg:25,rate:40,range:138,slow:0,slowDur:0,multi:1,splash:42},
       {dmg:38,rate:33,range:152,slow:0,slowDur:0,multi:1,splash:55},
       {dmg:56,rate:26,range:166,slow:0.22,slowDur:40,multi:1,splash:68}],
     upgCost:[190,260]},
-  prefect:{name:'Prefect',icon:'🎖️',cost:200,color:'#a78bfa',proj:'tentacle',
+  prefect:{name:'学长',icon:'🎖️',cost:200,color:'#a78bfa',proj:'tentacle',
     levels:[
       {dmg:12,rate:25,range:175,slow:0,slowDur:0,multi:6,splash:0},
       {dmg:18,rate:20,range:195,slow:0,slowDur:0,multi:7,splash:0},
       {dmg:27,rate:16,range:215,slow:0.26,slowDur:44,multi:8,splash:0}],
     upgCost:[250,320]},
-  vp:{name:'VP',icon:'🏛️',cost:260,color:'#34d399',proj:'spine',aoe360:true,
+  vp:{name:'副校长',icon:'🏛️',cost:260,color:'#34d399',proj:'spine',aoe360:true,
     levels:[
       {dmg:18,rate:28,range:100,slow:0,slowDur:0,multi:12,splash:0},
       {dmg:28,rate:23,range:115,slow:0,slowDur:0,multi:14,splash:0},
       {dmg:42,rate:18,range:130,slow:0.18,slowDur:34,multi:16,splash:0}],
     upgCost:[310,400]},
-  principal:{name:'Principal',icon:'👨‍💼',cost:500,color:'#fbbf24',proj:'pulse',aoe360:true,isPrincipal:true,maxCount:1,
+  principal:{name:'校长',icon:'👨‍💼',cost:500,color:'#fbbf24',proj:'pulse',aoe360:true,isPrincipal:true,maxCount:1,
     levels:[
       {dmg:0, rate:260,range:99999,slow:0.42,slowDur:125,multi:1,splash:99999},
       {dmg:25,rate:215,range:99999,slow:0.34,slowDur:160,multi:1,splash:99999},
@@ -153,9 +201,8 @@ const TDEFS={
 };
 const TKEYS=Object.keys(TDEFS);
 
-// ══════════ ENEMY DEFS — tuned HP so wave 1 is fair ══════════
+// ══════════ 敌人定义 ══════════
 const EDEFS={
-  // gold values reduced ~20% from previous, quick spd +10%
   minor:   {hp:80,  spd:0.75,gold:6, size:13,fill:'#4ade80',glow:'#22c55e',score:10},
   quick:   {hp:45,  spd:1.76,gold:6, size:10,fill:'#facc15',glow:'#eab308',score:15},
   heavy:   {hp:380, spd:0.42,gold:14,size:20,fill:'#f87171',glow:'#ef4444',score:30,leakLives:3},
@@ -165,31 +212,31 @@ const EDEFS={
   splitter:{hp:160, spd:0.65,gold:7, size:14,fill:'#38bdf8',glow:'#0ea5e9',score:25},
 };
 
-// ══════════ 20 WAVES — p:0=pathA(left) p:1=pathB(right) p:2=both alternating ══════════
+// ══════════ 20波敌人配置（保持不变） ══════════
 const WAVES=[
-  [{t:'minor',n:6,i:55,p:0}],                                                                        // W1
-  [{t:'minor',n:5,i:50,p:0},{t:'minor',n:4,i:55,p:1}],                                               // W2
-  [{t:'minor',n:8,i:44,p:0},{t:'quick',n:4,i:52,p:1}],                                               // W3
-  [{t:'minor',n:8,i:40,p:2},{t:'quick',n:4,i:48,p:0}],                                               // W4
-  [{t:'quick',n:8,i:36,p:1},{t:'heavy',n:1,i:1,p:0},{t:'minor',n:8,i:38,p:2}],                       // W5
-  [{t:'minor',n:10,i:34,p:2},{t:'heavy',n:2,i:75,p:0},{t:'regen',n:2,i:100,p:1}],                    // W6
-  [{t:'quick',n:12,i:28,p:2},{t:'heavy',n:2,i:70,p:1},{t:'armored',n:3,i:55,p:0}],                   // W7
-  [{t:'armored',n:5,i:45,p:0},{t:'quick',n:12,i:26,p:1},{t:'regen',n:3,i:65,p:2}],                   // W8
-  [{t:'armored',n:6,i:40,p:2},{t:'heavy',n:3,i:65,p:0},{t:'boss',n:1,i:1,p:1}],                      // W9
-  [{t:'boss',n:2,i:160,p:2},{t:'armored',n:8,i:32,p:2},{t:'quick',n:14,i:22,p:2}],                   // W10 milestone
-  [{t:'splitter',n:6,i:42,p:0},{t:'armored',n:6,i:36,p:1},{t:'heavy',n:3,i:62,p:2}],                 // W11
-  [{t:'splitter',n:8,i:38,p:2},{t:'regen',n:5,i:52,p:0},{t:'boss',n:2,i:130,p:1}],                   // W12
-  [{t:'armored',n:10,i:30,p:2},{t:'splitter',n:6,i:36,p:0},{t:'quick',n:18,i:18,p:1}],               // W13
-  [{t:'boss',n:3,i:110,p:2},{t:'armored',n:10,i:28,p:0},{t:'regen',n:6,i:46,p:1}],                   // W14
-  [{t:'boss',n:4,i:95,p:0},{t:'splitter',n:10,i:32,p:1},{t:'armored',n:12,i:26,p:2}],                // W15
-  [{t:'boss',n:4,i:88,p:2},{t:'regen',n:8,i:40,p:0},{t:'armored',n:14,i:24,p:1},{t:'quick',n:20,i:15,p:2}], // W16
-  [{t:'boss',n:6,i:75,p:2},{t:'armored',n:16,i:22,p:2},{t:'splitter',n:10,i:30,p:0},{t:'regen',n:8,i:36,p:1}], // W17
-  [{t:'boss',n:7,i:68,p:2},{t:'armored',n:20,i:18,p:2},{t:'heavy',n:14,i:26,p:2},{t:'quick',n:25,i:13,p:2}],  // W18
-  [{t:'boss',n:9,i:60,p:2},{t:'armored',n:24,i:16,p:2},{t:'regen',n:12,i:30,p:2},{t:'splitter',n:14,i:24,p:2}], // W19
-  [{t:'boss',n:14,i:48,p:2},{t:'armored',n:30,i:13,p:2},{t:'heavy',n:20,i:20,p:2},{t:'regen',n:16,i:24,p:2},{t:'splitter',n:18,i:20,p:2}], // W20 FINAL
+  [{t:'minor',n:6,i:55,p:0}],
+  [{t:'minor',n:5,i:50,p:0},{t:'minor',n:4,i:55,p:1}],
+  [{t:'minor',n:8,i:44,p:0},{t:'quick',n:4,i:52,p:1}],
+  [{t:'minor',n:8,i:40,p:2},{t:'quick',n:4,i:48,p:0}],
+  [{t:'quick',n:8,i:36,p:1},{t:'heavy',n:1,i:1,p:0},{t:'minor',n:8,i:38,p:2}],
+  [{t:'minor',n:10,i:34,p:2},{t:'heavy',n:2,i:75,p:0},{t:'regen',n:2,i:100,p:1}],
+  [{t:'quick',n:12,i:28,p:2},{t:'heavy',n:2,i:70,p:1},{t:'armored',n:3,i:55,p:0}],
+  [{t:'armored',n:5,i:45,p:0},{t:'quick',n:12,i:26,p:1},{t:'regen',n:3,i:65,p:2}],
+  [{t:'armored',n:6,i:40,p:2},{t:'heavy',n:3,i:65,p:0},{t:'boss',n:1,i:1,p:1}],
+  [{t:'boss',n:2,i:160,p:2},{t:'armored',n:8,i:32,p:2},{t:'quick',n:14,i:22,p:2}],
+  [{t:'splitter',n:6,i:42,p:0},{t:'armored',n:6,i:36,p:1},{t:'heavy',n:3,i:62,p:2}],
+  [{t:'splitter',n:8,i:38,p:2},{t:'regen',n:5,i:52,p:0},{t:'boss',n:2,i:130,p:1}],
+  [{t:'armored',n:10,i:30,p:2},{t:'splitter',n:6,i:36,p:0},{t:'quick',n:18,i:18,p:1}],
+  [{t:'boss',n:3,i:110,p:2},{t:'armored',n:10,i:28,p:0},{t:'regen',n:6,i:46,p:1}],
+  [{t:'boss',n:4,i:95,p:0},{t:'splitter',n:10,i:32,p:1},{t:'armored',n:12,i:26,p:2}],
+  [{t:'boss',n:4,i:88,p:2},{t:'regen',n:8,i:40,p:0},{t:'armored',n:14,i:24,p:1},{t:'quick',n:20,i:15,p:2}],
+  [{t:'boss',n:6,i:75,p:2},{t:'armored',n:16,i:22,p:2},{t:'splitter',n:10,i:30,p:0},{t:'regen',n:8,i:36,p:1}],
+  [{t:'boss',n:7,i:68,p:2},{t:'armored',n:20,i:18,p:2},{t:'heavy',n:14,i:26,p:2},{t:'quick',n:25,i:13,p:2}],
+  [{t:'boss',n:9,i:60,p:2},{t:'armored',n:24,i:16,p:2},{t:'regen',n:12,i:30,p:2},{t:'splitter',n:14,i:24,p:2}],
+  [{t:'boss',n:14,i:48,p:2},{t:'armored',n:30,i:13,p:2},{t:'heavy',n:20,i:20,p:2},{t:'regen',n:16,i:24,p:2},{t:'splitter',n:18,i:20,p:2}],
 ];
 
-// ══════════ CANVAS / STATE ══════════
+// ══════════ 画布/状态 ══════════
 const canvas=document.getElementById('gc');
 const ctx=canvas.getContext('2d');
 const wrap=document.getElementById('game-wrap');
@@ -209,7 +256,7 @@ let stars=[],motes=[];
 let tapX=0,tapY=0;
 let principalPlaced=false;
 
-// ══════════ RESIZE — detects portrait vs landscape ══════════
+// ══════════ 调整尺寸 ══════════
 function resize(){
   W=canvas.width=bgC.width=wrap.clientWidth;
   H=canvas.height=bgC.height=wrap.clientHeight;
@@ -220,55 +267,26 @@ function resize(){
 }
 window.addEventListener('resize',resize);
 
-// ══════════ PATHS — adaptive to screen shape ══════════
-// Portrait (phone): paths run top→bottom
-// Landscape (desktop): paths run left→right
-// Both paths end at the same shrine point (bottom-center or right-center)
+// ══════════ 路径 — 自适应屏幕 ══════════
 function buildPaths(){
-  const portrait = H > W;
-
+  const portrait=H>W;
   if(portrait){
-    // ── PORTRAIT LAYOUT ──
-    // Path A (purple): enters TOP-LEFT, winds down to shrine at BOTTOM-CENTER
     PATHS[0]=[
-      [0.06,0.02],  // entry top-left
-      [0.30,0.02],  // go right
-      [0.30,0.18],  // go down
-      [0.10,0.18],  // go left
-      [0.10,0.36],  // go down
-      [0.40,0.36],  // go right
-      [0.40,0.54],  // go down
-      [0.18,0.54],  // go left
-      [0.18,0.72],  // go down
-      [0.50,0.72],  // go right → shrine
-      [0.50,0.88],  // shrine
+      [0.06,0.02],[0.30,0.02],[0.30,0.18],[0.10,0.18],
+      [0.10,0.36],[0.40,0.36],[0.40,0.54],[0.18,0.54],
+      [0.18,0.72],[0.50,0.72],[0.50,0.88],
     ].map(([rx,ry])=>({x:rx*W,y:ry*H}));
-
-    // Path B (pink): enters TOP-RIGHT, winds down to same shrine
     PATHS[1]=[
-      [0.94,0.02],  // entry top-right
-      [0.68,0.02],  // go left
-      [0.68,0.18],  // go down
-      [0.88,0.18],  // go right
-      [0.88,0.36],  // go down
-      [0.58,0.36],  // go left
-      [0.58,0.54],  // go down
-      [0.80,0.54],  // go right
-      [0.80,0.72],  // go down
-      [0.50,0.72],  // go left → shrine
-      [0.50,0.88],  // shrine (same endpoint)
+      [0.94,0.02],[0.68,0.02],[0.68,0.18],[0.88,0.18],
+      [0.88,0.36],[0.58,0.36],[0.58,0.54],[0.80,0.54],
+      [0.80,0.72],[0.50,0.72],[0.50,0.88],
     ].map(([rx,ry])=>({x:rx*W,y:ry*H}));
-
   } else {
-    // ── LANDSCAPE LAYOUT ──
-    // Path A (purple): enters LEFT-TOP, winds right to shrine at RIGHT-CENTER
     PATHS[0]=[
       [0.00,0.22],[0.18,0.22],[0.18,0.45],[0.38,0.45],
       [0.38,0.18],[0.60,0.18],[0.60,0.58],[0.38,0.58],
       [0.38,0.80],[0.62,0.80],[0.62,0.90],[0.84,0.90],
     ].map(([rx,ry])=>({x:rx*W,y:ry*H}));
-
-    // Path B (pink): enters LEFT-BOTTOM, winds to same shrine
     PATHS[1]=[
       [0.00,0.75],[0.14,0.75],[0.14,0.55],[0.30,0.55],
       [0.30,0.72],[0.48,0.72],[0.48,0.45],[0.64,0.45],
@@ -277,7 +295,7 @@ function buildPaths(){
   }
 }
 
-// ══════════ PATH HELPERS ══════════
+// ══════════ 路径辅助函数 ══════════
 let _lenA=0,_lenB=0;
 function segLen(path){let l=0;for(let s=0;s<path.length-1;s++)l+=Math.hypot(path[s+1].x-path[s].x,path[s+1].y-path[s].y);return l;}
 function pathLength(pi){if(pi===0){if(_lenA>0)return _lenA;return _lenA=segLen(PATHS[0]);}if(_lenB>0)return _lenB;return _lenB=segLen(PATHS[1]);}
@@ -291,50 +309,42 @@ function posOnPath(path,dist){
   return{x:path[path.length-1].x,y:path[path.length-1].y,done:true};
 }
 
-// ══════════ NODES — placed neatly beside each segment ══════════
+// ══════════ 节点 ══════════
 function buildNodes(){
   NODES=[];
-  const OFF=42; // perpendicular offset
-  const MIN=40; // minimum gap between nodes
-
+  const OFF=42,MIN=40;
   function tryAdd(x,y){
-    x=Math.round(x); y=Math.round(y);
-    // screen bounds
-    if(x<24||x>W-24||y<24||y>H-24) return;
-    // too close to another node
-    if(NODES.some(n=>Math.hypot(n.x-x,n.y-y)<MIN)) return;
-    // too close to ANY path segment
+    x=Math.round(x);y=Math.round(y);
+    if(x<24||x>W-24||y<24||y>H-24)return;
+    if(NODES.some(n=>Math.hypot(n.x-x,n.y-y)<MIN))return;
     for(const path of PATHS){
       for(let s=0;s<path.length-1;s++){
         const a=path[s],b=path[s+1];
         const dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy);
-        if(len<1) continue;
+        if(len<1)continue;
         const t=Math.max(0,Math.min(1,((x-a.x)*dx+(y-a.y)*dy)/(len*len)));
-        if(Math.hypot(x-a.x-t*dx,y-a.y-t*dy)<32) return;
+        if(Math.hypot(x-a.x-t*dx,y-a.y-t*dy)<32)return;
       }
     }
     NODES.push({x,y,tower:null,id:NODES.length});
   }
-
   for(const path of PATHS){
     for(let s=0;s<path.length-1;s++){
       const a=path[s],b=path[s+1];
       const dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy);
-      if(len<50) continue;
-      // perpendicular direction
-      const nx=-dy/len, ny=dx/len;
-      // place nodes at 1/4, 1/2, 3/4 along segment on BOTH sides
-      const fracs = len>130 ? [0.25,0.5,0.75] : [0.5];
+      if(len<50)continue;
+      const nx=-dy/len,ny=dx/len;
+      const fracs=len>130?[0.25,0.5,0.75]:[0.5];
       for(const f of fracs){
-        const px=a.x+dx*f, py=a.y+dy*f;
-        tryAdd(px+nx*OFF, py+ny*OFF);
-        tryAdd(px-nx*OFF, py-ny*OFF);
+        const px=a.x+dx*f,py=a.y+dy*f;
+        tryAdd(px+nx*OFF,py+ny*OFF);
+        tryAdd(px-nx*OFF,py-ny*OFF);
       }
     }
   }
 }
 
-// ══════════ BG ══════════
+// ══════════ 背景 ══════════
 function genStars(){
   stars=[];for(let i=0;i<70;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:.3+Math.random()*1.1,ph:Math.random()*Math.PI*2,sp:.006+Math.random()*.015});
   motes=[];for(let i=0;i<12;i++)motes.push({x:Math.random()*W,y:Math.random()*H,r:1.5+Math.random()*4,spd:.1+Math.random()*.35});
@@ -348,7 +358,7 @@ function drawBgCache(){
   for(let y=0;y<H;y+=48){bgX.beginPath();bgX.moveTo(0,y);bgX.lineTo(W,y);bgX.stroke();}
 }
 
-// ══════════ WAVES ══════════
+// ══════════ 波次 ══════════
 function startWave(){
   if(wave>=WAVES.length){winGame();return;}
   state='playing';spawnT=0;spawnQ=[];
@@ -364,7 +374,7 @@ function startWave(){
   document.getElementById('h-wave').textContent=wave+1;
 }
 
-// ══════════ ENEMIES ══════════
+// ══════════ 敌人 ══════════
 function spawnEnemy(type,pi){
   const d=EDEFS[type];
   const hm=1+wave*0.20;
@@ -383,7 +393,6 @@ function updateEnemies(dt){
   for(let i=enemies.length-1;i>=0;i--){
     const e=enemies[i];
     const path=PATHS[e.pi];
-    // regen: uses regenPct from def (default 10%)
     if(e.type==='regen'&&e.regenTick>0){
       e.regenTick-=dt;
       if(e.regenTick<=0){
@@ -399,11 +408,9 @@ function updateEnemies(dt){
     if(e.flash>0)e.flash-=dt;
     if(p.done||e.dist>pathLength(e.pi)+10){
       enemies.splice(i,1);
-      // heavy/armored leak = -3 lives, boss leak = -5 lives, others = -1
       const penalty=EDEFS[e.type].leakLives||1;
       lives=Math.max(0,lives-penalty);
       document.getElementById('h-lives').textContent=lives;
-      // show how many lives lost
       const txt=penalty>1?`💔×${penalty}`:'💔';
       floatAt(p.x,p.y,txt,'#f87171');
       if(lives<=0){loseGame();return;}
@@ -411,14 +418,14 @@ function updateEnemies(dt){
   }
 }
 
-// ══════════ TOWERS ══════════
+// ══════════ 防御塔 ══════════
 function tStat(t){return TDEFS[t.type].levels[t.lvl];}
 
 function placeTower(node){
   if(!selType)return;
   const def=TDEFS[selType];
-  if(def.isPrincipal&&principalPlaced){floatAt(node.x,node.y,'Only 1 Principal!','#f87171');return;}
-  if(gold<def.cost){floatAt(node.x,node.y,'Need 💰'+def.cost,'#f87171');return;}
+  if(def.isPrincipal&&principalPlaced){floatAt(node.x,node.y,'只能建造一个校长！','#f87171');return;}
+  if(gold<def.cost){floatAt(node.x,node.y,'需要 💰'+def.cost,'#f87171');return;}
   if(node.tower)return;
   gold-=def.cost;updGold();
   const tw={type:selType,node,lvl:0,cd:0,angle:0,shootAnim:0,phase:Math.random()*Math.PI*2};
@@ -430,12 +437,12 @@ function placeTower(node){
 
 function upgradeTower(t){
   const def=TDEFS[t.type];
-  if(t.lvl>=def.levels.length-1){floatAt(t.node.x,t.node.y,'MAX LV!','#a78bfa');return;}
+  if(t.lvl>=def.levels.length-1){floatAt(t.node.x,t.node.y,'已达到最大等级！','#a78bfa');return;}
   const cost=def.upgCost[t.lvl];
-  if(gold<cost){floatAt(t.node.x,t.node.y,'Need 💰'+cost,'#f87171');return;}
+  if(gold<cost){floatAt(t.node.x,t.node.y,'需要 💰'+cost,'#f87171');return;}
   gold-=cost;updGold();t.lvl++;
   burst(t.node.x,t.node.y,14,def.color);
-  floatAt(t.node.x,t.node.y,'⬆ Lv.'+(t.lvl+1),'#a78bfa');
+  floatAt(t.node.x,t.node.y,'⬆ 等级 '+(t.lvl+1),'#a78bfa');
   updateStrip();
 }
 
@@ -513,7 +520,7 @@ function fireP(sx,sy,tx,ty,color,type){
   projs.push({sx,sy,tx,ty,x:sx,y:sy,color,type,spd:5.5});
 }
 
-// ══════════ PARTICLES ══════════
+// ══════════ 粒子效果 ══════════
 function burst(x,y,n,color){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=.8+Math.random()*3;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:28+Math.random()*24,ml:52,color,size:1.5+Math.random()*3});}}
 function floatAt(x,y,text,color){floaters.push({x,y,text,color,life:58,ml:58,vy:-1.2});}
 function updateParticles(dt){
@@ -523,10 +530,9 @@ function updateParticles(dt){
   for(let i=projs.length-1;i>=0;i--){const p=projs[i];const dx=p.tx-p.x,dy=p.ty-p.y,d=Math.hypot(dx,dy);if(d<p.spd*2){projs.splice(i,1);continue;}const s=p.spd*gspeed*dt;p.x+=dx/d*s;p.y+=dy/d*s;}
 }
 
-// ══════════ DRAW ══════════
+// ══════════ 绘图函数（仅文字改为中文） ══════════
 function draw(){
   ctx.drawImage(bgC,0,0);
-  // light rays
   ctx.save();
   for(let c=0;c<4;c++){
     const cx=W*(.08+c*.25),rh=H*(.2+Math.sin(frame*.005+c)*.07);
@@ -565,7 +571,6 @@ function drawOnePath(path,baseCol,rgba){
 }
 
 function drawShrine(){
-  // Shrine at last point of path A (both paths meet there)
   const sx=PATHS[0][PATHS[0].length-1].x;
   const sy=PATHS[0][PATHS[0].length-1].y;
   const pulse=.82+Math.sin(frame*.07)*.18;
@@ -575,12 +580,12 @@ function drawShrine(){
   ctx.fillStyle='rgba(8,4,22,0.9)';ctx.beginPath();ctx.arc(sx,sy,28,0,Math.PI*2);ctx.fill();
   ctx.strokeStyle=`rgba(251,191,36,${.78*pulse})`;ctx.lineWidth=2.5;ctx.shadowColor='#fbbf24';ctx.shadowBlur=16*pulse;
   ctx.beginPath();ctx.arc(sx,sy,33,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
-  ctx.font=`bold 19px "Microsoft YaHei","PingFang SC",serif`;
+  ctx.font='bold 11px Rajdhani,sans-serif';
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.shadowColor='#000';ctx.shadowBlur=6;ctx.fillStyle='#111';ctx.fillText('道德',sx+1,sy+1);
   ctx.shadowColor='#fbbf24';ctx.shadowBlur=20;ctx.fillStyle='#ffd60a';ctx.fillText('道德',sx,sy);
   ctx.shadowBlur=0;
-  ctx.fillStyle='rgba(251,191,36,0.6)';ctx.font='bold 7px Orbitron,monospace';ctx.fillText('MORAL',sx,sy+26);
+  ctx.fillStyle='rgba(251,191,36,0.6)';ctx.font='bold 7px Orbitron,monospace';ctx.fillText('道德价值',sx,sy+26);
 }
 
 function drawEntryIcons(){
@@ -625,7 +630,7 @@ function drawTowers(){
     ctx.save();ctx.translate(n.x,n.y);ctx.scale(ss,ss);
     ctx.font='15px serif';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.shadowColor=def.color;ctx.shadowBlur=8*pulse;ctx.fillText(def.icon,0,0);ctx.shadowBlur=0;ctx.restore();
-    if(t.lvl>0){ctx.fillStyle='#fbbf24';ctx.font='bold 6.5px Orbitron,monospace';ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText('Lv'+(t.lvl+1),n.x,n.y+10);}
+    if(t.lvl>0){ctx.fillStyle='#fbbf24';ctx.font='bold 6.5px Orbitron,monospace';ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText('等级'+ (t.lvl+1),n.x,n.y+10);}
     if(t.cd>0){const st=tStat(t),cd=Math.min(t.cd/st.rate,1);ctx.strokeStyle='rgba(255,255,255,0.16)';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(n.x,n.y,21,-Math.PI/2,-Math.PI/2+Math.PI*2*cd);ctx.stroke();}
   }
 }
@@ -639,7 +644,7 @@ function drawEnemies(){
     if(e.type==='regen'){ctx.strokeStyle=`rgba(251,146,60,${.4+Math.sin(frame*.1)*.3})`;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,e.size+3,0,Math.PI*2);ctx.stroke();}
     if(e.slow<1){ctx.strokeStyle='rgba(147,210,255,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(0,0,e.size+4,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);}
     const sz=Math.max(6,(e.size*.6)|0);
-    ctx.font=`bold ${sz}px "Microsoft YaHei",sans-serif`;
+    ctx.font=`bold ${sz}px Arial,sans-serif`;
     ctx.fillStyle=e.flash>0?'#ff3333':'rgba(255,45,45,0.95)';
     ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='rgba(0,0,0,0.85)';ctx.shadowBlur=4;
     ctx.fillText(e.word,0,0);ctx.shadowBlur=0;ctx.restore();
@@ -680,13 +685,13 @@ function drawWaveBreak(){
   ctx.save();ctx.fillStyle='rgba(8,4,22,0.52)';ctx.fillRect(0,0,W,H);
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.shadowColor='#a78bfa';ctx.shadowBlur=20;ctx.fillStyle='#c4b5fd';ctx.font='bold 13px Orbitron,monospace';
-  ctx.fillText(`WAVE ${wave+1}/20 — PREPARE!`,W/2,H/2-40);
+  ctx.fillText(`第 ${wave+1}/20 波 — 准备！`,W/2,H/2-40);
   ctx.shadowBlur=40;ctx.fillStyle='#a78bfa';ctx.font='bold 64px Orbitron,monospace';ctx.fillText(secs,W/2,H/2+12);
   ctx.shadowBlur=0;ctx.fillStyle='rgba(167,139,250,0.3)';ctx.font='11px Rajdhani,sans-serif';
-  ctx.fillText('Defend from BOTH sides!',W/2,H/2+70);ctx.restore();
+  ctx.fillText('从两个方向防御！',W/2,H/2+70);ctx.restore();
 }
 
-// ══════════ BOTTOM BAR ══════════
+// ══════════ 底部栏 ══════════
 function buildBar(){
   const row=document.getElementById('tower-row');row.innerHTML='';
   TKEYS.forEach(k=>{
@@ -705,18 +710,10 @@ function refreshCards(){
     const blocked=d.isPrincipal&&principalPlaced;
     const canAfford=gold>=d.cost&&!blocked;
     const isSel=selType===k&&!selTower;
-
-    // Always clear all three states first, then apply exactly one
     c.classList.remove('sel','afford','nope');
-    if(isSel){
-      c.classList.add('sel');           // selected: gold glow
-    } else if(canAfford){
-      c.classList.add('afford');        // can buy: green glow
-    } else {
-      c.classList.add('nope');          // cannot buy: dimmed
-    }
-
-    // Update principal badge
+    if(isSel){c.classList.add('sel');}
+    else if(canAfford){c.classList.add('afford');}
+    else{c.classList.add('nope');}
     const badge=c.querySelector('.tcard-badge');
     if(badge&&d.isPrincipal)badge.textContent=principalPlaced?'✓':'×1';
   });
@@ -724,7 +721,7 @@ function refreshCards(){
 
 function onPickType(k){
   const def=TDEFS[k];
-  if(def.isPrincipal&&principalPlaced){floatAt(W/2,H*.4,'Only 1 Principal!','#f87171');return;}
+  if(def.isPrincipal&&principalPlaced){floatAt(W/2,H*.4,'只能建造一个校长！','#f87171');return;}
   selTower=null;selType=selType===k?null:k;refreshCards();updateStrip();
 }
 
@@ -734,16 +731,16 @@ function updateStrip(){
   const uBtn=document.getElementById('upg-btn'),sBtn=document.getElementById('sell-btn');
   if(selTower){
     const def=TDEFS[selTower.type],st=tStat(selTower);
-    txt.innerHTML=`<b>${def.icon} ${def.name}</b> Lv.${selTower.lvl+1} · DMG:${st.dmg||'—'} RNG:${st.range>=9000?'ALL':st.range}`;
+    txt.innerHTML=`<b>${def.icon} ${def.name}</b> 等级 ${selTower.lvl+1} · 攻击力:${st.dmg||'—'} 范围:${st.range>=9000?'全体':st.range}`;
     btns.style.display='flex';
     if(selTower.lvl<def.levels.length-1){const uc=def.upgCost[selTower.lvl];uBtn.textContent=`⬆ 💰${uc}`;uBtn.style.display='';uBtn.style.opacity=gold>=uc?'1':'0.4';}
     else uBtn.style.display='none';
     let spent=def.cost;for(let i=0;i<selTower.lvl;i++)spent+=def.upgCost[i];
     sBtn.textContent=`💰${Math.floor(spent*.5)}`;
   } else if(selType){
-    txt.innerHTML=`<b>${TDEFS[selType].icon} ${TDEFS[selType].name}</b> — tap a + node`;btns.style.display='none';
+    txt.innerHTML=`<b>${TDEFS[selType].icon} ${TDEFS[selType].name}</b> — 点击节点 +`;btns.style.display='none';
   } else {
-    txt.innerHTML='Tap a <b>defender</b> · tap a <b style="color:var(--acc)">+ node</b>';btns.style.display='none';
+    txt.innerHTML='选择 <b>守护者</b> · 点击 <b style="color:var(--acc)">节点 +</b>';btns.style.display='none';
   }
 }
 
@@ -751,10 +748,10 @@ function updGold(){
   document.getElementById('h-gold').textContent=gold;
   document.getElementById('h-score').textContent=score;
   refreshCards();
-  updateStrip(); // always refresh strip so upgrade button opacity stays correct
+  updateStrip();
 }
 
-// ══════════ INPUT ══════════
+// ══════════ 输入 ══════════
 function getPos(e){
   const r=canvas.getBoundingClientRect(),scX=W/r.width,scY=H/r.height;
   const src=e.changedTouches?e.changedTouches[0]:(e.touches?e.touches[0]:e);
@@ -788,8 +785,18 @@ function setupBtn(id,fn){
 setupBtn('start-btn',()=>{document.getElementById('start-panel').style.display='none';state='wavebreak';waveTimer=210;});
 setupBtn('restart-btn',resetGame);
 
-function winGame(){state='gameover';document.getElementById('go-title').textContent='🎉 道德 SAVED!';document.getElementById('go-msg').innerHTML=`All 20 waves defeated!<br>Score: <b style="color:var(--gold)">${score}</b>`;document.getElementById('go-panel').style.display='block';}
-function loseGame(){if(state==='gameover')return;state='gameover';document.getElementById('go-title').textContent='💔 道德 BREACHED';document.getElementById('go-msg').innerHTML=`Cyberbullying broke through on Wave ${wave+1}.<br>Score: <b style="color:var(--gold)">${score}</b>`;document.getElementById('go-panel').style.display='block';}
+function winGame(){
+  state='gameover';
+  document.getElementById('go-title').textContent='🎉 道德已被守护！';
+  document.getElementById('go-msg').innerHTML=`成功击败全部20波敌人！<br>得分: <b style="color:var(--gold)">${score}</b>`;
+  document.getElementById('go-panel').style.display='block';
+}
+function loseGame(){
+  if(state==='gameover')return;state='gameover';
+  document.getElementById('go-title').textContent='💔 道德被侵犯';
+  document.getElementById('go-msg').innerHTML=`网络霸凌在第 ${wave+1} 波突破了防线。<br>得分: <b style="color:var(--gold)">${score}</b>`;
+  document.getElementById('go-panel').style.display='block';
+}
 
 function resetGame(){
   towers=[];enemies=[];projs=[];parts=[];floaters=[];pulses=[];
@@ -810,20 +817,19 @@ function resetGame(){
 function checkWaveClear(){
   if(state==='playing'&&spawnQ.length===0&&enemies.length===0){
     state='wavebreak';waveTimer=220;
-    floatAt(W/2,H*.45,'✅ WAVE CLEAR!','#34d399');
+    floatAt(W/2,H*.45,'✅ 本波清理完成！','#34d399');
     if(wave>=WAVES.length)setTimeout(winGame,1000);
   }
 }
 
-// ══════════ LOOP ══════════
+// ══════════ 主循环 ══════════
 function loop(ts){
   const dt=lastTs?Math.min((ts-lastTs)/16.67,3):1;lastTs=ts;frame++;
   if(state==='playing'){
     spawnT+=gspeed*dt;
     while(spawnQ.length&&spawnT>=spawnQ[0].t){const s=spawnQ.shift();spawnEnemy(s.type,s.pi);}
     updateEnemies(dt);updateTowers(dt);updateParticles(dt);checkWaveClear();
-    // Re-sync card states every 20 frames in case gold changed without triggering updGold
-    if(frame%20===0) refreshCards();
+    if(frame%20===0)refreshCards();
   } else updateParticles(dt);
   draw();if(state==='wavebreak')drawWaveBreak();
   requestAnimationFrame(loop);
