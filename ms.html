@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Moral Fantastic · Menyuburkan Moral Muda</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Nunito', 'Segoe UI', 'Quicksand', '微软雅黑', system-ui, sans-serif;
+      background: #ffffff;
+      color: #2d4e1e;
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #eef5ea; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #7fa86a; border-radius: 10px; }
+
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #d4e6ca;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { font-size: 28px; animation: bounce 2s ease-in-out infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);} }
+    .logo-text { font-size: 1.5rem; font-weight: 800; color: #2d4e1e; letter-spacing: -0.5px; }
+    .lang-badge { 
+      background: #eef5ea; 
+      border-radius: 40px; 
+      padding: 6px 16px; 
+      font-size: 0.8rem; 
+      font-weight: 600; 
+      color: #4a6e3a;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .lang-badge:hover { background: #d4e6ca; transform: translateY(-2px); }
+
+    .screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      background: linear-gradient(145deg, #e6f0e2 0%, #f8fbf7 100%);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      z-index: 1000;
+      padding: 80px 16px 20px;
+      overflow-y: auto;
+    }
+    .card {
+      background: white;
+      max-width: 520px;
+      width: 100%;
+      padding: 28px 24px;
+      border-radius: 48px;
+      box-shadow: 0 20px 40px rgba(80,110,60,0.12);
+      border: 1px solid #d4e6ca;
+      margin: auto;
+      animation: cardFadeIn 0.5s ease-out;
+    }
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .card-icon { font-size: 48px; text-align: center; margin-bottom: 8px; }
+    h1 { color: #2d4e1e; font-size: 1.6rem; font-weight: 700; text-align: center; }
+    .subtitle { color: #6b7c63; text-align: center; font-size: 0.9rem; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #e2ecd9; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; color: #3a5e2b; font-weight: 600; margin-bottom: 8px; }
+    select, input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2ecd9;
+      border-radius: 60px;
+      font-size: 1rem;
+      background: white;
+      font-family: inherit;
+      transition: 0.2s;
+    }
+    select:focus, input:focus { outline: none; border-color: #7fa86a; box-shadow: 0 0 0 3px rgba(127,168,106,0.2); }
+    .btn {
+      background: linear-gradient(135deg, #7fa86a, #6b9a56);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      font-size: 1rem;
+      border-radius: 60px;
+      cursor: pointer;
+      font-weight: 700;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+    .btn:hover { background: linear-gradient(135deg, #5b8c4e, #4a7a3d); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(91,140,78,0.3); }
+    .btn-sm {
+      background: linear-gradient(135deg, #7fa86a, #6b9a56);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      border-radius: 60px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .btn-sm:hover { background: linear-gradient(135deg, #5b8c4e, #4a7a3d); transform: translateY(-2px); }
+    .error-message { color: #c44; font-size: 0.8rem; display: none; margin-top: 8px; }
+    .privacy-note { font-size: 0.7rem; color: #9bb88b; text-align: center; margin-top: 16px; }
+
+    #mainContent { display: none; }
+    header {
+      background: linear-gradient(135deg, #eef5ea, #e4eddf);
+      padding: 12px 20px;
+      border-bottom: 3px solid #d4e6ca;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2d4e1e;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .user-welcome { background: #d4e6ca; padding: 4px 16px; border-radius: 40px; font-size: 0.8rem; }
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .dropdown { position: relative; display: inline-block; }
+    .dropdown-btn {
+      background: white;
+      border: 2px solid #c8dcc0;
+      color: #3a5e2b;
+      padding: 8px 18px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .dropdown-btn:hover { background: #eef5ea; transform: translateY(-2px); border-color: #7fa86a; }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      min-width: 240px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+      border-radius: 24px;
+      border: 1px solid #d4e6ca;
+      z-index: 100;
+      margin-top: 8px;
+      max-height: 350px;
+      overflow-y: auto;
+    }
+    .dropdown-content.show { display: block; animation: fadeInScale 0.2s ease; }
+    @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .dropdown-item { padding: 12px 18px; cursor: pointer; border-bottom: 1px solid #e2ecd9; transition: 0.2s; }
+    .dropdown-item:hover { background: #eef5ea; transform: translateX(5px); color: #7fa86a; }
+    .back-btn { background: #eef5ea; font-weight: 600; }
+    .today-topic { 
+      background: linear-gradient(135deg, #d4e6ca, #caddc1);
+      padding: 6px 16px; 
+      border-radius: 40px; 
+      font-size: 0.85rem; 
+      font-weight: 600; 
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    /* ========== 修改：主容器宽度统一为 1200px，与游戏页面一致 ========== */
+    main { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 20px 16px; 
+    }
+
+    .slogan-img {
+      text-align: center;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .slogan-img img { 
+      width: 100%; 
+      max-width: 600px; 
+      border-radius: 28px; 
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08); 
+      transition: transform 0.3s, box-shadow 0.3s; 
+    }
+    .slogan-img img:hover { transform: scale(1.02); box-shadow: 0 12px 32px rgba(127,168,106,0.2); }
+
+    /* ========== 修改：卡片在大屏幕下更宽 ========== */
+    .board-card {
+      background: white;
+      border-radius: 28px;
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid #d4e6ca;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease-out;
+    }
+    .board-card:hover { box-shadow: 0 12px 28px rgba(127,168,106,0.15); transform: translateY(-3px); border-color: #7fa86a; }
+    .board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e2ecd9;
+    }
+    .board-header h2 { color: #2d4e1e; font-size: 1.3rem; display: flex; align-items: center; gap: 8px; margin: 0; }
+    .board-badge { padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; background: #eef5ea; }
+    .badge-anonymous { background: #eef5ea; color: #4a6e3a; }
+    .badge-signed { background: #d4e6ca; color: #2d4e1e; }
+    .board-tip {
+      background: linear-gradient(135deg, #eef5ea, #f4faf0);
+      border-radius: 20px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      color: #4a6040;
+    }
+    .message-form {
+      background: #fefef9;
+      border-radius: 24px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid #e2ecd9;
+    }
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e2ecd9;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      resize: vertical;
+      min-height: 80px;
+      font-family: inherit;
+      transition: 0.2s;
+    }
+    textarea:focus { outline: none; border-color: #7fa86a; box-shadow: 0 0 0 3px rgba(127,168,106,0.1); }
+    .message-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .message-item {
+      background: #fefef9;
+      border-radius: 20px;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #e2ecd9;
+      transition: 0.2s;
+    }
+    .message-item:hover { border-color: #7fa86a; transform: translateX(4px); background: #ffffff; }
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.7rem;
+    }
+    .message-author { color: #5b8c4e; font-weight: 600; }
+    .message-time { color: #9bb88b; }
+    .message-content { color: #2e3b2c; font-size: 0.9rem; word-break: break-word; }
+    footer {
+      background: linear-gradient(135deg, #eef5ea, #e4eddf);
+      padding: 16px;
+      text-align: center;
+      color: #4a6e3a;
+      margin-top: 20px;
+      border-radius: 28px;
+      font-size: 0.75rem;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .circle-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin: 24px 0 32px;
+      flex-wrap: wrap;
+    }
+    .circle-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #7fa86a, #6b9a56);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      box-shadow: 0 8px 20px rgba(127,168,106,0.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .circle-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: 0.5s;
+    }
+    .circle-btn:hover::before { left: 100%; }
+    .circle-btn:hover {
+      transform: translateY(-6px) scale(1.05);
+      background: linear-gradient(145deg, #5b8c4e, #4a7a3d);
+      box-shadow: 0 16px 32px rgba(91,140,78,0.45);
+    }
+    .circle-btn span:first-child { 
+      font-size: 1.8rem; 
+      font-weight: 800;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      line-height: 1.2;
+    }
+    .circle-btn span:last-child { 
+      font-size: 0.7rem; 
+      margin-top: 4px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-align: center;
+      line-height: 1.2;
+      max-width: 100%;
+      padding: 0 4px;
+    }
+    @media (max-width: 600px) {
+      .circle-buttons { gap: 10px; }
+      .circle-btn { width: 65px; height: 65px; }
+      .circle-btn span:first-child { font-size: 1.4rem; }
+      .circle-btn span:last-child { font-size: 0.55rem; }
+      .board-header h2 { font-size: 1.1rem; }
+      .board-tip { font-size: 0.8rem; }
+    }
+
+    .enter-classroom-btn {
+      background: linear-gradient(135deg, #7fa86a, #6b9a56);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(127,168,106,0.3);
+    }
+    .enter-classroom-btn:hover {
+      background: linear-gradient(135deg, #5b8c4e, #4a7a3d);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(91,140,78,0.4);
+    }
+
+    .custom-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      animation: fadeIn 0.2s ease;
+    }
+    .custom-modal {
+      background: white;
+      border-radius: 48px;
+      max-width: 380px;
+      width: 90%;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 28px 48px rgba(0, 0, 0, 0.2);
+      animation: bounceIn 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+      border: 1px solid #d4e6ca;
+    }
+    .custom-modal .modal-icon { font-size: 3rem; margin-bottom: 12px; }
+    .custom-modal h3 { color: #2d4e1e; font-size: 1.4rem; margin-bottom: 12px; }
+    .custom-modal p { color: #6b7c63; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; }
+    .custom-modal input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2ecd9;
+      border-radius: 60px;
+      font-size: 1rem;
+      text-align: center;
+      letter-spacing: 2px;
+      font-family: monospace;
+      margin-bottom: 16px;
+    }
+    .custom-modal input:focus { outline: none; border-color: #7fa86a; box-shadow: 0 0 0 3px rgba(127,168,106,0.2); }
+    .modal-buttons { display: flex; gap: 12px; justify-content: center; margin-top: 8px; }
+    .modal-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .modal-confirm { background: #7fa86a; color: white; }
+    .modal-confirm:hover { background: #5b8c4e; transform: translateY(-2px); }
+    .modal-cancel { background: #f0f0f0; color: #666; }
+    .modal-cancel:hover { background: #e0e0e0; transform: translateY(-2px); }
+    .modal-ok { background: #7fa86a; color: white; padding: 12px 24px; width: 100%; }
+    .modal-ok:hover { background: #5b8c4e; transform: translateY(-2px); }
+    .copy-email {
+      background: #eef5ea;
+      padding: 12px;
+      border-radius: 60px;
+      margin: 12px 0;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 600;
+      color: #2d4e1e;
+    }
+    .copy-email:hover { background: #d4e6ca; transform: scale(1.02); }
+    .copy-email span { font-size: 1.1rem; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      80% { transform: scale(1.02); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    #rotateOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.88);
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+    }
+    #rotateOverlay.active { display: flex; }
+    #rotateOverlay .rotate-icon { font-size: 5rem; animation: rotatePhone 1.5s ease-in-out infinite; }
+    @keyframes rotatePhone { 0%,100%{transform:rotate(0deg);} 50%{transform:rotate(90deg);} }
+
+    .empty-message { text-align: center; color: #b8cfaa; padding: 24px; font-style: italic; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div id="rotateOverlay"><div class="rotate-icon">📱</div><p>Sila putar telefon ke mod potret<br><span style="font-size:1rem;color:#94a3b8;">请将手机转回竖屏模式</span></p></div>
+
+<div class="sticky-header">
+  <div class="logo-area"><div class="logo-icon">🍀</div><div class="logo-text">Moral Fantastic</div></div>
+  <div class="lang-badge" id="langSwitchBtn">🌙 Bahasa Melayu</div>
+</div>
+
+<!-- Halaman Maklumat Peribadi -->
+<div id="welcomeScreen" class="screen">
+  <div class="card">
+    <div class="card-icon">🌱</div>
+    <h1>Menyuburkan Moral Muda</h1>
+    <div class="subtitle">✧ Sila beritahu kami siapa anda ✧</div>
+    <form onsubmit="return false;">
+      <div class="form-group"><label>📚 Tahun</label><select id="grade" required><option value="">-- Sila pilih --</option><option value="Tahun 1">Tahun 1</option><option value="Tahun 2">Tahun 2</option><option value="Tahun 3">Tahun 3</option><option value="Tahun 4">Tahun 4</option><option value="Tahun 5">Tahun 5</option><option value="Tahun 6">Tahun 6</option><option value="Pelajar IPG">Pelajar IPG</option></select></div>
+      <div class="form-group"><label>👤 Peranan</label><select id="role" required><option value="">-- Sila pilih --</option><option value="Pelajar">Pelajar</option><option value="Guru">Guru</option></select></div>
+      <div class="form-group"><label>✏️ Nama / Gelaran</label><input type="text" id="userName" placeholder="Cth: Ali" maxlength="20" required></div>
+      <div class="error-message" id="welcomeError">⚠️ Sila isi maklumat lengkap</div>
+      <button type="button" class="btn" onclick="goToMain()">✨ Masuk Taman Moral →</button>
+    </form>
+    <div class="privacy-note">🔒 Maklumat anda hanya untuk interaksi kelas ini</div>
+  </div>
+</div>
+
+<!-- Halaman Utama -->
+<div id="mainContent">
+  <header>
+    <h1>🍀 Moral Fantastic<span class="user-welcome" id="userWelcomeDisplay"></span></h1>
+    <div class="nav-bar">
+      <div class="dropdown">
+        <button type="button" class="dropdown-btn" onclick="toggleDropdown()">📚 Topik Lain ▼</button>
+        <div class="dropdown-content" id="dropdownMenu">
+          <div id="gradeList">
+            <div class="dropdown-item" onclick="showCourses('Tahun 1')">📖 Tahun 1</div>
+            <div class="dropdown-item" onclick="showCourses('Tahun 2')">📖 Tahun 2</div>
+            <div class="dropdown-item" onclick="showCourses('Tahun 3')">📖 Tahun 3</div>
+            <div class="dropdown-item" onclick="showCourses('Tahun 4')">📖 Tahun 4</div>
+            <div class="dropdown-item" onclick="showCourses('Tahun 5')">📖 Tahun 5</div>
+            <div class="dropdown-item" onclick="showCourses('Tahun 6')">📖 Tahun 6</div>
+          </div>
+          <div id="courseList" style="display:none;">
+            <div class="dropdown-item back-btn" onclick="backToGrades()">← Kembali</div>
+            <div id="courseItems"></div>
+          </div>
+        </div>
+      </div>
+      <div class="today-topic">📌 Topik Ujian: Buli Siber</div>
+      <button id="openClassroomBtn" class="enter-classroom-btn">📖 Masuki Kelas Hari Ini →</button>
+    </div>
+  </header>
+  <main>
+    <div class="slogan-img"><img src="https://i.ibb.co/VWxhBjJQ/Cute-Slogan.jpg" alt="Slogan"></div>
+
+    <div class="circle-buttons">
+      <a href="pptms.html" class="circle-btn"><span>①</span><span>PPT</span></a>
+      <a href="videoms.html" class="circle-btn"><span>②</span><span>Video</span></a>
+      <a href="gamems.html" class="circle-btn"><span>③</span><span>Game</span></a>
+      <a href="classroomms.html" class="circle-btn"><span>④</span><span>Dunia</span></a>
+      <a href="quizms.html" class="circle-btn"><span>⑤</span><span>Ujian</span></a>
+    </div>
+
+    <!-- Dinding Luahan Tanpa Nama -->
+    <div class="board-card">
+      <div class="board-header">
+        <h2><span>🌙</span><span>Dinding Luahan Tanpa Nama</span></h2>
+        <div style="display:flex; gap:8px;">
+          <span class="board-badge badge-anonymous">🕶️ Tanpa Nama</span>
+          <button type="button" id="teacherToggleBtn" onclick="toggleTeacherMode()" style="background:#d4e6ca; border:none; padding:4px 12px; border-radius:40px; cursor:pointer;">🔑 Log Masuk Guru</button>
+        </div>
+      </div>
+      <div class="board-tip">💬 Ada masalah atau soalan? Luah di sini tanpa nama. Guru akan lihat dan balas.</div>
+      <div class="message-form">
+        <textarea id="counselComment" placeholder="✏️ Tulis masalah atau soalan anda..."></textarea>
+        <div style="display:flex; gap:10px; margin-top:12px;">
+          <button type="button" class="btn-sm" id="counselBtn" onclick="submitCounsel()" style="flex:2;">🌙 Hantar Tanpa Nama</button>
+          <button type="button" class="btn-sm" id="teacherReplyIndicator" style="flex:1; background:#d4e6ca; color:#2d4e1e; display:none;" disabled>👩‍🏫 Mod Guru</button>
+        </div>
+      </div>
+      <div class="message-list" id="counselList"><div class="empty-message">✨ Sedang memuat...</div></div>
+    </div>
+
+    <!-- Dinding Kata Semangat -->
+    <div class="board-card">
+      <div class="board-header">
+        <h2><span>🌟</span><span>Dinding Kata Semangat</span></h2>
+        <span class="board-badge badge-signed">✏️ Kongsi Beridentiti</span>
+      </div>
+      <div class="board-tip">✨ Kongsi kata mutiara atau semangat, sebarkan positif.</div>
+      <div class="message-form">
+        <textarea id="quoteComment" placeholder="✏️ Tulis kata mutiara atau semangat..."></textarea>
+        <button type="button" class="btn-sm" id="quoteBtn" onclick="submitQuote()" style="margin-top:12px;">🌟 Hantar Beridentiti</button>
+      </div>
+      <div class="message-list" id="quoteList"><div class="empty-message">✨ Sedang memuat...</div></div>
+    </div>
+  </main>
+  <footer><p>© 2026 Moral Fantastic · Tugasan Kursus IPG | Moral bagai hujan renyai, menyubur tanpa bunyi</p></footer>
+</div>
+
+<script>
+// ==================== Global Variables ====================
+let currentUser = null;
+let isTeacherMode = false;
+let violationCount = parseInt(localStorage.getItem('moral_violation_count') || '0');
+let lastSubmitTime = parseInt(localStorage.getItem('moral_last_submit') || '0');
+const SUBMIT_COOLDOWN = 10000;
+const TEACHER_PASSWORD = "123456";
+
+const CONFIG = {
+  googleScriptUrl: "https://script.google.com/macros/s/AKfycbw55PFmrpGe6chTrZeB1QtGhCwHAKABz3tWr9TOlsbKMQgKSkv6pD1T0NIK4_b3_EGW/exec",
+  sheetApiUrl: "https://opensheet.elk.sh/13cZDJXzzD0OaGJIb0qlnCwmV6hjl_ruJzOhDLkYmZqw/Sheet1"
+};
+
+// ==================== Custom Modal Functions ====================
+function showCustomAlert(message, icon = '🌿') {
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.className = 'custom-modal-overlay';
+    overlay.innerHTML = `
+      <div class="custom-modal">
+        <div class="modal-icon">${icon}</div>
+        <h3>🌼 Makluman</h3>
+        <p>${message}</p>
+        <button class="modal-btn modal-ok" style="width:100%;">✨ OK ✨</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector('.modal-ok').onclick = () => {
+      overlay.remove();
+      resolve();
+    };
+    overlay.onclick = (e) => { if (e.target === overlay) { overlay.remove(); resolve(); } };
+  });
+}
+
+function showCustomConfirm(message, icon = '❓') {
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.className = 'custom-modal-overlay';
+    overlay.innerHTML = `
+      <div class="custom-modal">
+        <div class="modal-icon">${icon}</div>
+        <h3>🌸 Pengesahan</h3>
+        <p>${message}</p>
+        <div class="modal-buttons">
+          <button class="modal-btn modal-confirm" id="confirmYes">✅ Ya</button>
+          <button class="modal-btn modal-cancel" id="confirmNo">❌ Tidak</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#confirmYes').onclick = () => { overlay.remove(); resolve(true); };
+    overlay.querySelector('#confirmNo').onclick = () => { overlay.remove(); resolve(false); };
+    overlay.onclick = (e) => { if (e.target === overlay) { overlay.remove(); resolve(false); } };
+  });
+}
+
+function showCustomPrompt(message, icon = '🔐', inputPlaceholder = '', maxLength = 8) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.className = 'custom-modal-overlay';
+    overlay.innerHTML = `
+      <div class="custom-modal">
+        <div class="modal-icon">${icon}</div>
+        <h3>${message}</h3>
+        <input type="password" id="customPromptInput" placeholder="${inputPlaceholder}" maxlength="${maxLength}" autocomplete="off">
+        <div class="modal-buttons">
+          <button class="modal-btn modal-confirm" id="promptConfirm">🔓 Sahkan</button>
+          <button class="modal-btn modal-cancel" id="promptCancel">🚪 Batal</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    const input = overlay.querySelector('#customPromptInput');
+    input.focus();
+    overlay.querySelector('#promptConfirm').onclick = () => {
+      const value = input.value.trim();
+      overlay.remove();
+      resolve(value);
+    };
+    overlay.querySelector('#promptCancel').onclick = () => { overlay.remove(); resolve(null); };
+    overlay.onclick = (e) => { if (e.target === overlay) { overlay.remove(); resolve(null); } };
+  });
+}
+
+async function showCourseModal(grade, course) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.className = 'custom-modal-overlay';
+    overlay.innerHTML = `
+      <div class="custom-modal" style="max-width:400px;">
+        <div class="modal-icon">📚</div>
+        <h3>${grade}</h3>
+        <p style="margin-bottom:16px;"><strong>${course}</strong></p>
+        <div style="background:#eef5ea; border-radius:20px; padding:12px; margin:8px 0;">
+          <p style="color:#4a6e3a; margin-bottom:4px;">📧 Untuk topik lain, sila emel:</p>
+          <div class="copy-email" onclick="copyToClipboard('nexusgt.my@gmail.com')">
+            <span>📋</span> nexusgt.my@gmail.com <span>📧</span>
+          </div>
+        </div>
+        <button class="modal-btn modal-ok" style="width:100%; margin-top:12px;">✨ Saya Faham ✨</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector('.modal-ok').onclick = () => { overlay.remove(); resolve(); };
+    overlay.onclick = (e) => { if (e.target === overlay) { overlay.remove(); resolve(); } };
+  });
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text);
+  showCustomAlert('📧 Email telah disalin! ✨', '✅');
+}
+
+// ==================== Course Data for Dropdown ====================
+const courseData = {
+  'Tahun 1': ['Pegangan Hidup Saya','Baik Hati Amalan Saya','Tanggungjawab Suresh','Terima Kasih, Kawan-kawan','Budi Bahasa Amalan Saya','Hormati Diri Disanjung Tinggi','Sayangi Diri Sendiri','Adil Membawa Sejahtera','Berani Menghadapi Cabaran','Kok Heng Yang Jujur','Blog Kerajinan','Kerjasama Membawa Berkat','Pesanan Nenek','Bertolak Ansur Amalan Saya'],
+  'Tahun 2': ['Ajaran Agama Keluarga Saya','Baik Hati Keluarga Bahagia','Tanggungjawab Saya Dalam Keluarga','Terima Kasih, Keluargaku','Hemah Tinggi Dalam Keluarga','Hormati Keluarga Hidup Gembira','Keluarga Bahagia','Keluarga yang Adil Hidup Sejahtera','Berani Demi Nama Baik Keluarga','Jujur Selalu','Sikap Rajin Amalan Keluarga','Kerjasama Meringankan Beban Keluarga','Bersederhana Amalan Keluarga','Toleransi Sesama Ahli Keluarga'],
+  'Tahun 3': ['Perayaan Warga Sekolah','Baik Hati Nilai Mulia','Murid Bertanggungjawab','Berterima Kasih Amalan Mulia','Beradab Sopan Pekerti Terpuji','Hormati Semua Amalan Kami','Sekolah Kebanggaanku','Sikap Adil Sekolah Sejahtera','Hadapi Cabaran Demi Sekolah','Jujur Amalan Warga Sekolah','Rajin Tangga Kejayaan','Kerjasama Budaya Kami','Amalan Hidup di Sekolah','Toleransi Sesama Warga Sekolah'],
+  'Tahun 4': ['Hayati Amalan Agama dan Kepercayaan Jiran','Sikap Prihatin Amalan Mulia','Tanggungjawab Hidup Berjiran','Hargai Jiran Hubungan Erat','Sopan Santun dengan Jiran','Semaikan Amalan Menghormati Jiran','Sayangi Jiran','Bersikap Adil Sesama Jiran','Bertindak Berani demi Kesejahteraan Kejiranan','Kejujuran Amalan Hidup Bersama-sama Jiran','Usaha Berterusan Membawa Kesejahteraan','Muafakat Membawa Berkat','Kesederhanaan Menjalin Kemesraan Sesama Jiran','Bertolak Ansur Amalan Terpuji'],
+  'Tahun 5': ['Keunikan Masyarakatku','Penyeri Jiwa Masyarakat','Kehijauan Alam Tanggungjawab Bersama','Hargai Jasa dan Sumbangan','Pupuk Amalan Berbudi Pekerti Mulia','Budaya Masyarakat Patut Dihormati','Sajak Kasih Sayang','Suri Teladan Dicontohi Masyarakat','Berani Pertahankan Cabaran','Beradab dengan Jujurnya','Berkat Kerajinan','Amalan Kerjasama, Kebaikan Bersama','Bersederhana Menjamin Kebahagiaan','Bertoleransi Membawa Kesejahteraan'],
+  'Tahun 6': ['Kepercayaan Kepada Tuhan Menjamin Kesejahteraan Negara','Bantuan Dan Sokongan Moral Kepada Negara','Tanggungjawab Sebagai Warganegara','Hargai Keunikan Negara','Amalan Hemah Tinggi Meningkatkan Imej Negara','Hormati Identiti Negara','Cinta Akan Negara','Amalan Adil Demi Kesejahteraan Negara','Berani Mempertahankan Maruah Negara','Kejujuran Demi Kesejahteraan Negara']
+};
+
+// ==================== Orientation ====================
+function isTouchDevice(){return 'ontouchstart' in window||navigator.maxTouchPoints>0;}
+function checkOrientation(){
+  var o=document.getElementById('rotateOverlay');
+  if(!isTouchDevice()){o.classList.remove('active');return;}
+  if(window.innerWidth>window.innerHeight){o.classList.add('active');}else{o.classList.remove('active');}
+}
+window.addEventListener('orientationchange',checkOrientation);
+window.addEventListener('resize',checkOrientation);
+checkOrientation();
+
+// ==================== Content Protection ====================
+document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
+document.addEventListener('copy',function(e){e.preventDefault();return false;});
+document.addEventListener('cut',function(e){e.preventDefault();return false;});
+document.addEventListener('dragstart',function(e){e.preventDefault();return false;});
+document.addEventListener('selectstart',function(e){if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'){e.preventDefault();return false;}});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'){e.preventDefault();return false;}
+  if(e.ctrlKey&&e.key==='u'){e.preventDefault();return false;}
+  if(e.ctrlKey&&e.key==='s'){e.preventDefault();return false;}
+  if(e.ctrlKey&&e.shiftKey&&e.key==='I'){e.preventDefault();return false;}
+  if(e.ctrlKey&&e.shiftKey&&e.key==='J'){e.preventDefault();return false;}
+  if(e.ctrlKey&&e.shiftKey&&e.key==='C'){e.preventDefault();return false;}
+});
+
+// ========== Submit Personal Info ==========
+async function goToMain(){
+  var grade=document.getElementById('grade').value;
+  var role=document.getElementById('role').value;
+  var name=document.getElementById('userName').value.trim();
+  if(!grade||!role||!name){
+    document.getElementById('welcomeError').style.display='block';
+    await showCustomAlert('Sila lengkapkan semua maklumat!', '⚠️');
+    return;
+  }
+  currentUser={grade:grade,role:role,name:name,timestamp:new Date().toISOString()};
+  localStorage.setItem('moralEduUserInfo',JSON.stringify(currentUser));
+  document.getElementById('userWelcomeDisplay').innerHTML='👋 '+currentUser.name+' ('+currentUser.grade+' - '+currentUser.role+')';
+  document.getElementById('welcomeScreen').style.display='none';
+  document.getElementById('mainContent').style.display='block';
+  loadAllMessages();
+  setInterval(loadAllMessages,30000);
+}
+
+// ========== Language Switch ==========
+document.getElementById('langSwitchBtn').onclick = async function(){
+  const confirm = await showCustomConfirm('Adakah anda pasti ingin bertukar ke versi Bahasa Cina?\n确定要切换到中文版本吗？', '🌍');
+  if(confirm) window.location.href = 'zh.html';
+};
+
+// ==================== Bad Words Filter ====================
+const BANNED_WORDS = {
+  chinese:['傻逼','傻b','sb','白痴','笨蛋','蠢货','去死','滚蛋','废物','垃圾','混蛋','王八蛋','操你','妈的','他妈','尼玛','脑残','弱智','低能','畜生','禽兽','杂种','贱人','婊子','骚货','下贱','无耻','干你','靠北','塞你','丢你','顶你','叼你','屌你','七早八早'],
+  english:['fuck','fck','fuk','fcu','f*k','f**k','shit','sh1t','sh!t','sht','bitch','b1tch','b!tch','btch','asshole','ass','arse','bastard','damn','dumb','stupid','idiot','moron','retard','piss','crap','hell','nigger','nigga','faggot','fag','slut','whore','cunt','dick','pussy','cock','penis','vagina','motherfucker','mofo','wtf','stfu'],
+  malay:['babi','bab1','b4bi','anjing','anj1ng','sial','s1al','bodoh','bod0h','bangang','bahlol','tolol','gila','g1la','pukimak','puk1mak','puki','lancau','kote','celaka','jilat','bangsat','haram','jadah','kurang ajar','tak guna','sampah','bencong','pondan','keparat']
+};
+const CHAR_MAP={'0':'o','1':'i','2':'z','3':'e','4':'a','5':'s','6':'g','7':'t','8':'b','9':'g','@':'a','$':'s','!':'i','*':'','#':'','(':'',')':'','_':'','-':'','.':'',',':''};
+let flatBannedWords=[],bannedPatterns=[];
+
+function initBannedWords(){
+  flatBannedWords=[];
+  var allWords=BANNED_WORDS.chinese.concat(BANNED_WORDS.english,BANNED_WORDS.malay);
+  allWords.forEach(function(word){
+    var normalized=normalizeText(word);
+    if(flatBannedWords.indexOf(normalized)===-1)flatBannedWords.push(normalized);
+  });
+  bannedPatterns=flatBannedWords.map(function(word){return{pattern:new RegExp(escapeRegex(word),'gi'),word:word};});
+}
+function normalizeText(text){
+  if(!text)return'';
+  var normalized=text.toLowerCase().trim();
+  for(var char in CHAR_MAP){normalized=normalized.split(char).join(CHAR_MAP[char]);}
+  return normalized.replace(/(.)\1+/g,'$1');
+}
+function escapeRegex(str){return str.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function containsBannedWord(text){
+  if(!text)return{found:false,word:''};
+  var normalizedText=normalizeText(text);
+  for(var i=0;i<bannedPatterns.length;i++){
+    if(bannedPatterns[i].pattern.test(normalizedText)){bannedPatterns[i].pattern.lastIndex=0;return{found:true,word:bannedPatterns[i].word};}
+  }
+  for(var j=0;j<flatBannedWords.length;j++){if(normalizedText.indexOf(flatBannedWords[j])!==-1)return{found:true,word:flatBannedWords[j]};}
+  return{found:false,word:''};
+}
+function addViolation(){violationCount++;localStorage.setItem('moral_violation_count',violationCount);return violationCount;}
+function resetViolations(){violationCount=0;localStorage.setItem('moral_violation_count','0');}
+function getViolationWarning(){
+  if(violationCount===1)return"⚠️ Amaran: Mesej mengandungi bahasa tidak sopan, sila guna bahasa baik!";
+  else if(violationCount>=2)return"🚨 Amaran Serius: Anda telah menggunakan bahasa tidak sopan berulang kali.\nGuru telah merekod masa dan IP anda. Guru berhak melaporkan kepada MCMC.\nHentikan segera.";
+  return"⚠️ Mesej mengandungi bahasa tidak sopan, tidak boleh dihantar.";
+}
+function canSubmit(){
+  var now=Date.now();
+  if(now-lastSubmitTime<SUBMIT_COOLDOWN){var ws=Math.ceil((SUBMIT_COOLDOWN-(now-lastSubmitTime))/1000);showCustomAlert(`⏳ Jangan spam, sila tunggu ${ws} saat.`, '⏰');return false;}
+  return true;
+}
+function recordSubmit(){lastSubmitTime=Date.now();localStorage.setItem('moral_last_submit',lastSubmitTime);}
+
+// ==================== Teacher Mode ====================
+async function toggleTeacherMode(){
+  if(isTeacherMode){
+    isTeacherMode=false;
+    updateTeacherUI();
+    await showCustomAlert('✨ Telah keluar mod guru ✨', '👋');
+  } else {
+    const password = await showCustomPrompt('🔐 Sila masukkan kata laluan guru:', '🔑', 'Kata laluan', 20);
+    if(password === TEACHER_PASSWORD){
+      isTeacherMode=true;
+      resetViolations();
+      updateTeacherUI();
+      await showCustomAlert('✅ Mod guru dibuka! Anda boleh balas sebagai Cikgu Mow.', '🎓');
+    } else if(password !== null && password !== ''){
+      await showCustomAlert('❌ Kata laluan salah!', '🔒');
+    }
+  }
+}
+function updateTeacherUI(){
+  var toggleBtn=document.getElementById('teacherToggleBtn');
+  var indicator=document.getElementById('teacherReplyIndicator');
+  var counselBtn=document.getElementById('counselBtn');
+  if(isTeacherMode){
+    toggleBtn.innerHTML='✅ Mod Guru (Klik keluar)';
+    toggleBtn.style.background='#5b8c4e';
+    toggleBtn.style.color='white';
+    indicator.style.display='block';
+    counselBtn.innerHTML='👩‍🏫 Balas Cikgu Mow';
+    counselBtn.style.background='#5b8c4e';
+  }else{
+    toggleBtn.innerHTML='🔑 Log Masuk Guru';
+    toggleBtn.style.background='#d4e6ca';
+    toggleBtn.style.color='#2d4e1e';
+    indicator.style.display='none';
+    counselBtn.innerHTML='🌙 Hantar Tanpa Nama';
+    counselBtn.style.background='#7fa86a';
+  }
+}
+
+// ==================== Dropdown Courses ====================
+function toggleDropdown(){
+  var m=document.getElementById('dropdownMenu');
+  m.classList.toggle('show');
+  document.getElementById('gradeList').style.display='block';
+  document.getElementById('courseList').style.display='none';
+}
+function showCourses(grade){
+  var courses = courseData[grade] || [];
+  var html = '<div style="padding:8px 16px; background:#eef5ea; border-radius:20px 20px 0 0;">📚 '+grade+'</div>';
+  courses.forEach(function(c,i){
+    html += '<div class="dropdown-item" onclick="selectCourse(\''+grade+'\', \'Pelajaran '+(i+1)+': '+c+'\')">📖 Pelajaran '+(i+1)+': '+c+'</div>';
+  });
+  document.getElementById('courseItems').innerHTML = html;
+  document.getElementById('gradeList').style.display = 'none';
+  document.getElementById('courseList').style.display = 'block';
+}
+function backToGrades(){
+  document.getElementById('gradeList').style.display = 'block';
+  document.getElementById('courseList').style.display = 'none';
+}
+async function selectCourse(grade, course){
+  document.getElementById('dropdownMenu').classList.remove('show');
+  await showCourseModal(grade, course);
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.dropdown')) document.getElementById('dropdownMenu').classList.remove('show');
+});
+
+// ==================== Message Board ====================
+async function loadAllMessages(){
+  try{
+    var res=await fetch(CONFIG.sheetApiUrl);
+    var data=await res.json();
+    var counselHtml='', quoteHtml='';
+    data.reverse().forEach(function(item){
+      var content=item['留言']||'';
+      if(content.startsWith('[质询]')||content.startsWith('[老师回复]')){
+        var isTR=content.startsWith('[老师回复]');
+        var cleanMsg=content.replace('[老师回复]','').replace('[质询]','').trim();
+        counselHtml += '<div class="message-item" style="'+(isTR?'background:#eef5ea;border-left:4px solid #7fa86a;':'')+'"><div class="message-header"><span class="message-author" style="'+(isTR?'color:#2d4e1e;font-weight:600;':'')+'">'+(isTR?'👩‍🏫 Balasan Cikgu Mow ✨':'🕶️ Tanpa Nama ✦')+'</span><span class="message-time">'+(item['时间戳']||'')+'</span></div><div class="message-content">'+escapeHtml(cleanMsg)+'</div></div>';
+      } else if(content.startsWith('[名言]')){
+        var quoteMsg = content.replace('[名言]','').trim();
+        var namePart = '';
+        var messagePart = quoteMsg;
+        var nameMatch = quoteMsg.match(/【(.*?)】/);
+        if(nameMatch) {
+          namePart = nameMatch[1];
+          messagePart = quoteMsg.replace(/【.*?】/, '').replace(/^[:：]\s*/, '');
+        } else {
+          var starMatch = quoteMsg.match(/✦(.*?)✦/);
+          if(starMatch) {
+            namePart = starMatch[1];
+            messagePart = quoteMsg.replace(/✦.*?✦/, '').replace(/^[:：]\s*/, '');
+          }
+        }
+        if(namePart) {
+          quoteHtml += '<div class="message-item"><div class="message-header"><span class="message-author" style="color:#5b8c4e;">' + escapeHtml(namePart) + '</span></div><div class="message-content">' + escapeHtml(messagePart) + '</div></div>';
+        } else {
+          quoteHtml += '<div class="message-item"><div class="message-content">✨ ' + escapeHtml(quoteMsg) + '</div></div>';
+        }
+      }
+    });
+    document.getElementById('counselList').innerHTML = counselHtml || '<div class="empty-message">✨ Tiada luahan, tulis masalah anda tanpa nama ✨</div>';
+    document.getElementById('quoteList').innerHTML = quoteHtml || '<div class="empty-message">✨ Tiada kata mutiara, jom kongsi positif! ✨</div>';
+  } catch(e){
+    console.warn(e);
+    document.getElementById('counselList').innerHTML = '<div class="empty-message">🌿 Gagal memuat, sila muat semula</div>';
+  }
+}
+function escapeHtml(str){var div=document.createElement('div');div.textContent=str;return div.innerHTML;}
+async function submitCounsel(){
+  var comment=document.getElementById('counselComment').value.trim();
+  if(!comment){await showCustomAlert('📝 Sila isi kandungan', '✏️'); return;}
+  if(!canSubmit())return;
+  var banCheck=containsBannedWord(comment);
+  if(banCheck.found){
+    addViolation();
+    await showCustomAlert(getViolationWarning(), '⚠️');
+    document.getElementById('counselComment').focus();
+    return;
+  }
+  var prefix=isTeacherMode?'[老师回复]':'[质询]';
+  var btn=document.getElementById('counselBtn');
+  btn.disabled=true;btn.innerHTML='Menghantar...';
+  await fetch(CONFIG.googleScriptUrl,{method:'POST',body:new URLSearchParams({'comment':prefix+' '+comment})});
+  recordSubmit();
+  document.getElementById('counselComment').value='';
+  await showCustomAlert(isTeacherMode?'✨ Balasan Cikgu Mow dihantar! ✨':'✨ Berjaya hantar tanpa nama! ✨', '✅');
+  loadAllMessages();
+  btn.disabled=false;btn.innerHTML=isTeacherMode?'👩‍🏫 Balas Cikgu Mow':'🌙 Hantar Tanpa Nama';
+}
+async function submitQuote(){
+  var comment=document.getElementById('quoteComment').value.trim();
+  if(!comment){await showCustomAlert('📝 Sila isi kandungan', '✏️'); return;}
+  if(!canSubmit())return;
+  var banCheck=containsBannedWord(comment);
+  if(banCheck.found){
+    addViolation();
+    await showCustomAlert(getViolationWarning(), '⚠️');
+    document.getElementById('quoteComment').focus();
+    return;
+  }
+  var displayName=currentUser?currentUser.name+' ('+currentUser.grade+' - '+currentUser.role+')':'Tanpa Nama';
+  var btn=document.getElementById('quoteBtn');
+  btn.disabled=true;btn.innerHTML='Menghantar...';
+  await fetch(CONFIG.googleScriptUrl,{method:'POST',body:new URLSearchParams({'comment':'[名言] ✦ '+displayName+' ✦: '+comment})});
+  recordSubmit();
+  document.getElementById('quoteComment').value='';
+  await showCustomAlert('✨ Berjaya dihantar! ✨', '🌟');
+  loadAllMessages();
+  btn.disabled=false;btn.innerHTML='🌟 Hantar Beridentiti';
+}
+
+// ========== Bind "Enter Classroom" button ==========
+document.addEventListener('DOMContentLoaded',function(){
+  initBannedWords();
+  checkOrientation();
+  var openBtn = document.getElementById('openClassroomBtn');
+  if(openBtn) openBtn.onclick = function(){ window.location.href = 'pptms.html'; };
+  var saved=localStorage.getItem('moralEduUserInfo');
+  if(saved){
+    currentUser=JSON.parse(saved);
+    document.getElementById('welcomeScreen').style.display='none';
+    document.getElementById('mainContent').style.display='block';
+    document.getElementById('userWelcomeDisplay').innerHTML='👋 '+currentUser.name+' ('+currentUser.grade+' - '+currentUser.role+')';
+    loadAllMessages();
+    setInterval(loadAllMessages,30000);
+  }
+});
+</script>
+</body>
+</html>
