@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>课堂PPT · Moral Fantastic</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Nunito', system-ui; background: #fff; color: #2d4e1e; }
+    .sticky-header {
+      position: sticky; top: 0; background: rgba(255,255,255,0.96); backdrop-filter: blur(10px);
+      border-bottom: 2px solid #d4e6ca; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { font-size: 28px; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);} }
+    .logo-text { font-size: 1.5rem; font-weight: 800; color: #2d4e1e; }
+    .back-home { background: #eef5ea; color: #2d4e1e; text-decoration: none; padding: 8px 20px; border-radius: 40px; font-weight: 600; transition: 0.2s; }
+    .back-home:hover { background: #7fa86a; color: white; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px 16px 40px; text-align: center; }
+    h1 { color: #2d4e1e; margin-bottom: 16px; }
+    
+    /* ========== 统一容器样式 ========== */
+    .content-container { 
+      background: white; 
+      border-radius: 32px; 
+      border: 1px solid #d4e6ca;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    
+    .ppt-wrapper {
+      background: #1a2a1a;
+      border-radius: 24px;
+      overflow: hidden;
+      width: 100%;
+      height: 550px;
+      min-height: 500px;
+    }
+    
+    @media (max-width: 768px) {
+      .ppt-wrapper {
+        height: 70vh;
+        min-height: 450px;
+      }
+    }
+    
+    @media (min-width: 1200px) {
+      .ppt-wrapper {
+        height: 650px;
+      }
+    }
+    
+    .ppt-wrapper iframe { 
+      width: 100%; 
+      height: 100%; 
+      border: none; 
+      display: block;
+    }
+    
+    .placeholder {
+      background: #eef5ea;
+      border-radius: 24px;
+      padding: 80px 20px;
+      border: 2px dashed #c8dcc0;
+      text-align: center;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .placeholder-icon { font-size: 4rem; margin-bottom: 16px; }
+    .placeholder h3 { color: #7fa86a; margin-bottom: 8px; }
+    .placeholder p { color: #8aa67d; }
+    
+    .game-note { text-align: center; margin-top: 12px; color: #8aa67d; }
+    .nav-buttons { display: flex; gap: 16px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
+    .nav-btn { background: #7fa86a; color: white; text-decoration: none; padding: 12px 28px; border-radius: 60px; font-weight: 600; transition: 0.2s; }
+    .nav-btn:hover { background: #5b8c4e; transform: translateY(-2px); }
+    .nav-btn.outline { background: white; color: #7fa86a; border: 2px solid #7fa86a; }
+    footer { text-align: center; padding: 24px; color: #9bb88b; border-top: 1px solid #e2ecd9; margin-top: 20px; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="sticky-header">
+  <div class="logo-area"><div class="logo-icon">🍀</div><div class="logo-text">Moral Fantastic</div></div>
+  <a href="index.html" class="back-home">🏠 返回首页</a>
+</div>
+<div class="container">
+  <h1>📊 课堂PPT</h1>
+  <p style="color: #6b7c63; margin-bottom: 16px;">网络霸凌 · 教学课件</p>
+  
+  <div class="content-container">
+    <div class="ppt-wrapper" id="pptWrapper">
+      <div class="placeholder">
+        <div class="placeholder-icon">📎</div>
+        <h3>PPT 即将上线</h3>
+        <p>请在此处添加您的PPT链接</p>
+      </div>
+    </div>
+    <div class="game-note">
+      📚 网络霸凌互动教学幻灯片
+    </div>
+  </div>
+  
+  <div class="nav-buttons">
+    <a href="index.html" class="nav-btn outline">🏠 返回首页</a>
+    <a href="video.html" class="nav-btn">下一页：教学视频 →</a>
+  </div>
+</div>
+<footer>© 2026 Moral Fantastic · 德育如细雨，润物细无声</footer>
+
+<script>
+  function updatePptHeight() {
+    const wrapper = document.getElementById('pptWrapper');
+    if (!wrapper) return;
+    const isMobile = window.innerWidth < 768;
+    const isLarge = window.innerWidth > 1200;
+    
+    if (isMobile) {
+      wrapper.style.height = '70vh';
+    } else if (isLarge) {
+      wrapper.style.height = '650px';
+    } else {
+      wrapper.style.height = '550px';
+    }
+  }
+  
+  window.addEventListener('resize', updatePptHeight);
+  window.addEventListener('load', updatePptHeight);
+</script>
+</body>
+</html>
