@@ -2,7 +2,7 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes"/>
 <title>⚖️ Pertahanan Moral</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap');
@@ -11,22 +11,59 @@
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);}
 body{font-family:'Rajdhani',sans-serif;color:#ddd6fe;display:flex;flex-direction:column;user-select:none;touch-action:none;}
 
-#hud{display:flex;align-items:center;justify-content:space-between;
-  padding:5px 10px;background:rgba(6,3,16,0.99);border-bottom:1px solid var(--bdr);
-  flex-shrink:0;z-index:50;gap:4px;}
+#hud{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:5px 10px;
+  background:rgba(6,3,16,0.99);
+  border-bottom:1px solid var(--bdr);
+  flex-shrink:0;
+  z-index:50;
+  gap:4px;
+  flex-wrap:wrap;  /* ← 新增：手机版自动换行 */
+}
 #hud-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:900;color:var(--acc);text-shadow:0 0 10px var(--acc);white-space:nowrap;}
 .hs{display:flex;align-items:center;gap:2px;background:rgba(0,0,0,0.5);border:1px solid var(--bdr);border-radius:6px;padding:2px 7px;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;white-space:nowrap;}
 .hs span{color:#fff;}
-#wave-pill{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;background:rgba(167,139,250,0.12);border:1px solid var(--acc);border-radius:14px;padding:2px 9px;color:var(--acc);}
-#speed-btn{padding:2px 9px;background:rgba(167,139,250,0.1);border:1px solid var(--bdr);border-radius:14px;color:var(--acc);font-size:10px;font-weight:700;cursor:pointer;font-family:'Orbitron',monospace;touch-action:manipulation;}
+#wave-pill{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;background:rgba(167,139,250,0.12);border:1px solid var(--acc);border-radius:14px;padding:2px 9px;color:var(--acc);white-space:nowrap;}
+#speed-btn{padding:2px 9px;background:rgba(167,139,250,0.1);border:1px solid var(--bdr);border-radius:14px;color:var(--acc);font-size:10px;font-weight:700;cursor:pointer;font-family:'Orbitron',monospace;touch-action:manipulation;white-space:nowrap;}
 
 #game-wrap{flex:1;position:relative;overflow:hidden;min-height:0;}
 #gc{display:block;width:100%;height:100%;touch-action:none;}
 
 #bottom-bar{flex-shrink:0;background:rgba(6,3,16,0.99);border-top:1px solid var(--bdr);z-index:50;}
-#tower-row{display:flex;align-items:center;gap:4px;padding:5px 6px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+#tower-row{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:5px 6px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
 #tower-row::-webkit-scrollbar{display:none;}
-.tcard{flex-shrink:0;width:64px;background:rgba(0,0,0,0.45);border:1.5px solid rgba(80,60,120,0.4);border-radius:10px;padding:5px 3px;cursor:pointer;text-align:center;position:relative;touch-action:manipulation;transition:border-color 0.15s,box-shadow 0.15s,opacity 0.15s;}
+.tcard{
+  flex-shrink:0;
+  width:64px;
+  background:rgba(0,0,0,0.45);
+  border:1.5px solid rgba(80,60,120,0.4);
+  border-radius:10px;
+  padding:5px 3px;
+  cursor:pointer;
+  text-align:center;
+  position:relative;
+  touch-action:manipulation;
+  transition:border-color 0.15s,box-shadow 0.15s,opacity 0.15s;
+}
+/* 手机版卡片缩小一点 */
+@media (max-width: 600px) {
+  .tcard { width: 55px; padding: 4px 2px; }
+  .tcard-icon { font-size: 18px; }
+  .tcard-name { font-size: 7px; }
+  .tcard-cost { font-size: 7px; }
+}
 .tcard.afford{border-color:rgba(52,211,153,0.7);box-shadow:0 0 8px rgba(52,211,153,0.25);}
 .tcard.sel{border-color:var(--gold);box-shadow:0 0 14px rgba(251,191,36,0.55);}
 .tcard.nope{opacity:0.32;border-color:rgba(60,40,80,0.35);box-shadow:none;}
@@ -37,9 +74,20 @@ body{font-family:'Rajdhani',sans-serif;color:#ddd6fe;display:flex;flex-direction
 .tcard.nope .tcard-cost{color:#f87171;}
 .tcard-badge{position:absolute;top:2px;right:3px;font-size:7px;font-family:'Orbitron',monospace;color:#f87171;font-weight:700;}
 
-#info-strip{display:flex;align-items:center;gap:5px;padding:3px 8px 6px;min-height:26px;border-top:1px solid rgba(167,139,250,0.1);font-size:10px;color:#9d86e0;}
+#info-strip{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:3px 8px 6px;
+  min-height:26px;
+  border-top:1px solid rgba(167,139,250,0.1);
+  font-size:10px;
+  color:#9d86e0;
+  flex-wrap:wrap;  /* 手机版换行 */
+}
 #info-strip b{color:#c4b5fd;}
 #sub-btns{display:flex;gap:4px;margin-left:auto;}
+#sub-btns button{white-space:nowrap;}
 .abtn{padding:3px 9px;border-radius:7px;font-size:10px;font-weight:700;cursor:pointer;border:1px solid;font-family:'Rajdhani',sans-serif;white-space:nowrap;touch-action:manipulation;}
 #sell-btn{background:rgba(127,29,29,0.25);border-color:#7f1d1d;color:var(--red);}
 #upg-btn{background:rgba(167,139,250,0.14);border-color:var(--acc);color:var(--acc);}
@@ -56,7 +104,7 @@ body{font-family:'Rajdhani',sans-serif;color:#ddd6fe;display:flex;flex-direction
 
 <div id="hud">
   <div id="hud-title">⚖️ PERTAHANAN MORAL</div>
-  <div style="display:flex;gap:3px;align-items:center;">
+  <div style="display:flex;gap:3px;align-items:center;flex-wrap:wrap;">
     <div class="hs">💰<span id="h-gold">200</span></div>
     <div class="hs">❤️<span id="h-lives">20</span></div>
     <div class="hs">⭐<span id="h-score">0</span></div>
@@ -533,7 +581,6 @@ function drawShrine(){
   ctx.fillStyle='rgba(8,4,22,0.9)';ctx.beginPath();ctx.arc(sx,sy,28,0,Math.PI*2);ctx.fill();
   ctx.strokeStyle=`rgba(251,191,36,${.78*pulse})`;ctx.lineWidth=2.5;ctx.shadowColor='#fbbf24';ctx.shadowBlur=16*pulse;
   ctx.beginPath();ctx.arc(sx,sy,33,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
-  // "MORAL" in Malay — two lines
   ctx.font='bold 11px Rajdhani,sans-serif';
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.shadowColor='#000';ctx.shadowBlur=6;ctx.fillStyle='#111';ctx.fillText('MORAL',sx+1,sy+1);
