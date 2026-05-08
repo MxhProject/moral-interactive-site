@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ms-MY">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Ruang Siber: Radar Peta Penuh Edisi Pantas</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+    :root {
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+      width: 100%; height: 100%; overflow: hidden;
+      background: #050510;
+      font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      touch-action: manipulation; user-select: none;
+      -webkit-user-select: none; position: fixed; top: 0; left: 0;
+    }
+    canvas#gameCanvas { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+    #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
+
+    #timer-container {
+      position: absolute; top: calc(10px + var(--safe-top)); left: 50%; transform: translateX(-50%);
+      background: rgba(8,15,25,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(0,243,255,0.6); border-radius: 22px; padding: 6px 24px;
+      text-align: center; box-shadow: 0 0 25px rgba(0,243,255,0.3); z-index: 22; pointer-events: auto;
+    }
+    #timer-text { font-family: 'Orbitron', monospace; font-size: 28px; font-weight: 900; letter-spacing: 3px; color: #00f3ff; text-shadow: 0 0 12px #00f3ff; }
+    #speed-indicator { font-size: 11px; color: #9ad7e0; letter-spacing: 1px; }
+
+    #leaderboard {
+      position: absolute; top: calc(80px + var(--safe-top)); right: calc(10px + var(--safe-right));
+      background: rgba(10,15,22,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border-radius: 12px; border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px;
+      color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.6); z-index: 22; pointer-events: auto;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .board-title { font-size: 12px; font-weight: 700; color: #aaa; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; }
+    .board-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; font-weight: bold; background: rgba(255,255,255,0.03); border-radius: 20px; padding: 4px 10px; }
+    .board-row span:last-child { color: #fff; font-weight: 700; }
+    .board-color-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 6px currentColor; flex-shrink: 0; }
+    .my-score-row { background: rgba(0,243,255,0.15); border: 1px solid rgba(0,243,255,0.25); }
+
+    #minimap-container {
+      position: absolute; bottom: calc(14px + var(--safe-bottom)); left: calc(10px + var(--safe-left));
+      width: 180px; height: 180px; background: rgba(4,4,10,0.8); border: 2px solid #333;
+      border-radius: 14px; overflow: hidden; box-shadow: 0 0 25px rgba(0,0,0,0.7); z-index: 25; pointer-events: auto;
+    }
+    #minimap-container canvas { width: 100%; height: 100%; border-radius: 12px; }
+
+    #joystick-container {
+      position: absolute; bottom: calc(40px + var(--safe-bottom)); right: calc(20px + var(--safe-right));
+      width: 140px; height: 140px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 50%; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 30; pointer-events: auto; touch-action: none;
+    }
+    #joystick-thumb {
+      position: absolute; top: 50%; left: 50%; width: 60px; height: 60px; background: rgba(0,243,255,0.25);
+      border: 2px solid rgba(0,243,255,0.6); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 15px rgba(0,243,255,0.3); pointer-events: none;
+    }
+
+    #game-over { display: flex; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 100; }
+    .panel { background: #10121f; padding: 30px 35px; border-radius: 20px; color: white; border: 1px solid #2a2a3a; text-align: center; box-shadow: 0 20px 50px black; max-width: 95vw; }
+    .panel h1 { font-family: 'Orbitron', 'PingFang SC', sans-serif; margin-bottom: 20px; font-size: 30px; }
+    .panel .encourage { font-size: 18px; color: #ccc; margin: 15px 0 25px; line-height: 1.5; }
+    button { padding: 12px 35px; background: transparent; border: 2px solid #00f3ff; color: #00f3ff; font-weight: bold; border-radius: 30px; font-size: 18px; letter-spacing: 1px; cursor: pointer; transition: 0.2s; }
+    button:active { background: #00f3ff; color: #000; }
+
+    @media (max-width: 600px) {
+      #timer-container { padding: 4px 18px; }
+      #timer-text { font-size: 22px; }
+      #leaderboard { top: calc(65px + var(--safe-top)); gap: 4px; padding: 8px 10px; }
+      .board-row { font-size: 10px; padding: 3px 8px; }
+      #minimap-container { width: 130px; height: 130px; }
+      #joystick-container { width: 120px; height: 120px; }
+      #joystick-thumb { width: 50px; height: 50px; }
+      .panel h1 { font-size: 24px; }
+      .panel .encourage { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <div id="ui-layer">
+    <div id="timer-container">
+      <div id="timer-text">05:00</div>
+      <div id="speed-indicator">Kelajuan Rangkaian 1.00x</div>
+    </div>
+    <div id="leaderboard">
+      <div class="board-title">Kemajuan Pembersihan</div>
+      <div id="board-content"></div>
+    </div>
+    <div id="minimap-container"><canvas id="minimap"></canvas></div>
+    <div id="joystick-container"><div id="joystick-thumb"></div></div>
+  </div>
+  <div id="game-over" style="display:none;">
+    <div class="panel">
+      <h1 id="result-title"></h1>
+      <div class="encourage" id="result-message"></div>
+      <button onclick="startGame()">Sambung Semula ke Rangkaian</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
+      const minimapCanvas = document.getElementById('minimap');
+      const minictx = minimapCanvas.getContext('2d');
+      const gameOverScreen = document.getElementById('game-over');
+      const resultTitle = document.getElementById('result-title');
+      const resultMessage = document.getElementById('result-message');
+      const joystickContainer = document.getElementById('joystick-container');
+      const joystickThumb = document.getElementById('joystick-thumb');
+
+      let width, height;
+      function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        const mmSize = window.innerWidth < 600 ? 130 : 180;
+        minimapCanvas.width = mmSize;
+        minimapCanvas.height = mmSize;
+        document.getElementById('minimap-container').style.width = mmSize + 'px';
+        document.getElementById('minimap-container').style.height = mmSize + 'px';
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      let joystickActive = false, joystickId = null;
+      function handleJoystickStart(e) { e.preventDefault(); joystickActive = true; joystickId = e.pointerId; }
+      function handleJoystickMove(e) {
+        if (!joystickActive || e.pointerId !== joystickId) return;
+        e.preventDefault();
+        const rect = joystickContainer.getBoundingClientRect();
+        const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+        let dx = e.clientX - cx, dy = e.clientY - cy;
+        const dist = Math.sqrt(dx*dx+dy*dy), maxDist = rect.width/2 - 15;
+        if (dist > maxDist) { dx = (dx/dist)*maxDist; dy = (dy/dist)*maxDist; }
+        joystickThumb.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+        if (dist > 8) { inputDir.x = dx/maxDist; inputDir.y = dy/maxDist; }
+        else { inputDir.x = 0; inputDir.y = 0; }
+      }
+      function handleJoystickEnd(e) { if (e.pointerId !== joystickId) return; joystickActive = false; joystickId = null; joystickThumb.style.transform = 'translate(-50%, -50%)'; inputDir.x = 0; inputDir.y = 0; }
+      joystickContainer.addEventListener('pointerdown', handleJoystickStart);
+      joystickContainer.addEventListener('pointermove', handleJoystickMove);
+      joystickContainer.addEventListener('pointerup', handleJoystickEnd);
+      joystickContainer.addEventListener('pointercancel', handleJoystickEnd);
+      joystickContainer.addEventListener('pointerleave', handleJoystickEnd);
+
+      window.addEventListener('mousemove', e => {
+        if (joystickActive) return;
+        if (gameState !== 'PLAYING') return;
+        let dx = e.clientX - width/2, dy = e.clientY - height/2, dist = Math.sqrt(dx*dx+dy*dy);
+        inputDir.x = dist > 20 ? dx/dist : 0;
+        inputDir.y = dist > 20 ? dy/dist : 0;
+      });
+      window.addEventListener('mouseleave', () => { if(!joystickActive) { inputDir.x=0; inputDir.y=0; } });
+
+      const WORLD_SIZE = 3500, PERSON_RADIUS = 5, NUM_NEUTRALS = 650, NUM_AI_TEAMS = 7;
+      const TEAM_COLORS = ['#555566','#00f3ff','#ff003c','#bc13fe','#ff71ce','#2962ff','#39ff14','#ffea00','#ff6600'];
+      const TEAM_NAMES = [
+        "Pengguna Internet Biasa", "Pembela Moral",
+        "Pembuli Siber", "Pencarian Butiran Peribadi", "Penyebar Fitnah",
+        "Penghina & Pencaci", "Penghasut Jahat", "Tentera Bertaip", "Si Pengusik Tegar"
+      ];
+      const MAX_GAME_TIME = 300;
+      let gameTimeLeft = MAX_GAME_TIME, speedMultiplier = 1.0, lastTime = 0, animationId = null;
+      let gameState = 'MENU', persons = [], teams = {}, particles = [], obstacles = [], powerups = [], superStars = [];
+      let camera = { x: WORLD_SIZE/2, y: WORLD_SIZE/2 }, inputDir = { x:0, y:0 };
+
+      const teamBallImages = {};
+      function createBallImage(color) {
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = PERSON_RADIUS * 2 + 4;
+        offCanvas.height = PERSON_RADIUS * 2 + 4;
+        const offCtx = offCanvas.getContext('2d');
+        offCtx.beginPath();
+        offCtx.arc(PERSON_RADIUS+2, PERSON_RADIUS+2, PERSON_RADIUS, 0, Math.PI*2);
+        offCtx.fillStyle = color;
+        offCtx.fill();
+        return offCanvas;
+      }
+      for (let i = 0; i < TEAM_COLORS.length; i++) {
+        teamBallImages[i] = createBallImage(TEAM_COLORS[i]);
+      }
+
+      const SUPER_STAR_TYPES = [
+        { name:'Guru', bonus:10, radius:15, glowColor:'#FFD700', glowIntensity:22, weight:45 },
+        { name:'Pengetua Disiplin', bonus:10, radius:19, glowColor:'#FFC107', glowIntensity:28, weight:25 },
+        { name:'Pengetua Sekolah', bonus:10, radius:24, glowColor:'#FFB300', glowIntensity:34, weight:15 },
+        { name:'Ibu Bapa', bonus:10, radius:30, glowColor:'#FFA000', glowIntensity:42, weight:8 }
+      ];
+      function getRandomSuperStarType() {
+        let total = SUPER_STAR_TYPES.reduce((s,t)=>s+t.weight,0);
+        let r = Math.random()*total;
+        for(const t of SUPER_STAR_TYPES) if((r-=t.weight)<=0) return t;
+        return SUPER_STAR_TYPES[0];
+      }
+
+      class Person {
+        constructor(x,y,team){ this.x=x; this.y=y; this.vx=(Math.random()-0.5)*2; this.vy=(Math.random()-0.5)*2; this.team=team; this.baseSpeed=4.8+Math.random()*1.2; }
+        update(){
+          let tx=0, ty=0, ms = this.baseSpeed * speedMultiplier;
+          if(this.team===0){ tx=this.vx+(Math.random()-0.5)*0.6; ty=this.vy+(Math.random()-0.5)*0.6; }
+          else { let t=teams[this.team]; if(t&&t.alive){ let d=Math.sqrt((t.targetX-this.x)**2+(t.targetY-this.y)**2)||1; tx=(t.targetX-this.x)/d*ms; ty=(t.targetY-this.y)/d*ms; } }
+          this.vx+=(tx-this.vx)*0.18; this.vy+=(ty-this.vy)*0.18;
+          let sp=Math.sqrt(this.vx**2+this.vy**2); if(sp>ms){ this.vx=this.vx/sp*ms; this.vy=this.vy/sp*ms; }
+          this.x+=this.vx; this.y+=this.vy;
+          if(this.x<10){this.x=10; this.vx*=-0.7;} if(this.x>WORLD_SIZE-10){this.x=WORLD_SIZE-10; this.vx*=-0.7;}
+          if(this.y<10){this.y=10; this.vy*=-0.7;} if(this.y>WORLD_SIZE-10){this.y=WORLD_SIZE-10; this.vy*=-0.7;}
+        }
+        draw(ctx) {
+          const img = teamBallImages[this.team];
+          if (img) {
+            ctx.drawImage(img, this.x - PERSON_RADIUS - 2, this.y - PERSON_RADIUS - 2);
+          } else {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, PERSON_RADIUS, 0, Math.PI*2);
+            ctx.fillStyle = TEAM_COLORS[this.team];
+            ctx.fill();
+          }
+        }
+      }
+      class Particle {
+        constructor(x,y,color,size){ this.x=x; this.y=y; let a=Math.random()*Math.PI*2,s=Math.random()*4; this.vx=Math.cos(a)*s; this.vy=Math.sin(a)*s; this.color=color; this.life=1; this.decay=0.04+Math.random()*0.04; this.size=size||2; }
+        update(){this.x+=this.vx; this.y+=this.vy; this.life-=this.decay;}
+        draw(ctx){if(this.life<=0)return; ctx.globalAlpha=this.life; ctx.fillStyle=this.color; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;}
+      }
+
+      function generateMap(){
+        obstacles=[]; powerups=[]; superStars=[];
+        for(let i=0;i<45;i++) obstacles.push({x:Math.random()*(WORLD_SIZE-200)+100, y:Math.random()*(WORLD_SIZE-200)+100, w:40+Math.random()*100, h:40+Math.random()*100});
+        for(let i=0;i<10;i++) powerups.push({x:Math.random()*WORLD_SIZE,y:Math.random()*WORLD_SIZE,pulse:Math.random()*Math.PI*2});
+        for(let i=0;i<10;i++) superStars.push({x:Math.random()*WORLD_SIZE,y:Math.random()*WORLD_SIZE,type:getRandomSuperStarType(),pulse:Math.random()*Math.PI*2});
+      }
+
+      function startGame(){
+        if(animationId) cancelAnimationFrame(animationId);
+        persons=[]; particles=[]; teams={}; obstacles=[]; powerups=[]; superStars=[];
+        gameState='PLAYING'; gameOverScreen.style.display='none';
+        gameTimeLeft=MAX_GAME_TIME; speedMultiplier=1.0; lastTime=performance.now();
+        generateMap();
+        for(let i=1;i<=NUM_AI_TEAMS+1;i++){
+          let sx=Math.random()*WORLD_SIZE,sy=Math.random()*WORLD_SIZE;
+          if(i===1){sx=WORLD_SIZE/2; sy=WORLD_SIZE/2;}
+          teams[i]={id:i,count:1,alive:true,targetX:sx,targetY:sy,cx:sx,cy:sy};
+          persons.push(new Person(sx,sy,i));
+        }
+        camera.x=WORLD_SIZE/2; camera.y=WORLD_SIZE/2;
+        for(let i=0;i<NUM_NEUTRALS;i++) persons.push(new Person(Math.random()*WORLD_SIZE,Math.random()*WORLD_SIZE,0));
+        animationId=requestAnimationFrame(gameLoop);
+      }
+
+      function updateAI(){
+        for(let i=2;i<=NUM_AI_TEAMS+1;i++){
+          let t=teams[i]; if(!t||!t.alive) continue;
+          let bx=t.targetX+(Math.random()-0.5)*150, by=t.targetY+(Math.random()-0.5)*150, min=450*450, found=false;
+          [...superStars,...powerups].forEach(o=>{ let d=(o.x-t.cx)**2+(o.y-t.cy)**2; if(d<min){min=d; bx=o.x; by=o.y; found=true;} });
+          if(!found) persons.forEach(p=>{ if(p.team===i)return; let d=(p.x-t.cx)**2+(p.y-t.cy)**2; if(d<min){ let ec=p.team===0?0:(teams[p.team]?teams[p.team].count:0); if(t.count>ec){min=d; bx=p.x; by=p.y;} else if(t.count<ec){ bx=t.cx-(p.x-t.cx); by=t.cy-(p.y-t.cy); min=0; } } });
+          t.targetX+=(bx-t.targetX)*0.1*speedMultiplier; t.targetY+=(by-t.targetY)*0.1*speedMultiplier;
+        }
+      }
+
+      function updatePhysics(){
+        for(let i=1;i<=NUM_AI_TEAMS+1;i++) if(teams[i]){teams[i].count=0; teams[i].sumX=0; teams[i].sumY=0;}
+        const CS=80, gC=Math.ceil(WORLD_SIZE/CS), grid=new Array(gC*gC).fill().map(()=>[]);
+        persons.forEach(p=>{ if(p.team>0&&teams[p.team]){teams[p.team].count++; teams[p.team].sumX+=p.x; teams[p.team].sumY+=p.y;} let idx=Math.floor(p.x/CS)+Math.floor(p.y/CS)*gC; if(grid[idx])grid[idx].push(p); });
+        for(let i=1;i<=NUM_AI_TEAMS+1;i++) if(teams[i]&&teams[i].count>0){teams[i].cx=teams[i].sumX/teams[i].count; teams[i].cy=teams[i].sumY/teams[i].count;} else if(teams[i])teams[i].alive=false;
+        persons.forEach(p1=>{
+          obstacles.forEach(o=>{ if(p1.x>o.x-5&&p1.x<o.x+o.w+5&&p1.y>o.y-5&&p1.y<o.y+o.h+5){ p1.x+=(p1.x>o.x+o.w/2?3:-3); p1.y+=(p1.y>o.y+o.h/2?3:-3); } });
+          if(p1.team>0){
+            for(let k=powerups.length-1;k>=0;k--){ let pw=powerups[k]; if((p1.x-pw.x)**2+(p1.y-pw.y)**2<400){ powerups.splice(k,1); for(let b=0;b<3;b++) persons.push(new Person(p1.x+(Math.random()-0.5)*30,p1.y+(Math.random()-0.5)*30,p1.team)); powerups.push({x:Math.random()*WORLD_SIZE,y:Math.random()*WORLD_SIZE,pulse:0}); } }
+            for(let k=superStars.length-1;k>=0;k--){ let ss=superStars[k]; if((p1.x-ss.x)**2+(p1.y-ss.y)**2<(ss.type.radius+8)**2){ let bonus=ss.type.bonus; superStars.splice(k,1); for(let b=0;b<bonus;b++) persons.push(new Person(ss.x+(Math.random()-0.5)*35,ss.y+(Math.random()-0.5)*35,p1.team)); superStars.push({x:Math.random()*WORLD_SIZE,y:Math.random()*WORLD_SIZE,type:getRandomSuperStarType(),pulse:0}); } }
+          }
+          let cx=Math.floor(p1.x/CS),cy=Math.floor(p1.y/CS);
+          for(let nx=-1;nx<=1;nx++) for(let ny=-1;ny<=1;ny++){ let idx=(cx+nx)+(cy+ny)*gC; if(!grid[idx])continue; grid[idx].forEach(p2=>{ if(p1===p2)return; let dx=p1.x-p2.x,dy=p1.y-p2.y,distSq=dx*dx+dy*dy; if(distSq<121){ if(p1.team!==p2.team){ let c1=p1.team===0?0:(teams[p1.team]?teams[p1.team].count:0),c2=p2.team===0?0:(teams[p2.team]?teams[p2.team].count:0); if(c1>c2&&p1.team!==0) p2.team=p1.team; } else { let d=Math.sqrt(distSq)||0.1; p1.x+=(dx/d)*0.5; p1.y+=(dy/d)*0.5; } } }); }
+        });
+        if (particles.length > 80) particles.splice(0, particles.length - 80);
+      }
+
+      function drawWorld(){
+        ctx.save();
+        if(teams[1]&&teams[1].alive) { camera.x+=(teams[1].cx-camera.x)*0.12; camera.y+=(teams[1].cy-camera.y)*0.12; }
+        const isMobile = window.innerWidth < 600;
+        const viewScale = isMobile ? 0.38 : 1.0;
+        ctx.translate(width/2 - camera.x * viewScale, height/2 - camera.y * viewScale);
+        ctx.scale(viewScale, viewScale);
+
+        ctx.fillStyle='#08080f'; ctx.fillRect(0,0,WORLD_SIZE,WORLD_SIZE);
+        obstacles.forEach(o=>{
+          ctx.fillStyle='#151520'; ctx.fillRect(o.x, o.y, o.w, o.h);
+          ctx.strokeStyle='#3a3a4a'; ctx.lineWidth=2; ctx.strokeRect(o.x, o.y, o.w, o.h);
+          ctx.strokeStyle='rgba(0,243,255,0.15)'; ctx.lineWidth=4; ctx.strokeRect(o.x-2, o.y-2, o.w+4, o.h+4);
+        });
+
+        powerups.forEach(p=>{ p.pulse+=0.08; ctx.beginPath(); ctx.arc(p.x,p.y,9+Math.sin(p.pulse)*2.5,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.shadowBlur=10; ctx.shadowColor='#fff'; ctx.fill(); ctx.shadowBlur=0; });
+
+        const nameFontSize = (isMobile ? 22 : 20) / viewScale;
+        const bonusFontSize = (isMobile ? 15 : 13) / viewScale;
+        superStars.forEach(s=>{
+          s.pulse+=0.06;
+          let r=s.type.radius+Math.sin(s.pulse)*4;
+          ctx.beginPath(); ctx.arc(s.x,s.y,r,0,Math.PI*2);
+          let g=ctx.createRadialGradient(s.x,s.y,r*0.2,s.x,s.y,r);
+          g.addColorStop(0,'#FFFDE7'); g.addColorStop(0.4,'#FFB300'); g.addColorStop(1,'#E65100');
+          ctx.fillStyle=g; ctx.shadowBlur=s.type.glowIntensity; ctx.shadowColor=s.type.glowColor; ctx.fill(); ctx.shadowBlur=0;
+          ctx.font = `bold ${nameFontSize}px "PingFang SC","Microsoft YaHei",sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#ffffff'; ctx.shadowBlur = 10; ctx.shadowColor = '#000';
+          ctx.fillText(s.type.name, s.x, s.y - r - 6);
+          ctx.font = `bold ${bonusFontSize}px "Orbitron",sans-serif`;
+          ctx.fillText('+'+s.type.bonus, s.x, s.y - r - 6 - nameFontSize*0.8);
+          ctx.shadowBlur = 0;
+        });
+
+        particles.forEach(p=>{ p.update(); p.draw(ctx); });
+        particles = particles.filter(p => p.life > 0);
+        
+        persons.forEach(p=>{ p.update(); p.draw(ctx); });
+
+        const teamFontSize = (isMobile ? 28 : 24) / viewScale;
+        for(let i=1;i<=NUM_AI_TEAMS+1;i++){
+          const t = teams[i];
+          if(t && t.alive && t.count > 0) {
+            ctx.font = `bold ${teamFontSize}px "PingFang SC","Microsoft YaHei",sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.fillStyle = TEAM_COLORS[i];
+            ctx.shadowBlur = 12; ctx.shadowColor = '#000';
+            ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+            const txt = t.count.toString();
+            ctx.strokeText(txt, t.cx, t.cy - 32);
+            ctx.fillText(txt, t.cx, t.cy - 32);
+            ctx.shadowBlur = 0;
+          }
+        }
+        ctx.restore();
+      }
+
+      function drawMinimap(){
+        let w=minimapCanvas.width, h=minimapCanvas.height, s=w/WORLD_SIZE;
+        minictx.clearRect(0,0,w,h);
+        minictx.fillStyle='rgba(4,4,10,0.9)'; minictx.fillRect(0,0,w,h);
+        superStars.forEach(ss=>{ minictx.fillStyle='#FFD740'; minictx.beginPath(); minictx.arc(ss.x*s, ss.y*s, 3, 0, Math.PI*2); minictx.fill(); });
+        persons.forEach(p=>{ minictx.fillStyle=TEAM_COLORS[p.team]; minictx.fillRect(p.x*s-1,p.y*s-1,2,2); });
+        minictx.strokeStyle='rgba(0,243,255,0.8)'; minictx.strokeRect((camera.x-width/2)*s,(camera.y-height/2)*s,width*s,height*s);
+      }
+
+      function updateUI(sorted){
+        if(gameState!=='PLAYING') return;
+        let now=performance.now(), dt=Math.min((now-lastTime)/1000,0.1); lastTime=now;
+        gameTimeLeft-=dt; if(gameTimeLeft<=0){gameTimeLeft=0; triggerGameOver("Penghakiman Akhir",sorted);}
+        speedMultiplier=1.0+((MAX_GAME_TIME-gameTimeLeft)/MAX_GAME_TIME)*1.6;
+        document.getElementById('timer-text').innerText=`${Math.floor(gameTimeLeft/60).toString().padStart(2,'0')}:${Math.floor(gameTimeLeft%60).toString().padStart(2,'0')}`;
+        document.getElementById('speed-indicator').innerText=`Kelajuan Rangkaian ${speedMultiplier.toFixed(2)}x`;
+        let html=''; const maxShow=window.innerWidth<600?3:5;
+        for(let i=0;i<Math.min(sorted.length,maxShow);i++){
+          let t=sorted[i], isMe=t.id===1;
+          html+=`<div class="board-row ${isMe?'my-score-row':''}"><span class="board-color-dot" style="background:${TEAM_COLORS[t.id]};color:${TEAM_COLORS[t.id]};"></span><span style="flex:1;color:#ccc;">${TEAM_NAMES[t.id]}</span><span>${t.count}</span></div>`;
+        }
+        document.getElementById('board-content').innerHTML=html;
+      }
+
+      function triggerGameOver(title, sorted) {
+        gameState = 'GAMEOVER';
+        if (title.includes('Ditenggelami') || title.includes('Gangguan')) {
+          resultTitle.innerText = 'Sambungan Terputus';
+          resultMessage.innerText = 'Jangan mengalah kepada pembuli. Ingatlah untuk mendapatkan bantuan daripada ibu bapa, guru, pengetua disiplin, dan pengetua sekolah.';
+        } else if (title.includes('Dibersihkan')) {
+          resultTitle.innerText = 'Persekitaran Rangkaian Telah Dibersihkan!';
+          resultMessage.innerText = 'Tahniah! Anda berjaya menentang pembuli. Teruskan berjuang, jangan pernah berputus asa!';
+        } else {
+          resultTitle.innerText = title;
+          resultMessage.innerText = 'Permainan Tamat';
+        }
+        gameOverScreen.style.display = 'flex';
+      }
+
+      function gameLoop(){
+        if(gameState==='PLAYING'){
+          if(teams[1]&&teams[1].alive){ teams[1].targetX=teams[1].cx+inputDir.x*220; teams[1].targetY=teams[1].cy+inputDir.y*220; }
+          updateAI(); updatePhysics();
+        }
+        ctx.clearRect(0,0,width,height);
+        drawWorld();
+        let sorted=Object.values(teams).filter(t=>t.count>0).sort((a,b)=>b.count-a.count);
+        updateUI(sorted); drawMinimap();
+        if(gameState==='PLAYING'&&(!teams[1]||teams[1].count<=0)) triggerGameOver("Ditenggelami oleh Buli Siber",sorted);
+        else if(gameState==='PLAYING'&&sorted.length===1&&sorted[0].id===1) triggerGameOver("Persekitaran Rangkaian Telah Dibersihkan!",sorted);
+        animationId=requestAnimationFrame(gameLoop);
+      }
+
+      startGame();
+      window.startGame = startGame;
+    })();
+  </script>
+</body>
+</html>
