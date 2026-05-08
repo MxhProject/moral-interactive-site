@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ms" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    window.elementSdk = {
+      init: (opts) => {},
+      setConfig: (cfg) => {}
+    };
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; font-family: 'Inter', sans-serif; overflow: hidden; }
+
+    .game-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .canvas-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      background: radial-gradient(circle at center, rgba(99,102,241,0.1) 0%, rgba(15,23,42,0.8) 100%);
+      box-shadow: inset 0 0 40px rgba(99,102,241,0.2), 0 0 40px rgba(99,102,241,0.1);
+      border-radius: 8px;
+      touch-action: none;
+    }
+
+    .menu-screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+      z-index: 50;
+      backdrop-filter: blur(8px);
+    }
+
+    .menu-screen.hidden { display: none; }
+
+    .menu-content {
+      text-align: center;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .menu-title {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #a5f3fc, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      letter-spacing: -1px;
+    }
+
+    .menu-subtitle {
+      font-size: clamp(1rem, 4vw, 1.25rem);
+      color: #94a3b8;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .menu-button {
+      padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2.5rem);
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .menu-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 32px rgba(99,102,241,0.6);
+    }
+
+    .menu-button:active {
+      transform: scale(0.95);
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+      50% { box-shadow: 0 12px 32px rgba(99,102,241,0.6); }
+    }
+
+    .game-ui {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: clamp(0.5rem, 2vw, 1rem);
+      background: rgba(15,23,42,0.6);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(99,102,241,0.2);
+      gap: 1rem;
+      font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+    }
+
+    .ui-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #a5b4fc;
+      font-weight: 600;
+    }
+
+    .ui-label { color: #94a3b8; font-weight: 400; }
+    .score-display { color: #34d399; font-size: 1.2em; }
+    .health-display { color: #fca5a5; }
+    .wave-display { color: #fbbf24; }
+
+    .game-over-screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+    }
+
+    .game-over-screen.active { display: flex; }
+
+    .game-over-content {
+      text-align: center;
+      padding: clamp(1.5rem, 5vw, 2.5rem);
+      background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1));
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 16px;
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .game-over-emoji {
+      font-size: clamp(3rem, 10vw, 5rem);
+      margin-bottom: 1rem;
+      animation: bounce 0.6s ease-out;
+    }
+
+    @keyframes bounce {
+      0% { transform: scale(0) rotate(-45deg); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .game-over-title {
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
+      font-weight: 900;
+      color: #e0e7ff;
+      margin-bottom: 0.5rem;
+    }
+
+    .game-over-score {
+      font-size: clamp(1.25rem, 4vw, 2rem);
+      color: #fbbf24;
+      font-weight: 700;
+      margin: 1rem 0;
+    }
+
+    .game-over-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .game-over-btn {
+      padding: clamp(0.5rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: clamp(0.875rem, 2vw, 1rem);
+    }
+
+    .btn-retry {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+    }
+
+    .btn-retry:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(99,102,241,0.4); }
+
+    .btn-menu {
+      background: rgba(255,255,255,0.1);
+      color: #a5b4fc;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .btn-menu:hover { background: rgba(255,255,255,0.15); }
+
+    .mobile-hint {
+      position: absolute;
+      bottom: clamp(0.5rem, 2vw, 1rem);
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: clamp(0.75rem, 2vw, 0.875rem);
+      color: #94a3b8;
+      background: rgba(15,23,42,0.7);
+      padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);
+      border-radius: 20px;
+      border: 1px solid rgba(99,102,241,0.2);
+      pointer-events: none;
+      animation: fadeInUp 0.6s ease-out 2s both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    .speed-up-hint {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fbbf24;
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      font-weight: 900;
+      text-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 40;
+      animation: speedUpFlash 1.5s ease-out;
+    }
+
+    @keyframes speedUpFlash {
+      0% { opacity: 0; transform: translate(-50%, -20px); }
+      20% { opacity: 1; transform: translate(-50%, 0); }
+      80% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, 20px); }
+    }
+
+    .powerup-timer {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #fbbf24;
+      font-size: 14px;
+      background: rgba(15,23,42,0.8);
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid #fbbf24;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .game-ui { gap: 0.5rem; }
+      canvas { border-radius: 4px; }
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-950">
+<div id="app" class="game-container">
+  <!-- Menu Utama -->
+  <div id="menuScreen" class="menu-screen">
+    <div class="menu-content">
+      <div style="font-size: clamp(3rem, 10vw, 5rem); margin-bottom: 1rem;">🛡️</div>
+      <h1 id="el-title" class="menu-title">Penjaga Siber</h1>
+      <p class="menu-subtitle">Sekat komen buli, lindungi dunia siber!</p>
+      <p class="menu-subtitle" style="font-size: clamp(0.875rem, 3vw, 1rem); color: #64748b; margin-top: 1.5rem;">💻 Gerak tetikus / 📱 Leret jari · Klik untuk tembak</p>
+      <button id="el-startBtn" class="menu-button mt-6" onclick="startGame()">Mula Bertahan</button>
+    </div>
+  </div>
+  <!-- Bekas Canvas -->
+  <div class="canvas-wrapper">
+    <canvas id="gameCanvas"></canvas>
+    <div class="mobile-hint" id="mobileHint">👆 Leret untuk kawal · Ketuk skrin untuk tembak</div>
+    <div id="speedUpHint" class="speed-up-hint"></div>
+    <div id="powerupTimer" class="powerup-timer" style="display: none;"></div>
+  </div>
+  <!-- UI Permainan -->
+  <div class="game-ui" id="gameUI" style="display: none;">
+    <div class="ui-item"><span class="ui-label">⏱️ Masa</span> <span id="waveCounter" class="wave-display">5:00</span></div>
+    <div class="ui-item"><span class="ui-label">❤️ Nyawa</span> <span id="healthCounter" class="health-display">3</span></div>
+    <div class="ui-item"><span class="ui-label">⭐ Skor</span> <span id="scoreDisplay" class="score-display">0</span></div>
+    <div class="ui-item"><span class="ui-label">⚡ Kelajuan</span> <span id="speedDisplay" style="color: #fbbf24;">1.0x</span></div>
+  </div>
+  <!-- Skrin Tamat Permainan -->
+  <div id="gameOverScreen" class="game-over-screen">
+    <div class="game-over-content">
+      <div id="gameOverEmoji" class="game-over-emoji">🌟</div>
+      <div id="gameOverTitle" class="game-over-title">Misi Selesai!</div>
+      <div id="gameOverScore" class="game-over-score">Skor: 0</div>
+      <p style="color: #94a3b8; font-size: clamp(0.875rem, 2.5vw, 1rem); margin: 1rem 0;"><span id="gameOverStats"></span></p>
+      <div class="game-over-buttons">
+        <button class="game-over-btn btn-retry" onclick="restartGame()">🔄 Main Semula</button>
+        <button class="game-over-btn btn-menu" onclick="goToMenu()">🏠 Kembali ke Menu</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  (function(){
+    const defaultConfig = {
+      game_title: 'Penjaga Siber',
+      start_button_text: 'Mula Bertahan',
+      background_color: '#0a0e27',
+      text_color: '#e0e7ff',
+      primary_action_color: '#6366f1',
+      secondary_action_color: '#94a3b8',
+      font_family: 'Inter',
+      font_size: 16
+    };
+
+    const gameCanvas = document.getElementById('gameCanvas');
+    const ctx = gameCanvas.getContext('2d');
+
+    // Senarai perkataan negatif yang dikembangkan
+    const badWords = [
+      'Tak guna', 'Sampah', 'Hodoh', 'Gemuk', 'Pendek', 'Empat mata', 'Nerd', 'Miskin',
+      'Bodoh', 'Bangang', 'Sial', 'Dungu', 'Gila', 'Psiko', 'Pondan', 'Pengkid',
+      'Pisau cukur', 'Buaya', 'Penyondol', 'Perampas', 'Tak laku', 'Bujang selamanya', 'Loser', 'Gagal',
+      'Berambus', 'Pergi mati', 'Jijik', 'Nak muntah', 'Tak payah hidup', 'Sampah masyarakat', 'Parasit',
+      'Lintah darat', 'Beban', 'Pemalas', 'Wira keyboard', 'Kaki gaduh', 'Hater', 'Kuat cemburu',
+      'Malas belajar', 'Corot', 'Terakhir', 'Takde kawan', 'Tersisih', 'Badut', 'Bahan lawak',
+      'Berlagak', 'Kau layak ke', 'Tak sedar diri', 'Perasan', 'Mimpi je la', 'Tunggu kiamat',
+      'Benci gila', 'Menyemak', 'Jauhkan diri', 'Jangan sentuh', 'Bawa malang', 'Pembawa suey'
+    ];
+
+    const gameState = {
+      running: false,
+      canvas: gameCanvas,
+      ctx: ctx,
+      width: 0,
+      height: 0,
+      player: { x: 0, y: 0, w: 0, h: 0 },
+      bullets: [],
+      enemies: [],
+      powerUps: [],
+      score: 0,
+      lives: 3,
+      gameTimer: 0,
+      difficulty: 1,
+      bulletSpeed: 0,
+      enemySpeed: 0,
+      baseEnemySpeed: 0,
+      speedMultiplier: 1.0,
+      spawnRate: 0,
+      shootCooldown: 0,
+      shootCooldownMax: 12,
+      laserMode: false,
+      laserTimer: 0,
+      laserMaxTime: 600,
+      rapidMode: false,           // Mod kombo automatik satu baris (Ganti peluru berpandu)
+      rapidTimer: 0,
+      rapidMaxTime: 600,
+      autoShootTimer: 0,
+      autoShootInterval: 5,       // Selang tembakan kombo (frame)
+      gameEndTime: 300,
+      powerUpSpawnChance: 25,
+      lastSpeedUpTime: 0
+    };
+
+    let particles = [];
+
+    function initCanvas() {
+      const wrapper = document.querySelector('.canvas-wrapper');
+      gameState.width = wrapper.clientWidth;
+      gameState.height = wrapper.clientHeight;
+
+      gameCanvas.width = gameState.width;
+      gameCanvas.height = gameState.height;
+
+      gameState.player.w = gameState.width * 0.08;
+      gameState.player.h = gameState.width * 0.08;
+      gameState.player.y = gameState.height - gameState.player.h - 20;
+      gameState.player.x = gameState.width / 2 - gameState.player.w / 2;
+
+      updateDifficulty();
+      setupControls();
+    }
+
+    function updateDifficulty() {
+      const progress = Math.min(gameState.gameTimer / (gameState.gameEndTime * 60), 1.0);
+      
+      const secondsElapsed = Math.floor(gameState.gameTimer / 60);
+      const speedLevel = Math.floor(secondsElapsed / 20);
+      gameState.speedMultiplier = 1.0 + (speedLevel * 0.2);
+      
+      if (speedLevel > 0 && secondsElapsed % 20 === 0 && secondsElapsed !== gameState.lastSpeedUpTime) {
+        showSpeedUpHint(gameState.speedMultiplier);
+        gameState.lastSpeedUpTime = secondsElapsed;
+      }
+      
+      gameState.difficulty = 1 + progress * 2;
+      gameState.bulletSpeed = gameState.height * 0.01;
+      
+      gameState.baseEnemySpeed = gameState.height * 0.003;
+      gameState.enemySpeed = gameState.baseEnemySpeed * gameState.speedMultiplier * gameState.difficulty;
+      
+      gameState.spawnRate = Math.max(40, 120 - Math.floor(progress * 80));
+    }
+
+    function showSpeedUpHint(multiplier) {
+      const hint = document.getElementById('speedUpHint');
+      hint.textContent = `⚡ Kelajuan ditingkatkan ke ${multiplier.toFixed(1)}x ⚡`;
+      hint.style.animation = 'none';
+      setTimeout(() => {
+        hint.style.animation = 'speedUpFlash 1.5s ease-out';
+      }, 10);
+    }
+
+    function setupControls() {
+      document.addEventListener('mousemove', e => {
+        if (!gameState.running) return;
+        const rect = gameCanvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        gameState.player.x = Math.max(0, Math.min(gameState.width - gameState.player.w, mouseX - gameState.player.w / 2));
+      });
+
+      gameCanvas.addEventListener('touchmove', e => {
+        e.preventDefault();
+        if (!gameState.running) return;
+        const touch = e.touches[0];
+        const rect = gameCanvas.getBoundingClientRect();
+        const touchX = touch.clientX - rect.left;
+        gameState.player.x = Math.max(0, Math.min(gameState.width - gameState.player.w, touchX - gameState.player.w / 2));
+      }, { passive: false });
+
+      gameCanvas.addEventListener('touchstart', e => {
+        e.preventDefault();
+        if (!gameState.running) return;
+        const touch = e.touches[0];
+        const rect = gameCanvas.getBoundingClientRect();
+        const touchX = touch.clientX - rect.left;
+        gameState.player.x = Math.max(0, Math.min(gameState.width - gameState.player.w, touchX - gameState.player.w / 2));
+        
+        if (gameState.shootCooldown <= 0 && !gameState.rapidMode) {
+          shootBullet();
+          gameState.shootCooldown = gameState.shootCooldownMax;
+        }
+      }, { passive: false });
+
+      gameCanvas.addEventListener('mousedown', e => {
+        e.preventDefault();
+        if (!gameState.running) return;
+        if (gameState.shootCooldown <= 0 && !gameState.rapidMode) {
+          shootBullet();
+          gameState.shootCooldown = gameState.shootCooldownMax;
+        }
+      });
+
+      gameCanvas.addEventListener('contextmenu', e => e.preventDefault());
+    }
+
+    function shootBullet() {
+      if (gameState.laserMode) {
+        const laserCount = 8;
+        const spacing = (gameState.player.w * 1.2) / (laserCount - 1);
+        const startX = gameState.player.x - gameState.player.w * 0.1;
+        for (let i = 0; i < laserCount; i++) {
+          gameState.bullets.push({
+            x: startX + i * spacing,
+            y: gameState.player.y - 5,
+            w: 5,
+            h: 22,
+            vx: 0,
+            isLaser: true
+          });
+        }
+        return;
+      }
+
+      // Mod biasa: Tiga baris peluru
+      const offsets = [-16, 0, 16];
+      for (let off of offsets) {
+        gameState.bullets.push({
+          x: gameState.player.x + gameState.player.w/2 - 3 + off,
+          y: gameState.player.y,
+          w: 6,
+          h: 16,
+          vx: 0
+        });
+      }
+    }
+
+    // Peluru kombo satu baris (Tembakan pantas berterusan)
+    function shootRapidBullet() {
+      gameState.bullets.push({
+        x: gameState.player.x + gameState.player.w/2 - 3,
+        y: gameState.player.y,
+        w: 8,
+        h: 18,
+        vx: 0,
+        isRapid: true
+      });
+    }
+
+    function activatePowerUp(type) {
+      switch(type) {
+        case 'health':
+          gameState.lives = Math.min(gameState.lives + 1, 10);
+          break;
+        case 'laser':
+          gameState.laserMode = true;
+          gameState.laserTimer = 0;
+          gameState.rapidMode = false;
+          break;
+        case 'rapid':
+          gameState.rapidMode = true;
+          gameState.rapidTimer = 0;
+          gameState.laserMode = false;
+          break;
+      }
+    }
+
+    function spawnEnemy() {
+      const spawnCount = Math.min(5, 1 + Math.floor(gameState.difficulty * 1.5));
+      for (let i = 0; i < spawnCount; i++) {
+        const randomWord = badWords[Math.floor(Math.random() * badWords.length)];
+        gameState.enemies.push({
+          x: Math.random() * (gameState.width - 50),
+          y: -60 - i * 60,
+          w: 50,
+          h: 50,
+          text: randomWord,
+          health: 1,
+          type: 'bad'
+        });
+      }
+    }
+
+    function spawnPowerUp() {
+      const powerTypes = ['health', 'laser', 'rapid'];
+      const icons = { health: '❤️', laser: '⚡', rapid: '🔥' };
+      const type = powerTypes[Math.floor(Math.random() * powerTypes.length)];
+      
+      gameState.powerUps.push({
+        x: Math.random() * (gameState.width - 40),
+        y: -50,
+        w: 40,
+        h: 40,
+        type: type,
+        icon: icons[type]
+      });
+    }
+
+    function collide(a, b) {
+      return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+    }
+
+    function createExplosion(x, y) {
+      for (let i = 0; i < 6; i++) {
+        const angle = (Math.PI * 2 * i) / 6;
+        const velocity = 3 + Math.random() * 2;
+        particles.push({
+          x, y, vx: Math.cos(angle)*velocity, vy: Math.sin(angle)*velocity,
+          life: 25, color: ['#34d399','#6ee7b7','#fbbf24'][Math.floor(Math.random()*3)], size: 3
+        });
+      }
+    }
+    
+    function createMissEffect(x, y) {
+      for (let i=0;i<6;i++) {
+        const angle = (Math.PI*2*i)/6;
+        particles.push({ x,y, vx: Math.cos(angle)*2, vy: Math.sin(angle)*2, life:20, color:'#fca5a5', size:2 });
+      }
+    }
+    
+    function createPowerUpEffect(x, y, type) {
+      const colors = { health:'#34d399', laser:'#fbbf24', rapid:'#f97316' };
+      for (let i=0;i<12;i++) {
+        const angle = (Math.PI*2*i)/12;
+        particles.push({ x,y, vx: Math.cos(angle)*3, vy: Math.sin(angle)*3, life:30, color:colors[type], size:3 });
+      }
+    }
+
+    function update() {
+      if (!gameState.running) return;
+
+      if (gameState.shootCooldown > 0) gameState.shootCooldown--;
+
+      updateDifficulty();
+
+      // Pemasa kuasa (10 saat)
+      if (gameState.laserMode) {
+        gameState.laserTimer++;
+        if (gameState.laserTimer > gameState.laserMaxTime) {
+          gameState.laserMode = false;
+          gameState.laserTimer = 0;
+        }
+      }
+      
+      if (gameState.rapidMode) {
+        gameState.rapidTimer++;
+        if (gameState.rapidTimer > gameState.rapidMaxTime) {
+          gameState.rapidMode = false;
+          gameState.rapidTimer = 0;
+        }
+      }
+
+      // Mod kombo automatik satu baris
+      if (gameState.rapidMode) {
+        gameState.autoShootTimer++;
+        if (gameState.autoShootTimer >= gameState.autoShootInterval) {
+          shootRapidBullet();
+          gameState.autoShootTimer = 0;
+        }
+      }
+
+      // Kemas kini peluru
+      gameState.bullets = gameState.bullets.filter(b => {
+        b.y -= gameState.bulletSpeed * (b.isRapid ? 1.3 : 1);
+        return b.y > -60;
+      });
+
+      gameState.enemies.forEach(e => { e.y += gameState.enemySpeed; });
+      gameState.powerUps = gameState.powerUps.filter(p => {
+        p.y += gameState.enemySpeed * 0.6;
+        return p.y < gameState.height;
+      });
+
+      // Pengesanan perlanggaran
+      for (let bi = gameState.bullets.length-1; bi>=0; bi--) {
+        const b = gameState.bullets[bi];
+        
+        for (let ei=gameState.enemies.length-1; ei>=0; ei--) {
+          const e = gameState.enemies[ei];
+          if (collide(b, e)) {
+            gameState.score += 10;
+            createExplosion(e.x+e.w/2, e.y+e.h/2);
+            gameState.enemies.splice(ei,1);
+            gameState.bullets.splice(bi,1);
+            break;
+          }
+        }
+      }
+
+      gameState.powerUps = gameState.powerUps.filter(p => {
+        if (collide(gameState.player, p)) {
+          activatePowerUp(p.type);
+          createPowerUpEffect(p.x+p.w/2, p.y+p.h/2, p.type);
+          return false;
+        }
+        return true;
+      });
+
+      gameState.enemies = gameState.enemies.filter(e => {
+        if (e.y > gameState.height) {
+          gameState.lives--;
+          createMissEffect(e.x+e.w/2, e.y);
+          return false;
+        }
+        return true;
+      });
+
+      gameState.gameTimer++;
+
+      if (gameState.gameTimer % Math.max(25, gameState.spawnRate) === 0) {
+        spawnEnemy();
+      }
+
+      if (gameState.gameTimer % 60 === 0 && Math.random()*100 < gameState.powerUpSpawnChance) {
+        spawnPowerUp();
+      }
+
+      if (gameState.lives <= 0 || gameState.gameTimer > gameState.gameEndTime * 60) {
+        endGame();
+      }
+
+      updateUI();
+    }
+
+    function updateParticles() {
+      particles = particles.filter(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.1;
+        p.life--;
+        return p.life > 0;
+      });
+    }
+
+    function draw() {
+      ctx.fillStyle = 'rgba(10, 14, 39, 0.3)';
+      ctx.fillRect(0, 0, gameState.width, gameState.height);
+
+      ctx.strokeStyle = 'rgba(99, 102, 241, 0.05)';
+      ctx.lineWidth = 1;
+      const grid = Math.max(40, gameState.width*0.1);
+      for (let i=0; i<gameState.width; i+=grid) { 
+        ctx.beginPath(); 
+        ctx.moveTo(i,0); 
+        ctx.lineTo(i,gameState.height); 
+        ctx.stroke(); 
+      }
+
+      const grad = ctx.createLinearGradient(gameState.player.x, gameState.player.y, gameState.player.x, gameState.player.y+gameState.player.h);
+      grad.addColorStop(0,'#6366f1'); 
+      grad.addColorStop(1,'#a5f3fc');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(gameState.player.x+gameState.player.w/2, gameState.player.y+gameState.player.h/2, gameState.player.w/2, 0, Math.PI*2);
+      ctx.fill();
+      ctx.font = `bold ${gameState.player.w*0.5}px Arial`;
+      ctx.fillStyle = 'white';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🛡️', gameState.player.x+gameState.player.w/2, gameState.player.y+gameState.player.h/2);
+
+      // Peluru
+      gameState.bullets.forEach(b => {
+        if (b.isLaser) {
+          const gradient = ctx.createLinearGradient(b.x, b.y, b.x, b.y+b.h);
+          gradient.addColorStop(0, '#fbbf24');
+          gradient.addColorStop(1, '#fcd34d');
+          ctx.fillStyle = gradient;
+          ctx.fillRect(b.x-2, b.y, 4, b.h+4);
+        } else if (b.isRapid) {
+          const gradient = ctx.createLinearGradient(b.x, b.y, b.x, b.y+b.h);
+          gradient.addColorStop(0, '#f97316');
+          gradient.addColorStop(1, '#fb923c');
+          ctx.fillStyle = gradient;
+          ctx.fillRect(b.x-2, b.y, 8, b.h);
+        } else {
+          const bulletGrad = ctx.createLinearGradient(b.x,b.y,b.x,b.y+b.h);
+          bulletGrad.addColorStop(0,'#6ee7b7'); 
+          bulletGrad.addColorStop(1,'#34d399');
+          ctx.fillStyle = bulletGrad;
+          ctx.fillRect(b.x,b.y,b.w,b.h);
+        }
+      });
+
+      // Musuh
+      gameState.enemies.forEach(e => {
+        const enemyGrad = ctx.createLinearGradient(e.x,e.y,e.x,e.y+e.h);
+        enemyGrad.addColorStop(0,'rgba(248,113,113,0.8)'); 
+        enemyGrad.addColorStop(1,'rgba(248,113,113,0.4)');
+        ctx.fillStyle = enemyGrad;
+        ctx.beginPath(); 
+        ctx.arc(e.x+e.w/2,e.y+e.h/2,e.w/2,0,Math.PI*2); 
+        ctx.fill();
+        ctx.strokeStyle='rgba(248,113,113,1)'; 
+        ctx.lineWidth=2; 
+        ctx.stroke();
+        ctx.font='bold 13px "Inter", Arial'; 
+        ctx.fillStyle='white'; 
+        ctx.fillText(e.text, e.x+e.w/2, e.y+e.h/2);
+      });
+
+      // Kuasa (Power-up)
+      gameState.powerUps.forEach(p => {
+        const cols = { health:'#34d399', laser:'#fbbf24', rapid:'#f97316' };
+        ctx.fillStyle = cols[p.type];
+        ctx.beginPath(); 
+        ctx.arc(p.x+p.w/2,p.y+p.h/2,p.w/2,0,Math.PI*2); 
+        ctx.fill();
+        ctx.strokeStyle='rgba(255,255,255,0.5)'; 
+        ctx.lineWidth=2; 
+        ctx.stroke();
+        ctx.font='bold 14px Arial'; 
+        ctx.fillStyle='white'; 
+        ctx.fillText(p.icon, p.x+p.w/2, p.y+p.h/2);
+      });
+
+      updateParticles();
+      particles.forEach(p => {
+        ctx.globalAlpha = p.life/30;
+        ctx.fillStyle = p.color;
+        ctx.beginPath(); 
+        ctx.arc(p.x,p.y,p.size,0,Math.PI*2); 
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    }
+
+    function updateUI() {
+      document.getElementById('scoreDisplay').textContent = Math.floor(gameState.score);
+      document.getElementById('healthCounter').textContent = gameState.lives;
+      
+      const timeLeft = Math.max(0, gameState.gameEndTime - Math.floor(gameState.gameTimer/60));
+      const mins = Math.floor(timeLeft/60);
+      const secs = timeLeft%60;
+      
+      let status = `${mins}:${secs.toString().padStart(2,'0')}`;
+      const timerDiv = document.getElementById('powerupTimer');
+      
+      if (gameState.laserMode) {
+        const timeLeft = Math.ceil((gameState.laserMaxTime - gameState.laserTimer) / 60);
+        status += ' ⚡';
+        timerDiv.textContent = `⚡ Laser ${timeLeft}s`;
+        timerDiv.style.display = 'block';
+      } else if (gameState.rapidMode) {
+        const timeLeft = Math.ceil((gameState.rapidMaxTime - gameState.rapidTimer) / 60);
+        status += ' 🔥';
+        timerDiv.textContent = `🔥 Tembakan Laju ${timeLeft}s`;
+        timerDiv.style.display = 'block';
+      } else {
+        timerDiv.style.display = 'none';
+      }
+      
+      document.getElementById('waveCounter').textContent = status;
+      document.getElementById('speedDisplay').textContent = gameState.speedMultiplier.toFixed(1) + 'x';
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function startGame() {
+      document.getElementById('menuScreen').classList.add('hidden');
+      document.getElementById('gameUI').style.display = 'flex';
+      document.getElementById('gameOverScreen').classList.remove('active');
+      
+      gameState.running = true;
+      gameState.score = 0;
+      gameState.lives = 3;
+      gameState.gameTimer = 0;
+      gameState.bullets = [];
+      gameState.enemies = [];
+      gameState.powerUps = [];
+      gameState.shootCooldown = 0;
+      gameState.laserMode = false;
+      gameState.rapidMode = false;
+      gameState.autoShootTimer = 0;
+      gameState.speedMultiplier = 1.0;
+      gameState.lastSpeedUpTime = 0;
+      
+      gameState.player.x = gameState.width/2 - gameState.player.w/2;
+      particles = [];
+      updateDifficulty();
+      updateUI();
+    }
+
+    function endGame() {
+      gameState.running = false;
+      document.getElementById('gameUI').style.display = 'none';
+      document.getElementById('gameOverScreen').classList.add('active');
+      document.getElementById('powerupTimer').style.display = 'none';
+      
+      const finalScore = Math.floor(gameState.score);
+      const emoji = finalScore>500?'🏆':finalScore>300?'🌟':finalScore>100?'💪':'👊';
+      const title = finalScore>500?'Penjaga Hebat!':finalScore>300?'Sangat Bagus!':finalScore>100?'Teruskan Usaha!':'Cuba Lagi!';
+      document.getElementById('gameOverEmoji').textContent = emoji;
+      document.getElementById('gameOverScore').textContent = `Skor: ${finalScore}`;
+      document.getElementById('gameOverTitle').textContent = title;
+      
+      const kills = Math.floor(gameState.score/10);
+      const timeSurvived = Math.floor(gameState.gameTimer/60);
+      document.getElementById('gameOverStats').textContent = `🎯 Disekat ${kills} kali | ⏱️ Bertahan ${timeSurvived} saat`;
+    }
+
+    function restartGame() {
+      initCanvas();
+      startGame();
+    }
+
+    function goToMenu() {
+      gameState.running = false;
+      document.getElementById('menuScreen').classList.remove('hidden');
+      document.getElementById('gameUI').style.display = 'none';
+      document.getElementById('gameOverScreen').classList.remove('active');
+      document.getElementById('powerupTimer').style.display = 'none';
+    }
+
+    window.startGame = startGame;
+    window.restartGame = restartGame;
+    window.goToMenu = goToMenu;
+
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange: async (cfg) => {},
+      mapToCapabilities: ()=>({}),
+      mapToEditPanelValues: ()=>new Map()
+    });
+
+    window.addEventListener('resize', () => { if (!gameState.running) initCanvas(); });
+    window.addEventListener('load', () => {
+      initCanvas();
+      gameLoop();
+    });
+    if (document.readyState === 'complete') {
+      initCanvas();
+      gameLoop();
+    }
+  })();
+</script>
+</body>
+</html>
