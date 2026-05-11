@@ -5,6 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>课堂PPT · Moral Fantastic</title>
   <style>
+    /* 横屏提示遮罩 - 默认隐藏 */
+#rotateOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  text-align: center;
+  font-family: 'Nunito', system-ui, sans-serif;
+}
+#rotateOverlay.active { display: flex; }
+#rotateOverlay .rotate-icon { 
+  font-size: 5rem; 
+  margin-bottom: 20px;
+  animation: rotatePhone 1.5s ease-in-out infinite; 
+}
+#rotateOverlay p { 
+  font-size: 1.2rem; 
+  margin-bottom: 10px;
+}
+#rotateOverlay .rotate-sub {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+@keyframes rotatePhone { 
+  0%,100%{transform:rotate(0deg);} 
+  50%{transform:rotate(90deg);} 
+}
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Nunito', system-ui; background: #fff; color: #2d4e1e; }
     .sticky-header {
@@ -85,9 +121,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div id="rotateOverlay">
+  <div class="rotate-icon">📱</div>
+  <p>请将手机转回竖屏模式</p>
+  <p class="rotate-sub">Sila putar telefon ke mod potret</p>
+</div>
+
 <div class="sticky-header">
   <div class="logo-area"><div class="logo-icon">🍀</div><div class="logo-text">Moral Fantastic</div></div>
-  <a href="index.html" class="back-home">🏠 返回首页</a>
+  <a href="zh.html" class="back-home">🏠 返回首页</a>
 </div>
 <div class="container">
   <h1>📊 课堂PPT</h1>
@@ -107,13 +149,30 @@
   </div>
   
   <div class="nav-buttons">
-    <a href="index.html" class="nav-btn outline">🏠 返回首页</a>
+    <a href="zh.html" class="nav-btn outline">🏠 返回首页</a>
     <a href="video.html" class="nav-btn">下一页：教学视频 →</a>
   </div>
 </div>
 <footer>© 2026 Moral Fantastic · 德育如细雨，润物细无声</footer>
 
 <script>
+  // 横屏检测
+function isTouchDevice() {
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+}
+function checkOrientation() {
+  var o = document.getElementById('rotateOverlay');
+  if (!o) return;
+  if (!isTouchDevice()) { o.classList.remove('active'); return; }
+  if (window.innerWidth > window.innerHeight) {
+    o.classList.add('active');
+  } else {
+    o.classList.remove('active');
+  }
+}
+window.addEventListener('orientationchange', checkOrientation);
+window.addEventListener('resize', checkOrientation);
+checkOrientation();
   function updatePptHeight() {
     const wrapper = document.getElementById('pptWrapper');
     if (!wrapper) return;
