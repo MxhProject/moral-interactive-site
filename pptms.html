@@ -6,41 +6,41 @@
   <title>PPT Kelas · Moral Fantastic</title>
   <style>
     /* 横屏提示遮罩 - 默认隐藏 */
-#rotateOverlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.88);
-  backdrop-filter: blur(8px);
-  z-index: 99999;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  color: white;
-  text-align: center;
-  font-family: 'Nunito', system-ui, sans-serif;
-}
-#rotateOverlay.active { display: flex; }
-#rotateOverlay .rotate-icon { 
-  font-size: 5rem; 
-  margin-bottom: 20px;
-  animation: rotatePhone 1.5s ease-in-out infinite; 
-}
-#rotateOverlay p { 
-  font-size: 1.2rem; 
-  margin-bottom: 10px;
-}
-#rotateOverlay .rotate-sub {
-  font-size: 0.85rem;
-  color: #94a3b8;
-}
-@keyframes rotatePhone { 
-  0%,100%{transform:rotate(0deg);} 
-  50%{transform:rotate(90deg);} 
-}
+    #rotateOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+      font-family: 'Nunito', system-ui, sans-serif;
+    }
+    #rotateOverlay.active { display: flex; }
+    #rotateOverlay .rotate-icon { 
+      font-size: 5rem; 
+      margin-bottom: 20px;
+      animation: rotatePhone 1.5s ease-in-out infinite; 
+    }
+    #rotateOverlay p { 
+      font-size: 1.2rem; 
+      margin-bottom: 10px;
+    }
+    #rotateOverlay .rotate-sub {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    @keyframes rotatePhone { 
+      0%,100%{transform:rotate(0deg);} 
+      50%{transform:rotate(90deg);} 
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Nunito', system-ui; background: #fff; color: #2d4e1e; }
     .sticky-header {
@@ -57,7 +57,7 @@
     .container { max-width: 1200px; margin: 0 auto; padding: 24px 16px 40px; text-align: center; }
     h1 { color: #2d4e1e; margin-bottom: 16px; }
     
-    /* ========== 与 gamems.html 统一的容器样式 ========== */
+    /* ========== 统一容器样式 ========== */
     .content-container { 
       background: white; 
       border-radius: 32px; 
@@ -71,22 +71,20 @@
       border-radius: 24px;
       overflow: hidden;
       width: 100%;
-      height: 550px;      /* 电脑版固定高度，与游戏页面一致 */
+      height: 550px;
       min-height: 500px;
     }
     
-    /* 手机版：使用视口高度比例 */
     @media (max-width: 768px) {
       .ppt-wrapper {
-        height: 70vh;     /* 手机版占屏幕70%高度 */
+        height: 70vh;
         min-height: 450px;
       }
     }
     
-    /* 大屏幕电脑：更高 */
     @media (min-width: 1200px) {
       .ppt-wrapper {
-        height: 650px;    /* 大屏幕更高 */
+        height: 650px;
       }
     }
     
@@ -97,23 +95,7 @@
       display: block;
     }
     
-    /* 占位提示样式（当没有嵌入内容时显示） */
-    .placeholder {
-      background: #eef5ea;
-      border-radius: 24px;
-      padding: 80px 20px;
-      border: 2px dashed #c8dcc0;
-      text-align: center;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .placeholder-icon { font-size: 4rem; margin-bottom: 16px; }
-    .placeholder h3 { color: #7fa86a; margin-bottom: 8px; }
-    .placeholder p { color: #8aa67d; }
-    
+    .game-note { text-align: center; margin-top: 12px; color: #8aa67d; }
     .nav-buttons { display: flex; gap: 16px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
     .nav-btn { background: #7fa86a; color: white; text-decoration: none; padding: 12px 28px; border-radius: 60px; font-weight: 600; transition: 0.2s; }
     .nav-btn:hover { background: #5b8c4e; transform: translateY(-2px); }
@@ -123,32 +105,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="rotateOverlay">
+
+<div id="rotateOverlay">
   <div class="rotate-icon">📱</div>
   <p>Sila putar telefon ke mod potret</p>
 </div>
+
 <div class="sticky-header">
   <div class="logo-area"><div class="logo-icon">🍀</div><div class="logo-text">Moral Fantastic</div></div>
   <a href="ms.html" class="back-home">🏠 Kembali ke Laman Utama</a>
 </div>
+
 <div class="container">
   <h1>📊 PPT Kelas</h1>
   <p style="color: #6b7c63; margin-bottom: 16px;">Buli Siber · Bahan Pengajaran</p>
   
   <div class="content-container">
     <div class="ppt-wrapper" id="pptWrapper">
-      <!-- 占位内容，您可以将 iframe 替换为实际的 PPT 嵌入代码 -->
-      <div class="placeholder">
-        <div class="placeholder-icon">📎</div>
-        <h3>PPT Akan Dimuat Naik</h3>
-        <p>Sila tambahkan pautan PPT anda di sini</p>
-      </div>
-      <!-- 当您有 PPT 链接时，取消下面代码的注释并删除上面的占位符 -->
-      <!--
-      <iframe src="PAUTAN_PPT_ANDA" allowfullscreen></iframe>
-      -->
+      <iframe 
+        style="width:100%; height:100%; border:none;"
+        src="https://www.canva.com/design/DAHI-VwUSlU/Qij6fbqU91dvYfjficfxrw/view?embed" 
+        allowfullscreen="allowfullscreen" 
+        allow="fullscreen">
+      </iframe>
     </div>
-    <div class="game-note" style="text-align: center; margin-top: 12px; color: #8aa67d;">
+    <div class="game-note">
       📚 Slaid pengajaran interaktif tentang buli siber
     </div>
   </div>
@@ -158,27 +139,28 @@
     <a href="videoms.html" class="nav-btn">Seterusnya: Video →</a>
   </div>
 </div>
+
 <footer>© 2026 Moral Fantastic · Moral bagai hujan renyai, menyubur tanpa bunyi</footer>
 
 <script>
   // 横屏检测
-function isTouchDevice() {
-  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-}
-function checkOrientation() {
-  var o = document.getElementById('rotateOverlay');
-  if (!o) return;
-  if (!isTouchDevice()) { o.classList.remove('active'); return; }
-  if (window.innerWidth > window.innerHeight) {
-    o.classList.add('active');
-  } else {
-    o.classList.remove('active');
+  function isTouchDevice() {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   }
-}
-window.addEventListener('orientationchange', checkOrientation);
-window.addEventListener('resize', checkOrientation);
-checkOrientation();
-  // ========== 与 gamems.html 一致的动态尺寸调整 ==========
+  function checkOrientation() {
+    var o = document.getElementById('rotateOverlay');
+    if (!o) return;
+    if (!isTouchDevice()) { o.classList.remove('active'); return; }
+    if (window.innerWidth > window.innerHeight) {
+      o.classList.add('active');
+    } else {
+      o.classList.remove('active');
+    }
+  }
+  window.addEventListener('orientationchange', checkOrientation);
+  window.addEventListener('resize', checkOrientation);
+  checkOrientation();
+
   function updatePptHeight() {
     const wrapper = document.getElementById('pptWrapper');
     if (!wrapper) return;
@@ -194,22 +176,9 @@ checkOrientation();
     }
   }
   
-  // 监听窗口大小变化
   window.addEventListener('resize', updatePptHeight);
   window.addEventListener('load', updatePptHeight);
-  
-  // 如果您有实际的 PPT 链接，可以这样设置：
-  // const pptLink = "https://docs.google.com/presentation/d/XXXXX/edit?usp=sharing";
-  // 或者使用 iframe 嵌入 Google Slides:
-  // const embedLink = "https://docs.google.com/presentation/d/XXXXX/embed";
-  // 
-  // 取消下面代码的注释并替换链接即可：
-  /*
-  const wrapper = document.getElementById('pptWrapper');
-  if (wrapper) {
-    wrapper.innerHTML = '<iframe src="https://docs.google.com/presentation/d/YOUR_ID/embed" allowfullscreen></iframe>';
-  }
-  */
+  setTimeout(updatePptHeight, 100);
 </script>
 </body>
 </html>
