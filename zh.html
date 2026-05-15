@@ -299,6 +299,28 @@
       margin-right: auto;
     }
 
+    /* 新增样式：让页脚链接看起来更美观 */
+    .footer-links {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin: 16px auto 0;
+        padding-top: 12px;
+        border-top: 1px solid rgba(168, 171, 115, 0.15);
+        flex-wrap: wrap;
+    }
+    .footer-links a {
+        color: #4a6e3a;
+        text-decoration: none;
+        transition: color 0.2s ease;
+        font-weight: 600;
+    }
+    .footer-links a:hover {
+        color: #7fa86a;
+        text-decoration: underline;
+    }
+
     /* ========== 与 ms.html 一致的圆形按钮尺寸 ========== */
     .circle-buttons {
       display: flex;
@@ -582,7 +604,12 @@
       <div class="message-list" id="quoteList"><div class="empty-message">✨ 加载中...</div></div>
     </div>
   </main>
-  <footer><p>© 2026 Moral Fantastic · 师范学校（课程作业） | 德育如细雨，润物细无声</p></footer>
+  <footer>
+    <p>© 2026 Moral Fantastic · 师范学校（课程作业） | 德育如细雨，润物细无声</p>
+    <div class="footer-links">
+        <a href="https://mxhproject.github.io/moral-interactive-site/" target="_blank">🏠 点击回宣传页</a>
+    </div>
+  </footer>
 </div>
 
 <script>
