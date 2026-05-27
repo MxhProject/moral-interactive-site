@@ -139,7 +139,7 @@
     .modal-cancel { background: #f0f0f0; color: #666; }
     .modal-cancel:hover { background: #e0e0e0; transform: translateY(-2px); }
     .language-modal {
-      background: white; border-radius: 48px; max-width: 450px; width: 90%;
+      background: white; border-radius: 48px; max-width: 480px; width: 90%;
       padding: 2rem 1.5rem; text-align: center; box-shadow: 0 28px 48px rgba(0,0,0,0.2);
       animation: bounceIn 0.4s cubic-bezier(0.34,1.2,0.64,1);
       border: 1px solid #c8dcc0;
@@ -150,6 +150,27 @@
     .lang-link.cn:hover { background: #5b8c4e; transform: translateY(-2px); }
     .lang-link.ms { background: #a8c99b; color: #2d4e1e; }
     .lang-link.ms:hover { background: #8aaf7a; transform: translateY(-2px); }
+
+    .confirm-modal {
+      background: white;
+      border-radius: 48px;
+      max-width: 380px;
+      width: 90%;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 28px 48px rgba(0,0,0,0.2);
+      animation: bounceIn 0.4s cubic-bezier(0.34,1.2,0.64,1);
+      border: 1px solid #c8dcc0;
+    }
+    .confirm-modal .modal-icon { font-size: 3rem; margin-bottom: 12px; }
+    .confirm-modal h3 { color: #2d4e1e; font-size: 1.4rem; margin-bottom: 12px; }
+    .confirm-modal p { color: #6b7c63; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; }
+    .confirm-buttons { display: flex; gap: 12px; justify-content: center; margin-top: 8px; }
+    .confirm-btn { flex: 1; padding: 12px 16px; border: none; border-radius: 60px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .confirm-yes { background: #7fa86a; color: white; }
+    .confirm-yes:hover { background: #5b8c4e; transform: translateY(-2px); }
+    .confirm-no { background: #f0f0f0; color: #666; }
+    .confirm-no:hover { background: #e0e0e0; transform: translateY(-2px); }
 
     #rotateOverlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -269,118 +290,99 @@
     placeholders.forEach(p => observer.observe(p));
   }
 
-  // ==================== 双语课程数据 ====================
+  // ==================== 双语课程数据（分开存储：华语 + 马来文）====================
+  // 华语：显示「第 X 课 · 课程名称」
+  // 马来文：显示「Unit X. 课程名称」（不含「第X课」字眼）
   const courseData = {
-    '一年级': [
-      { zh: '我的宗教信仰', ms: 'Pegangan Hidup Saya' },
-      { zh: '助人小天使', ms: 'Baik Hati Amalan Saya' },
-      { zh: '我已经长大', ms: 'Tanggungjawab Suresh' },
-      { zh: '欢喜说谢谢', ms: 'Terima Kasih, Kawan-kawan' },
-      { zh: '人人夸我有礼貌', ms: 'Budi Bahasa Amalan Saya' },
-      { zh: '我喜欢我自己', ms: 'Hormati Diri Disanjung Tinggi' },
-      { zh: '爱惜自己', ms: 'Sayangi Diri Sendiri' },
-      { zh: '处处讲公正', ms: 'Adil Membawa Sejahtera' },
-      { zh: '我是勇敢的小孩', ms: 'Berani Menghadapi Cabaran' },
-      { zh: '花瓶是我打破的', ms: 'Kok Heng Yang Jujur' },
-      { zh: '天天要勤劳', ms: 'Blog Kerajinan' },
-      { zh: '分工合作真欢喜', ms: 'Kerjasama Membawa Berkat' },
-      { zh: '凡事都要刚刚好', ms: 'Pesanan Nenek' },
-      { zh: '我懂得礼让', ms: 'Bertolak Ansur Amalan Saya' }
-    ],
-    '二年级': [
-      { zh: '美好的时光', ms: 'Ajaran Agama Keluarga Saya' },
-      { zh: '贴心小举动', ms: 'Baik Hati Keluarga Bahagia' },
-      { zh: '长大了，学做事', ms: 'Tanggungjawab Saya Dalam Keluarga' },
-      { zh: '心里暖暖的', ms: 'Terima Kasih, Keluargaku' },
-      { zh: '爸爸妈妈都夸我', ms: 'Hemah Tinggi Dalam Keluarga' },
-      { zh: '看重家人的感受', ms: 'Hormati Keluarga Hidup Gembira' },
-      { zh: '可爱的家庭', ms: 'Keluarga Bahagia' },
-      { zh: '公平又正直', ms: 'Keluarga yang Adil Hidup Sejahtera' },
-      { zh: '学做小勇士', ms: 'Berani Demi Nama Baik Keluarga' },
-      { zh: '踏实的心', ms: 'Jujur Selalu' },
-      { zh: '勤劳的收获', ms: 'Sikap Rajin Amalan Keluarga' },
-      { zh: '合作乐无穷', ms: 'Kerjasama Meringankan Beban Keluarga' },
-      { zh: '跟我这样生活吧', ms: 'Bersederhana Amalan Keluarga' },
-      { zh: '退一步想想', ms: 'Toleransi Sesama Ahli Keluarga' }
-    ],
-    '三年级': [
-      { zh: '欢喜庆佳节', ms: 'Perayaan Warga Sekolah' },
-      { zh: '助人为乐', ms: 'Baik Hati Nilai Mulia' },
-      { zh: '责任小尖兵', ms: 'Murid Bertanggungjawab' },
-      { zh: '感恩饼干', ms: 'Berterima Kasih Amalan Mulia' },
-      { zh: '礼貌花朵校园开', ms: 'Beradab Sopan Pekerti Terpuji' },
-      { zh: '互相尊重暖人心', ms: 'Hormati Semua Amalan Kami' },
-      { zh: '关爱满校园', ms: 'Sekolah Kebanggaanku' },
-      { zh: '大公无私', ms: 'Sikap Adil Sekolah Sejahtera' },
-      { zh: '我能够做到！', ms: 'Hadapi Cabaran Demi Sekolah' },
-      { zh: '诚实是宝', ms: 'Jujur Amalan Warga Sekolah' },
-      { zh: '最甜美的果实', ms: 'Rajin Tangga Kejayaan' },
-      { zh: '团结力量大', ms: 'Kerjasama Budaya Kami' },
-      { zh: '刚刚好，真美好', ms: 'Amalan Hidup di Sekolah' },
-      { zh: '一团和气', ms: 'Toleransi Sesama Warga Sekolah' }
-    ],
-    '四年级': [
-      { zh: '和谐乐融融', ms: 'Hayati Amalan Agama dan Kepercayaan Jiran' },
-      { zh: '欢喜来助人', ms: 'Sikap Prihatin Amalan Mulia' },
-      { zh: '尽责不自私', ms: 'Tanggungjawab Hidup Berjiran' },
-      { zh: '感恩有您', ms: 'Hargai Jiran Hubungan Erat' },
-      { zh: '谦让你的赞美', ms: 'Sopan Santun dengan Jiran' },
-      { zh: '一生受用的礼物', ms: 'Semaikan Amalan Menghormati Jiran' },
-      { zh: '好邻居，无价宝', ms: 'Sayangi Jiran' },
-      { zh: '花卉才艺赛', ms: 'Bersikap Adil Sesama Jiran' },
-      { zh: '有理无惧', ms: 'Bertindak Berani demi Kesejahteraan Kejiranan' },
-      { zh: '线条上的密码', ms: 'Kejujuran Amalan Hidup Bersama-sama Jiran' },
-      { zh: '晚霞里最美的笑容', ms: 'Usaha Berterusan Membawa Kesejahteraan' },
-      { zh: '幸福的传电波', ms: 'Muafakat Membawa Berkat' },
-      { zh: '讨人喜欢的白雪', ms: 'Kesederhanaan Menjalin Kemesraan Sesama Jiran' },
-      { zh: '礼让乐开怀', ms: 'Bertolak Ansur Amalan Terpuji' }
-    ],
-    '五年级': [
-      { zh: '同一条路上', ms: 'Keunikan Masyarakatku' },
-      { zh: '种希望', ms: 'Penyeri Jiwa Masyarakat' },
-      { zh: '破窗效应', ms: 'Kehijauan Alam Tanggungjawab Bersama' },
-      { zh: '说不出口的"谢谢"', ms: 'Hargai Jasa dan Sumbangan' },
-      { zh: '懂礼貌，守规矩', ms: 'Pupuk Amalan Berbudi Pekerti Mulia' },
-      { zh: '尊重乐开怀', ms: 'Budaya Masyarakat Patut Dihormati' },
-      { zh: '让青山更翠绿', ms: 'Sajak Kasih Sayang' },
-      { zh: '公正在人心', ms: 'Suri Teladan Dicontohi Masyarakat' },
-      { zh: '见义勇为', ms: 'Berani Pertahankan Cabaran' },
-      { zh: '诚信无价', ms: 'Beradab dengan Jujurnya' },
-      { zh: '勤奋坚毅', ms: 'Berkat Kerajinan' },
-      { zh: '守望相助', ms: 'Amalan Kerjasama, Kebaikan Bersama' },
-      { zh: '中庸之星', ms: 'Bersederhana Menjamin Kebahagiaan' },
-      { zh: '礼让之城', ms: 'Bertoleransi Membawa Kesejahteraan' }
-    ],
-    '六年级': [
-      { zh: '和谐心欢畅', ms: 'Kepercayaan Kepada Tuhan Menjamin Kesejahteraan Negara' },
-      { zh: '我为你送暖', ms: 'Bantuan Dan Sokongan Moral Kepada Negara' },
-      { zh: '为了您，马来西亚', ms: 'Tanggungjawab Sebagai Warganegara' },
-      { zh: '感恩之旅', ms: 'Hargai Keunikan Negara' },
-      { zh: '权利代言人', ms: 'Amalan Hemah Tinggi Meningkatkan Imej Negara' },
-      { zh: '我的保护伞', ms: 'Hormati Identiti Negara' },
-      { zh: '月亮一样圆', ms: 'Cinta Akan Negara' },
-      { zh: '以理服人', ms: 'Amalan Adil Demi Kesejahteraan Negara' },
-      { zh: '奔跑吧！小勇士', ms: 'Berani Mempertahankan Maruah Negara' },
-      { zh: '最美丽的外套', ms: 'Kejujuran Demi Kesejahteraan Negara' },
-      { zh: '汗水年年', ms: 'Usaha Berterusan' },
-      { zh: '小手牵大手', ms: 'Kerjasama Seimbang' },
-      { zh: '不偏不倚', ms: 'Keadilan' },
-      { zh: '礼让不委屈', ms: 'Toleransi' }
-    ]
+    '一年级': {
+      zh: ['我的宗教信仰','助人小天使','我已经长大','欢喜说谢谢','人人夸我有礼貌','我喜欢我自己','爱惜自己','处处讲公正','我是勇敢的小孩','花瓶是我打破的','天天要勤劳','分工合作真欢喜','凡事都要刚刚好','我懂得礼让'],
+      ms: ['Pegangan Hidup Saya','Baik Hati Amalan Saya','Tanggungjawab Suresh','Terima Kasih, Kawan-kawan','Budi Bahasa Amalan Saya','Hormati Diri Disanjung Tinggi','Sayangi Diri Sendiri','Adil Membawa Sejahtera','Berani Menghadapi Cabaran','Kok Heng Yang Jujur','Blog Kerajinan','Kerjasama Membawa Berkat','Pesanan Nenek','Bertolak Ansur Amalan Saya']
+    },
+    '二年级': {
+      zh: ['美好的时光','贴心小举动','长大了，学做事','心里暖暖的','爸爸妈妈都夸我','看重家人的感受','可爱的家庭','公平又正直','学做小勇士','踏实的心','勤劳的收获','合作乐无穷','跟我这样生活吧','退一步想想'],
+      ms: ['Ajaran Agama Keluarga Saya','Baik Hati Keluarga Bahagia','Tanggungjawab Saya Dalam Keluarga','Terima Kasih, Keluargaku','Hemah Tinggi Dalam Keluarga','Hormati Keluarga Hidup Gembira','Keluarga Bahagia','Keluarga yang Adil Hidup Sejahtera','Berani Demi Nama Baik Keluarga','Jujur Selalu','Sikap Rajin Amalan Keluarga','Kerjasama Meringankan Beban Keluarga','Bersederhana Amalan Keluarga','Toleransi Sesama Ahli Keluarga']
+    },
+    '三年级': {
+      zh: ['欢喜庆佳节','助人为乐','责任小尖兵','感恩饼干','礼貌花朵校园开','互相尊重暖人心','关爱满校园','大公无私','我能够做到！','诚实是宝','最甜美的果实','团结力量大','刚刚好，真美好','一团和气'],
+      ms: ['Perayaan Warga Sekolah','Baik Hati Nilai Mulia','Murid Bertanggungjawab','Berterima Kasih Amalan Mulia','Beradab Sopan Pekerti Terpuji','Hormati Semua Amalan Kami','Sekolah Kebanggaanku','Sikap Adil Sekolah Sejahtera','Hadapi Cabaran Demi Sekolah','Jujur Amalan Warga Sekolah','Rajin Tangga Kejayaan','Kerjasama Budaya Kami','Amalan Hidup di Sekolah','Toleransi Sesama Warga Sekolah']
+    },
+    '四年级': {
+      zh: ['和谐乐融融','欢喜来助人','尽责不自私','感恩有您','谦让你的赞美','一生受用的礼物','好邻居，无价宝','花卉才艺赛','有理无惧','线条上的密码','晚霞里最美的笑容','幸福的传电波','讨人喜欢的白雪','礼让乐开怀'],
+      ms: ['Hayati Amalan Agama dan Kepercayaan Jiran','Sikap Prihatin Amalan Mulia','Tanggungjawab Hidup Berjiran','Hargai Jiran Hubungan Erat','Sopan Santun dengan Jiran','Semaikan Amalan Menghormati Jiran','Sayangi Jiran','Bersikap Adil Sesama Jiran','Bertindak Berani demi Kesejahteraan Kejiranan','Kejujuran Amalan Hidup Bersama-sama Jiran','Usaha Berterusan Membawa Kesejahteraan','Muafakat Membawa Berkat','Kesederhanaan Menjalin Kemesraan Sesama Jiran','Bertolak Ansur Amalan Terpuji']
+    },
+    '五年级': {
+      zh: ['同一条路上','种希望','破窗效应','说不出口的"谢谢"','懂礼貌，守规矩','尊重乐开怀','让青山更翠绿','公正在人心','见义勇为','诚信无价','勤奋坚毅','守望相助','中庸之星','礼让之城'],
+      ms: ['Keunikan Masyarakatku','Penyeri Jiwa Masyarakat','Kehijauan Alam Tanggungjawab Bersama','Hargai Jasa dan Sumbangan','Pupuk Amalan Berbudi Pekerti Mulia','Budaya Masyarakat Patut Dihormati','Sajak Kasih Sayang','Suri Teladan Dicontohi Masyarakat','Berani Pertahankan Cabaran','Beradab dengan Jujurnya','Berkat Kerajinan','Amalan Kerjasama, Kebaikan Bersama','Bersederhana Menjamin Kebahagiaan','Bertoleransi Membawa Kesejahteraan']
+    },
+    '六年级': {
+      zh: ['和谐心欢畅','我为你送暖','为了您，马来西亚','感恩之旅','权利代言人','我的保护伞','月亮一样圆','以理服人','奔跑吧！小勇士','最美丽的外套','汗水年年','小手牵大手','不偏不倚','礼让不委屈'],
+      // 马来文六年级只有第一至第十课
+      ms: ['Kepercayaan Kepada Tuhan Menjamin Kesejahteraan Negara','Bantuan Dan Sokongan Moral Kepada Negara','Tanggungjawab Sebagai Warganegara','Hargai Keunikan Negara','Amalan Hemah Tinggi Meningkatkan Imej Negara','Hormati Identiti Negara','Cinta Akan Negara','Amalan Adil Demi Kesejahteraan Negara','Berani Mempertahankan Maruah Negara','Kejujuran Demi Kesejahteraan Negara']
+    }
   };
 
-  // ==================== 显示年级课程弹窗（双语） ====================
-  function showGradeModal(grade) {
-    const courses = courseData[grade] || [];
-    let coursesHtml = '<div style="max-height:350px; overflow-y:auto;">';
-    courses.forEach((c, i) => {
-      coursesHtml += `
-        <div style="padding:12px; border-bottom:1px solid #e2ecd9;">
-          <div style="font-weight:700; margin-bottom:4px;">📚 第${i+1}课 · ${c.zh}</div>
-          <div style="font-size:0.75rem; color:#7fa86a;">${c.ms}</div>
+  // ==================== 自定义确认弹窗（用于语言选择）====================
+  function showLanguageConfirm(grade) {
+    return new Promise((resolve) => {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      overlay.innerHTML = `
+        <div class="confirm-modal">
+          <div class="modal-icon">📚</div>
+          <h3>${grade}</h3>
+          <p>选择课程语言 / Pilih bahasa kursus:</p>
+          <div class="confirm-buttons">
+            <button class="confirm-btn confirm-yes" id="chooseZh">🇨🇳 华语</button>
+            <button class="confirm-btn confirm-no" id="chooseMs">🇲🇾 Bahasa Melayu</button>
+          </div>
         </div>
       `;
+      document.body.appendChild(overlay);
+      
+      overlay.querySelector('#chooseZh').onclick = () => {
+        overlay.remove();
+        resolve('zh');
+      };
+      overlay.querySelector('#chooseMs').onclick = () => {
+        overlay.remove();
+        resolve('ms');
+      };
+      overlay.onclick = (e) => { if (e.target === overlay) { overlay.remove(); resolve(null); } };
     });
+  }
+
+  // ==================== 显示年级课程弹窗（方案二：先选语言，再显示课程）====================
+  async function showGradeModal(grade) {
+    const courses = courseData[grade];
+    if (!courses) return;
+    
+    // 让用户选择语言
+    const language = await showLanguageConfirm(grade);
+    if (!language) return; // 用户取消了选择
+    
+    const courseList = courses[language];
+    const langName = language === 'zh' ? '华语' : 'Bahasa Melayu';
+    
+    let coursesHtml = '<div style="max-height:350px; overflow-y:auto;">';
+    if (language === 'zh') {
+      // 华语显示格式：📚 第1课 · 我的宗教信仰
+      courseList.forEach((c, i) => {
+        coursesHtml += `
+          <div style="padding:12px; border-bottom:1px solid #e2ecd9;">
+            <div style="font-weight:700;">📚 第${i+1}课 · ${c}</div>
+          </div>
+        `;
+      });
+    } else {
+      // 马来文显示格式：Unit 1. Pegangan Hidup Saya（不含「第X课」字眼）
+      courseList.forEach((c, i) => {
+        coursesHtml += `
+          <div style="padding:12px; border-bottom:1px solid #e2ecd9;">
+            <div style="font-weight:700;">📚 Unit ${i+1}. ${c}</div>
+          </div>
+        `;
+      });
+    }
     coursesHtml += '</div>';
     
     const overlay = document.createElement('div');
@@ -388,8 +390,7 @@
     overlay.innerHTML = `
       <div class="language-modal" style="max-width:480px;">
         <div style="font-size:2rem;">📖</div>
-        <h3>${grade}</h3>
-        <div style="font-size:0.7rem; color:#8aa67d; margin-bottom:8px;">华语 / Bahasa Melayu</div>
+        <h3>${grade} · ${langName}</h3>
         ${coursesHtml}
         <button class="modal-cancel" style="margin-top:16px; width:100%;">关闭</button>
       </div>
