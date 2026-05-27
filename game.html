@@ -116,9 +116,9 @@
   <div class="game-selector">
     <div style="font-weight:700; margin-bottom:12px;">🛡️ 选择游戏</div>
     <select id="gameSelect" onchange="switchGame()">
-      <option value="0">网络安全卫士 I</option>
-      <option value="1">网络安全卫士 II</option>
-      <option value="2">网络安全卫士 III</option>
+      <option value="0">恶言大作战</option>
+      <option value="1">道德守卫战</option>
+      <option value="2">求助大冒险</option>
     </select>
     <div class="game-container" id="gameContainer"><iframe src="cyber-guardian.html" allowfullscreen></iframe></div>
     <div class="game-note" id="gameNote">🛡️ 网络安全卫士 · 阻止霸凌，守护网络世界！</div>
@@ -149,9 +149,9 @@ window.addEventListener('orientationchange', checkOrientation);
 window.addEventListener('resize', checkOrientation);
 checkOrientation();
   const GAMES = [
-    { src: 'cyber-guardian.html', note: '🛡️ 网络安全卫士 I · 阻止霸凌，守护网络世界！' },
-    { src: 'cyber-guardian2.html', note: '🛡️ 网络安全卫士 II · 第二关挑战' },
-    { src: 'cyber-guardian3.html', note: '🛡️ 网络安全卫士 III · 终极挑战' }
+    { src: 'cyber-guardian.html', note: '🛡️ 恶言大作战 · 消灭恶言，守护网络世界！' },
+    { src: 'cyber-guardian2.html', note: '🛡️ 道德守卫战 · 建立道德防线，阻止恶言评论入侵！' },
+    { src: 'cyber-guardian3.html', note: '🛡️ 求助大冒险 · 勇敢飞向帮助你的人！' }
   ];
   function switchGame() {
     const idx = parseInt(document.getElementById('gameSelect').value);
