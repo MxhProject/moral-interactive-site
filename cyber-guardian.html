@@ -296,8 +296,8 @@
   <div id="menuScreen" class="menu-screen">
     <div class="menu-content">
       <div style="font-size: clamp(3rem, 10vw, 5rem); margin-bottom: 1rem;">🛡️</div>
-      <h1 id="el-title" class="menu-title">网络安全卫士</h1>
-      <p class="menu-subtitle">阻止霸凌言论，守护网络世界！</p>
+      <h1 id="el-title" class="menu-title">恶言大作战</h1>
+      <p class="menu-subtitle">消灭恶言，守护网络世界！</p>
       <p class="menu-subtitle" style="font-size: clamp(0.875rem, 3vw, 1rem); color: #64748b; margin-top: 1.5rem;">💻 鼠标移动 / 📱 手指滑动 · 点击射击</p>
       <button id="el-startBtn" class="menu-button mt-6" onclick="startGame()">开始防御</button>
     </div>
@@ -333,7 +333,7 @@
 <script>
   (function(){
     const defaultConfig = {
-      game_title: '网络安全卫士',
+      game_title: '恶言大作战',
       start_button_text: '开始防御',
       background_color: '#0a0e27',
       text_color: '#e0e7ff',
@@ -348,11 +348,11 @@
 
     // 负面词汇列表（中文）
     const badWords = [
-      '废物', '垃圾', '去死', '滚开', '白痴', '笨蛋', '蠢货', '弱智', '低能', '脑残',
+      '废物', '垃圾', '67', '去死', '滚开', '白痴', '笨蛋', '蠢货', '弱智', '低能', '脑残',
       '傻逼', '神经病', '精神病', '变态', '恶心', '丑陋', '矮冬瓜', '四眼仔', '书呆子',
-      '穷鬼', ' loser', '失败者', '单身狗', '没人要', '多余', '寄生虫', '社会败类',
-      '键盘侠', '喷子', '柠檬精', '酸民', '造谣者', '骗子', '小偷', '人渣', '畜生',
-      '不要脸', '厚脸皮', '无耻', '下贱', '卑鄙', '恶心', '讨厌鬼', '麻烦精', '灾星'
+      '穷鬼', ' loser', '失败者', '你很丑', '孤儿', '没人要', '多余', '寄生虫', '社会败类', '不要跟你好', 
+      '键盘侠', '废物', '没人喜欢你', '酸民', '造谣者', '骗子', '小偷', '人渣', '畜生',
+      '不要脸', '厚脸皮', '无耻', '下贱', '卑鄙', '恶心', '讨厌鬼', '你很菜', 'noob', '麻烦精', '灾星'
     ];
 
     const gameState = {
