@@ -296,8 +296,8 @@
   <div id="menuScreen" class="menu-screen">
     <div class="menu-content">
       <div style="font-size: clamp(3rem, 10vw, 5rem); margin-bottom: 1rem;">🛡️</div>
-      <h1 id="el-title" class="menu-title">Penjaga Siber</h1>
-      <p class="menu-subtitle">Sekat komen buli, lindungi dunia siber!</p>
+      <h1 id="el-title" class="menu-title">Tembak Komen Negatif</h1>
+      <p class="menu-subtitle">Hapuskan kata-kata negatif, lindungi dunia siber!</p>
       <p class="menu-subtitle" style="font-size: clamp(0.875rem, 3vw, 1rem); color: #64748b; margin-top: 1.5rem;">💻 Gerak tetikus / 📱 Leret jari · Klik untuk tembak</p>
       <button id="el-startBtn" class="menu-button mt-6" onclick="startGame()">Mula Bertahan</button>
     </div>
@@ -333,7 +333,7 @@
 <script>
   (function(){
     const defaultConfig = {
-      game_title: 'Penjaga Siber',
+      game_title: 'Tembak Komen Negatif',
       start_button_text: 'Mula Bertahan',
       background_color: '#0a0e27',
       text_color: '#e0e7ff',
@@ -349,13 +349,13 @@
     // Senarai perkataan negatif yang dikembangkan
     const badWords = [
       'Tak guna', 'Sampah', 'Hodoh', 'Gemuk', 'Pendek', 'Empat mata', 'Nerd', 'Miskin',
-      'Bodoh', 'Bangang', 'Sial', 'Dungu', 'Gila', 'Psiko', 'Pondan', 'Pengkid',
-      'Pisau cukur', 'Buaya', 'Penyondol', 'Perampas', 'Tak laku', 'Bujang selamanya', 'Loser', 'Gagal',
-      'Berambus', 'Pergi mati', 'Jijik', 'Nak muntah', 'Tak payah hidup', 'Sampah masyarakat', 'Parasit',
-      'Lintah darat', 'Beban', 'Pemalas', 'Wira keyboard', 'Kaki gaduh', 'Hater', 'Kuat cemburu',
-      'Malas belajar', 'Corot', 'Terakhir', 'Takde kawan', 'Tersisih', 'Badut', 'Bahan lawak',
-      'Berlagak', 'Kau layak ke', 'Tak sedar diri', 'Perasan', 'Mimpi je la', 'Tunggu kiamat',
-      'Benci gila', 'Menyemak', 'Jauhkan diri', 'Jangan sentuh', 'Bawa malang', 'Pembawa suey'
+      'Bodoh', 'Bangang', 'Sial', 'Dungu', 'Gila', 'Psiko', 'Pondan', 'Anak Haram',
+      'Lembab', 'Buaya', 'Penyondol', 'Perampas', 'Tak laku', 'Noob', 'Loser', 'Gagal',
+      'Berambus', 'Pergi mati', 'Jijik', 'Nak muntah', 'Diam', 'Sampah masyarakat', 'Parasit',
+      'Bongok', 'Beban', 'Pemalas', 'Wira keyboard', 'Kaki gaduh', 'Hater', 'Kuat cemburu',
+      'Malas', 'Babi', 'Anjing', 'Takde kawan', 'Tersisih', 'Badut', 'Celaka',
+      'Berlagak', 'Kau layak ke', 'Tak sedar diri', 'Perasan', 'pekak', 'Tunggu kiamat',
+      'Benci gila', 'Menyemak', 'Jauhkan diri', 'Mangkuk', 'Bawa malang', 'Pembawa suey'
     ];
 
     const gameState = {
