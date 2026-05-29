@@ -54,8 +54,20 @@
     .logo-text { font-size: 1.5rem; font-weight: 800; color: #2d4e1e; }
     .back-home { background: #eef5ea; color: #2d4e1e; text-decoration: none; padding: 8px 20px; border-radius: 40px; font-weight: 600; transition: 0.2s; }
     .back-home:hover { background: #7fa86a; color: white; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 24px 16px 40px; text-align: center; }
-    h1 { color: #2d4e1e; margin-bottom: 16px; }
+    
+    /* ========== 修改：容器左对齐（与华语版 classroom.html 风格一致） ========== */
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 24px 20px 40px; 
+      text-align: left;      /* 改为左对齐 */
+    }
+    
+    h1 { 
+      color: #2d4e1e; 
+      margin-bottom: 8px; 
+      font-size: 1.8rem;
+    }
     
     /* ========== 统一容器样式 ========== */
     .content-container { 
@@ -80,6 +92,12 @@
         height: 70vh;
         min-height: 450px;
       }
+      .container { 
+        padding: 16px 16px 32px; 
+      }
+      h1 { 
+        font-size: 1.5rem; 
+      }
     }
     
     @media (min-width: 1200px) {
@@ -95,12 +113,42 @@
       display: block;
     }
     
-    .game-note { text-align: center; margin-top: 12px; color: #8aa67d; }
-    .nav-buttons { display: flex; gap: 16px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
-    .nav-btn { background: #7fa86a; color: white; text-decoration: none; padding: 12px 28px; border-radius: 60px; font-weight: 600; transition: 0.2s; }
+    .game-note { 
+      text-align: center; 
+      margin-top: 12px; 
+      color: #8aa67d; 
+    }
+    
+    /* ========== 统一按钮样式 ========== */
+    .nav-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: #7fa86a;
+      color: white;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 60px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
     .nav-btn:hover { background: #5b8c4e; transform: translateY(-2px); }
     .nav-btn.outline { background: white; color: #7fa86a; border: 2px solid #7fa86a; }
-    footer { text-align: center; padding: 24px; color: #9bb88b; border-top: 1px solid #e2ecd9; margin-top: 20px; }
+    
+    footer { 
+      text-align: center; 
+      padding: 24px; 
+      color: #9bb88b; 
+      border-top: 1px solid #e2ecd9; 
+      margin-top: 20px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -118,7 +166,7 @@
 
 <div class="container">
   <h1>📊 PPT Kelas</h1>
-  <p style="color: #6b7c63; margin-bottom: 16px;">Buli Siber · Bahan Pengajaran</p>
+  <p style="color: #6b7c63; margin-bottom: 16px;">Tajuk : Buli Siber</p>
   
   <div class="content-container">
     <div class="ppt-wrapper" id="pptWrapper">
