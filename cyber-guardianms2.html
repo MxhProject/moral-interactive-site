@@ -121,7 +121,7 @@ body{font-family:'Rajdhani',sans-serif;color:#ddd6fe;display:flex;flex-direction
       <p>Kata-kata buli siber menyerang dari <b style="color:#f87171">DUA ARAH</b> menuju <b style="color:var(--gold)">MORAL</b>.</p>
       <p>Letakkan pembela sekolah di <b style="color:var(--acc)">nod +</b> untuk menghentikan mereka!</p>
       <p style="color:#3a2a6a;font-size:10.5px;margin-top:6px;">
-        👨‍💼 Pengetua: hanya boleh bina <b style="color:var(--gold)">SATU</b> sahaja<br>
+        👨‍💼 Guru Besar: hanya boleh bina <b style="color:var(--gold)">SATU</b> sahaja<br>
         Pilih kad → ketuk nod yang bersinar
       </p>
       <button class="glow-btn" id="start-btn">MULA PERTAHANAN</button>
@@ -193,7 +193,7 @@ const TDEFS={
       {dmg:28,rate:23,range:115,slow:0,slowDur:0,multi:14,splash:0},
       {dmg:42,rate:18,range:130,slow:0.18,slowDur:34,multi:16,splash:0}],
     upgCost:[310,400]},
-  principal:{name:'Pengetua',icon:'👨‍💼',cost:500,color:'#fbbf24',proj:'pulse',aoe360:true,isPrincipal:true,maxCount:1,
+  principal:{name:'Guru Besar',icon:'👨‍💼',cost:500,color:'#fbbf24',proj:'pulse',aoe360:true,isPrincipal:true,maxCount:1,
     levels:[
       {dmg:0, rate:260,range:99999,slow:0.42,slowDur:125,multi:1,splash:99999},
       {dmg:25,rate:215,range:99999,slow:0.34,slowDur:160,multi:1,splash:99999},
@@ -425,7 +425,7 @@ function tStat(t){return TDEFS[t.type].levels[t.lvl];}
 function placeTower(node){
   if(!selType)return;
   const def=TDEFS[selType];
-  if(def.isPrincipal&&principalPlaced){floatAt(node.x,node.y,'Hanya 1 Pengetua!','#f87171');return;}
+  if(def.isPrincipal&&principalPlaced){floatAt(node.x,node.y,'Hanya 1 Guru Besar!','#f87171');return;}
   if(gold<def.cost){floatAt(node.x,node.y,'Perlu 💰'+def.cost,'#f87171');return;}
   if(node.tower)return;
   gold-=def.cost;updGold();
@@ -722,7 +722,7 @@ function refreshCards(){
 
 function onPickType(k){
   const def=TDEFS[k];
-  if(def.isPrincipal&&principalPlaced){floatAt(W/2,H*.4,'Hanya 1 Pengetua!','#f87171');return;}
+  if(def.isPrincipal&&principalPlaced){floatAt(W/2,H*.4,'Hanya 1 Guru Besar!','#f87171');return;}
   selTower=null;selType=selType===k?null:k;refreshCards();updateStrip();
 }
 
