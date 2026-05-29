@@ -1020,7 +1020,7 @@ function showCourses(grade){
   var courses = courseData[grade] || [];
   var html = '<div style="padding:8px 16px; background:#eef5ea; border-radius:20px 20px 0 0;">📚 '+grade+'</div>';
   courses.forEach(function(c,i){
-    html += '<div class="dropdown-item" onclick="selectCourse(\''+grade+'\', \'Pelajaran '+(i+1)+': '+c+'\')">📖 Pelajaran '+(i+1)+': '+c+'</div>';
+    html += '<div class="dropdown-item" onclick="selectCourse(\''+grade+'\', \'Unit '+(i+1)+': '+c+'\')">📖 Unit '+(i+1)+': '+c+'</div>';
   });
   document.getElementById('courseItems').innerHTML = html;
   document.getElementById('gradeList').style.display = 'none';
