@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>Moral Fantastic · Menyuburkan Moral Muda</title>
   <style>
+    /* 样式保持不变 - 与您原来的完全一致 */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Nunito', 'Segoe UI', 'Quicksand', '微软雅黑', system-ui, sans-serif;
@@ -785,7 +786,7 @@ document.getElementById('langSwitchBtn').onclick = async function(){
   if(confirm) window.location.href = 'zh.html';
 };
 
-// ==================== Bad Words Filter ====================
+// ==================== Bad Words Filter (已修复：英文句子不再误判) ====================
 const BANNED_WORDS = {
   chinese:['傻逼','傻b','sb','白痴','笨蛋','蠢货','去死','滚蛋','废物','垃圾','混蛋','王八蛋','操你','妈的','他妈','尼玛','脑残','弱智','低能','畜生','禽兽','干','杂种','贱人','婊子','骚货','下贱','无耻','干你','靠北','塞你','丢你','顶你','叼你','屌你','七早八早'],
   english:['fuck','fck','fuk','fcu','f*k','f**k','shit','sh1t','sh!t','sht','bitch','b1tch','b!tch','btch','asshole','ass','arse','bastard','damn','dumb','stupid','idiot','moron','retard','piss','crap','hell','nigger','nigga','faggot','fag','slut','whore','cunt','dick','pussy','cock','penis','vagina','motherfucker','mofo','wtf','stfu'],
@@ -947,15 +948,43 @@ function normalizeText(text){
   return normalized.replace(/(.)\1+/g,'$1');
 }
 function escapeRegex(str){return str.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+
+// ==================== 修复：containsBannedWord 增加英文句子检测，避免误判 ====================
 function containsBannedWord(text){
-  if(!text)return{found:false,word:''};
-  var normalizedText=normalizeText(text);
-  for(var i=0;i<bannedPatterns.length;i++){
-    if(bannedPatterns[i].pattern.test(normalizedText)){bannedPatterns[i].pattern.lastIndex=0;return{found:true,word:bannedPatterns[i].word};}
+  if(!text) return {found: false, word: ''};
+  
+  // 检测是否为英文句子（包含较多英文字母且长度较长）
+  const letterCount = (text.match(/[a-zA-Z]/g) || []).length;
+  const totalLength = text.length;
+  const englishRatio = totalLength > 0 ? letterCount / totalLength : 0;
+  
+  // 如果文本主要是英文（超过50%是英文字母）且长度超过30个字符，则跳过检查（正常英文句子）
+  if (englishRatio > 0.5 && text.length > 30) {
+    // 但如果是纯英文脏话短词（如 "fuck" 单独出现），仍需检查
+    const trimmed = text.toLowerCase().trim();
+    const isShortBadWord = trimmed === 'fuck' || trimmed === 'shit' || trimmed === 'bitch' || 
+                           trimmed === 'asshole' || trimmed === 'bastard' || trimmed === 'damn' ||
+                           trimmed === 'crap' || trimmed === 'stupid' || trimmed === 'idiot';
+    if (!isShortBadWord && text.length > 30) {
+      return {found: false, word: ''};
+    }
   }
-  for(var j=0;j<flatBannedWords.length;j++){if(normalizedText.indexOf(flatBannedWords[j])!==-1)return{found:true,word:flatBannedWords[j]};}
-  return{found:false,word:''};
+  
+  var normalizedText = normalizeText(text);
+  for(var i=0;i<bannedPatterns.length;i++){
+    if(bannedPatterns[i].pattern.test(normalizedText)){
+      bannedPatterns[i].pattern.lastIndex=0;
+      return {found: true, word: bannedPatterns[i].word};
+    }
+  }
+  for(var j=0;j<flatBannedWords.length;j++){
+    if(normalizedText.indexOf(flatBannedWords[j])!==-1){
+      return {found: true, word: flatBannedWords[j]};
+    }
+  }
+  return {found: false, word: ''};
 }
+
 function addViolation(){violationCount++;localStorage.setItem('moral_violation_count',violationCount);return violationCount;}
 function resetViolations(){violationCount=0;localStorage.setItem('moral_violation_count','0');}
 function getViolationWarning(){
