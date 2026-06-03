@@ -950,15 +950,43 @@ function normalizeText(text){
   return normalized.replace(/(.)\1+/g,'$1');
 }
 function escapeRegex(str){return str.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+
+// ==================== 修复：containsBannedWord 增加英文句子检测，避免误判 ====================
 function containsBannedWord(text){
-  if(!text)return{found:false,word:''};
-  var normalizedText=normalizeText(text);
-  for(var i=0;i<bannedPatterns.length;i++){
-    if(bannedPatterns[i].pattern.test(normalizedText)){bannedPatterns[i].pattern.lastIndex=0;return{found:true,word:bannedPatterns[i].word};}
+  if(!text) return {found: false, word: ''};
+  
+  // 检测是否为英文句子（包含较多英文字母且长度较长）
+  const letterCount = (text.match(/[a-zA-Z]/g) || []).length;
+  const totalLength = text.length;
+  const englishRatio = totalLength > 0 ? letterCount / totalLength : 0;
+  
+  // 如果文本主要是英文（超过50%是英文字母）且长度超过30个字符，则跳过检查（正常英文句子）
+  if (englishRatio > 0.5 && text.length > 30) {
+    // 但如果是纯英文脏话短词（如 "fuck" 单独出现），仍需检查
+    const trimmed = text.toLowerCase().trim();
+    const isShortBadWord = trimmed === 'fuck' || trimmed === 'shit' || trimmed === 'bitch' || 
+                           trimmed === 'asshole' || trimmed === 'bastard' || trimmed === 'damn' ||
+                           trimmed === 'crap' || trimmed === 'stupid' || trimmed === 'idiot';
+    if (!isShortBadWord && text.length > 30) {
+      return {found: false, word: ''};
+    }
   }
-  for(var j=0;j<flatBannedWords.length;j++){if(normalizedText.indexOf(flatBannedWords[j])!==-1)return{found:true,word:flatBannedWords[j]};}
-  return{found:false,word:''};
+  
+  var normalizedText = normalizeText(text);
+  for(var i=0;i<bannedPatterns.length;i++){
+    if(bannedPatterns[i].pattern.test(normalizedText)){
+      bannedPatterns[i].pattern.lastIndex=0;
+      return {found: true, word: bannedPatterns[i].word};
+    }
+  }
+  for(var j=0;j<flatBannedWords.length;j++){
+    if(normalizedText.indexOf(flatBannedWords[j])!==-1){
+      return {found: true, word: flatBannedWords[j]};
+    }
+  }
+  return {found: false, word: ''};
 }
+
 function addViolation(){violationCount++;localStorage.setItem('moral_violation_count',violationCount);return violationCount;}
 function resetViolations(){violationCount=0;localStorage.setItem('moral_violation_count','0');}
 function getViolationWarning(){
